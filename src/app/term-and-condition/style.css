@@ -1,0 +1,77 @@
+.tc-body {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #0E1111;
+    padding: 10vh;
+    overflow-y: scroll;
+}
+
+.tc-nav {
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    top: 0%;
+    background: #0E1111;
+    width: 100vw;
+    height: 10vh;
+    color: white;
+    gap: 20px;
+    z-index: 1;
+
+    h3 {
+        position: relative;
+        display: flex;
+        bottom: 1px;
+        font-family: 'Orbitron variable';
+        cursor: pointer;
+    }
+}
+
+.logo {
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+}
+
+.tc-cont {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50vw;
+    min-height: 100vh;
+    line-height: 2;
+    text-align: left;
+    padding-bottom: 10vh;
+
+}
+
+h2,
+h3 {
+    color: #ffffff;
+}
+
+p,
+ul {
+    color: #cccccc;
+}
+
+/**********************600px**********************/
+@media screen and (max-width: 600px) {
+    .tc-cont {
+        width: 80vw;
+    }
+}
+
+/**********************900px**********************/
+@media screen and (max-width: 400px) {
+    .tc-cont {
+        width: 90vw;
+    }
+}

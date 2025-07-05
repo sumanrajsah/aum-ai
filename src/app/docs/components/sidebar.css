@@ -1,0 +1,9 @@
+.sidebar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 93vh;
+
+}

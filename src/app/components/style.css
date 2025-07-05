@@ -1,0 +1,619 @@
+.button-send {
+    position: relative;
+
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    box-shadow: none;
+
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    svg {
+        height: 32px;
+        width: 32px;
+    }
+
+}
+
+.adsbygoogle {
+    height: 100px;
+    width: 90%;
+}
+
+.button-send::after {
+    box-shadow: none;
+}
+
+.button-send:hover {
+    transform: scale(1.05);
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    /* Slight scale effect */
+}
+
+.tool-btn {
+    position: absolute;
+    padding: 7px 10px;
+    color: gray;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    /* Smooth transitions */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    box-shadow: none;
+    right: 70px;
+    bottom: 7%;
+    border-radius: 50px;
+    border: 2px solid gray;
+    gap: 5px;
+}
+
+.tool-btn:hover {
+
+    border-color: whitesmoke;
+}
+
+.attach-btn-modal {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    /* Space between textarea and button */
+    padding: 5px 5px;
+    background: linear-gradient(95deg,
+            rgba(var(--bg-color1), 0.15),
+            rgba(var(--bg-color1), 0.05));
+    /* Semi-transparent background */
+    backdrop-filter: blur(50px);
+    /* Blur effect for a modern look */
+    border-radius: 20px;
+    width: 250px;
+    height: auto;
+    z-index: 10000;
+    left: 0px;
+    bottom: 50px;
+    box-shadow:
+        0 15px 30px rgba(0, 0, 0, 0.2),
+        0 5px 10px rgba(0, 0, 0, 0.1),
+        inset 0 1px 1px rgba(255, 255, 255, 0.04);
+
+    hr {
+        width: 98%;
+        box-shadow: 0 4px 6px rgba(var(--bg-color1), 0.1);
+        border-color: rgba(var(--bg-color1), 0.144);
+    }
+
+    label {
+        width: 90%;
+        color: gray;
+    }
+}
+
+.attach-child-btn {
+    width: 98%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 10px;
+    text-align: left;
+    padding: 10px;
+    cursor: pointer;
+    gap: 10px;
+    z-index: 10;
+    font-size: 16px;
+
+    &:hover {
+        background: rgba(94, 129, 173, 0.2);
+    }
+}
+
+.server-btn {
+    position: relative;
+    padding: 5px 8px;
+    font-size: 14px;
+    cursor: pointer;
+
+    /* Smooth transitions */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    box-shadow: none;
+    border-radius: 50px;
+    gap: 5px;
+}
+
+.attach-btn {
+    position: relative;
+    padding: 5px 5px;
+    font-size: 14px;
+    cursor: pointer;
+
+    /* Smooth transitions */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    box-shadow: none;
+
+
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    gap: 5px;
+}
+
+.attach-btn-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    /* Space between textarea and button */
+    padding: 10px 10px;
+    background: rgba(128, 128, 128, 0.15);
+
+    /* Semi-transparent background */
+    backdrop-filter: blur(20px);
+    /* Blur effect for a modern look */
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
+    /* Subtle shadow */
+    border: 1px solid rgba(128, 128, 128, 0.144);
+    width: auto;
+    height: auto;
+    z-index: 1;
+    left: 50px;
+
+    hr {
+        width: 98%;
+        box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
+        border-color: rgba(128, 128, 128, 0.144);
+    }
+}
+
+.file-view {
+    font-size: 6px;
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    background: rgba(128, 128, 128, 0.144);
+    box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
+    overflow: hidden;
+}
+
+.file-view-user {
+    font-size: 6px;
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+    background: rgba(128, 128, 128, 0.144);
+    box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
+    overflow: hidden;
+}
+
+.action-button {
+    padding: 10px 20px;
+
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 10px 0;
+    transition: background 0.3s ease;
+    box-shadow: none;
+    /* Smooth transition for hover effect */
+}
+
+.action-button:hover {
+    box-shadow: none;
+    /* Light effect on hover */
+}
+
+.action-button::after {
+    box-shadow: none;
+}
+
+.copy-button {
+    position: relative;
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    bottom: 1%;
+    left: 2%;
+    box-shadow: none;
+    padding: 5px;
+}
+
+.copy-button:hover {
+    opacity: 0.8;
+    box-shadow: none;
+    background: rgba(128, 128, 128, 0.456);
+    /* Light fade effect on hover */
+}
+
+.copy-button::after {
+    box-shadow: none;
+}
+
+.copy-tool-button {
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 12px;
+    right: 5%;
+    box-shadow: none;
+    padding: 5px;
+}
+
+.copy-tool-button:hover {
+    opacity: 0.8;
+    box-shadow: none;
+
+    /* Light fade effect on hover */
+}
+
+.copy-tool-button::after {
+    box-shadow: none;
+}
+
+.copy-button2 {
+    position: absolute;
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 12px;
+    right: 8%;
+    box-shadow: none;
+    padding: 5px;
+
+}
+
+.copy-button2:hover {
+    opacity: 0.8;
+    box-shadow: none;
+
+    /* Light fade effect on hover */
+}
+
+.copy-butto2::after {
+    box-shadow: none;
+}
+
+.input-body {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 10vh;
+    bottom: 2%;
+    gap: 10px;
+}
+
+.chatmode-cont {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    padding: 5px 5px;
+    gap: 5px;
+    font-size: 16px;
+    border-radius: 10px;
+    width: fit-content;
+
+    background: linear-gradient(145deg, rgba(var(--bg-color1), 0.15), rgba(var(--bg-color1), 0.05));
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+
+    transform: perspective(800px) translateZ(0);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 🌑 Dark Mode Enhancements */
+
+
+.chatmode-cont:hover {
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 3px rgba(255, 255, 255, 0.07);
+}
+
+/* === Button Styling === */
+
+.chatmode-cont button {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    height: 32px;
+    width: 60px;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+
+    transition:
+        background 0.3s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+
+    transform-style: preserve-3d;
+}
+
+.chatmode-cont button.active {
+    background: rgba(var(--bg-color1), 0.2);
+    box-shadow:
+        inset 0 5px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover: Lift Effect */
+.chatmode-cont button:hover {
+    box-shadow:
+        0 6px 10px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Active: Pressed Effect */
+
+.input-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 30px;
+    max-width: 800px;
+    width: 98%;
+    transform: perspective(1000px) translateZ(0);
+    transform-style: preserve-3d;
+    transition: all 0.4s ease;
+}
+
+/* 🌑 Dark Mode */
+
+
+
+/* Optional Hover Effect */
+
+.input-container:hover {
+
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.3),
+        0 6px 16px rgba(0, 0, 0, 0.15),
+        inset 0 2px 3px rgba(255, 255, 255, 0.08);
+}
+
+.textarea {
+    position: relative;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    /* No border */
+    outline: none;
+    /* Remove default outline */
+    font-size: 16px;
+    background-color: transparent;
+    /* Transparent background */
+    transition: box-shadow 0.2s ease;
+    /* Smooth transitions */
+    width: 98%;
+    resize: none;
+    /* Disable manual resizing */
+    overflow-y: auto;
+    /* Hide scrollbar */
+    /* Minimum height */
+    max-height: 200px;
+    /* Maximum height before scrolling */
+    height: 50px;
+
+}
+
+.input-btn-cont {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 40px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-btn-cont-right,
+.input-btn-cont-left {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: 40px;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.sinput {
+    position: relative;
+    padding: 5px;
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    /* No border */
+    outline: none;
+    /* Remove default outline */
+    font-size: 18px;
+    background-color: transparent;
+    /* Transparent background */
+    transition: box-shadow 0.2s ease;
+    /* Smooth transitions */
+    width: 90%;
+    /* Disable manual resizing */
+    overflow-y: auto;
+    /* Maximum height before scrolling */
+
+}
+
+.textarea::placeholder {
+    position: relative;
+    display: flex;
+
+}
+
+.search-ads-result-cont {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 90%;
+}
+
+.search-ads-result {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    /* background: red; */
+    padding: 2px;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.ads-chat-cont,
+.ads-chat-banner {
+    background: red;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 100px;
+    cursor: pointer;
+}
+
+/******************* dark************************/
+html.dark {
+
+    .input-container,
+    .attach-btn-modal {
+        background: linear-gradient(to right, #1C273B, #191E2B);
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.25),
+            0 4px 10px rgba(0, 0, 0, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .chatmode-cont {
+        border-color: rgba(var(--bg-color1), 0.3);
+        box-shadow:
+            0 6px 14px rgba(0, 0, 0, 0.3),
+            inset 0 1px 2px rgba(255, 255, 255, 0.05),
+            inset 0 -2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+
+
+}
+
+/* ☀️ Light Mode */
+html.light {
+
+    .input-container,
+    .attach-btn-modal {
+        background: linear-gradient(to right, #D6E2FB, #E3EBFD);
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.1),
+            0 4px 12px rgba(0, 0, 0, 0.06),
+            inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    }
+
+    .chatmode-cont {
+        border-color: rgba(var(--bg-color1), 0.2);
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.1),
+            0 4px 12px rgba(0, 0, 0, 0.06),
+            inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    }
+}
+
+/***************768px ********************/
+@media screen and (max-width: 1000px) {
+
+    .input-body {
+        width: 100vw;
+    }
+}
+
+/***************768px ********************/
+@media screen and (max-width: 768px) {}
+
+@media screen and (max-width: 500px) {
+    .input-container {
+        padding: 5px 10px;
+    }
+
+    .textarea {
+        font-size: 14px;
+    }
+
+    .input-btn-cont {
+        gap: 1px;
+    }
+
+    .input-btn-cont-left,
+    .input-btn-cont-right {
+        gap: 1px;
+    }
+
+    .server-btn {
+        span {
+            display: none;
+        }
+    }
+
+
+
+}

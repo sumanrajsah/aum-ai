@@ -1,0 +1,142 @@
+.profile-body {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    /* Space between textarea and button */
+    padding: 10px 10px;
+    border-radius: 20px;
+
+    /* Blur effect for a modern look */
+    /* background: rgba(var(--bg-color1), 0.1); */
+
+
+
+
+    width: 250px;
+    height: auto;
+    z-index: 1;
+    right: 20px;
+    top: 4vh;
+
+    hr {
+        width: 98%;
+        box-shadow: 0 4px 6px rgba(var(--bg-color1), 0.1);
+        border-color: rgba(var(--bg-color1), 0.144);
+    }
+}
+
+.profile-btn {
+    width: 98%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 10px;
+    text-align: left;
+    padding: 8px 8px;
+    cursor: pointer;
+    gap: 10px;
+    z-index: 10;
+    font-size: 14px;
+}
+
+.profile-btn:hover {
+    background: rgba(94, 129, 173, 0.2);
+}
+
+.logout-btn {
+    width: 98%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 10px;
+    text-align: left;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    gap: 10px;
+    z-index: 10;
+    font-size: 14px;
+    color: #e5383b;
+}
+
+.logout-btn:hover {
+    background: #e5383bb0;
+    color: white;
+}
+
+.workspace-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    /* Space between textarea and button */
+    padding: 5px 5px;
+    border-radius: 20px;
+    /* Blur effect for a modern look */
+    /* background: rgba(var(--bg-color1), 0.1); */
+
+
+    min-width: 100px;
+    width: auto;
+    height: auto;
+    z-index: 1;
+    top: 2vh;
+    left: 10px;
+
+    hr {
+        width: 98%;
+        box-shadow: 0 4px 6px rgba(var(--bg-color1), 114, 0.1);
+        border-color: rgba(var(--bg-color1), 0.144);
+    }
+}
+
+.workspace-btn {
+    position: relative;
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 10px;
+    text-align: left;
+    padding: 8px 8px;
+    cursor: pointer;
+    gap: 10px;
+    z-index: 10;
+    font-size: 14px;
+}
+
+.workspace-btn:hover {
+    background: rgba(94, 129, 173, 0.2);
+}
+
+html.dark {
+
+    .workspace-body,
+    .profile-body {
+        background: linear-gradient(to right, #1C273B, #191E2B);
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.25),
+            0 4px 10px rgba(0, 0, 0, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+}
+
+html.light {
+
+    .workspace-body,
+    .profile-body {
+        background: linear-gradient(to right, #D6E2FB, #E3EBFD);
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.1),
+            0 4px 12px rgba(0, 0, 0, 0.06),
+            inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    }
+}

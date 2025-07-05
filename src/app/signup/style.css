@@ -1,0 +1,171 @@
+.collab-sbody {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10vh 0 10vh 0;
+    width: 100vw;
+    min-height: 100vh;
+    overflow-y: hidden;
+    gap: 50px;
+
+    p {
+        color: gray;
+    }
+}
+
+.cs-heading {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    p {
+        color: gray;
+    }
+}
+
+.collab-button {
+
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: medium;
+    font-weight: bold;
+    width: 100%;
+    border: none;
+}
+
+.collab-button:hover {
+    transform: scale(1.03);
+    background-clip: none;
+}
+
+.google-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background: whitesmoke;
+    color: #0E1111;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #0E1111;
+    font-size: medium;
+    font-weight: bold;
+    width: 100%;
+    gap: 10px;
+
+    svg {
+        height: 24px;
+    }
+
+    &:hover {
+        transform: scale(1.03);
+        background: whitesmoke;
+        color: #0E1111;
+    }
+
+}
+
+.collab-sbutton {
+    position: absolute;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: medium;
+    font-weight: bold;
+    width: 100%;
+    top: 2%;
+    right: 5%;
+    border: none;
+}
+
+.collab-sbutton:hover {
+    transform: scale(1.03);
+    background-clip: none;
+
+}
+
+.cs-signup-cont {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 20px;
+    gap: 20px;
+    width: 400px;
+    height: auto;
+
+}
+
+.cs-signup-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    width: 98%;
+
+    label {
+        color: gray;
+    }
+
+    input {
+        width: 100%;
+        font-size: 20px;
+        padding: 5px;
+        background: none;
+        border: 1px solid gray;
+        border-radius: 5px;
+    }
+}
+
+html.dark {
+
+    .collab-button,
+    .collab-sbutton {
+        background: linear-gradient(145deg,
+                rgba(var(--bg-color1), 0.15),
+                rgba(var(--bg-color1), 0.05));
+        box-shadow:
+            0 6px 14px rgba(0, 0, 0, 0.3),
+            inset 0 1px 2px rgba(255, 255, 255, 0.05),
+            inset 0 -2px 6px rgba(0, 0, 0, 0.15);
+
+    }
+
+
+
+}
+
+/* ☀️ Light Mode */
+html.light {
+
+    .collab-button,
+    .collab-sbutton {
+        background: linear-gradient(145deg,
+                rgba(var(--bg-color1), 0.15),
+                rgba(var(--bg-color1), 0.05));
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.1),
+            0 4px 12px rgba(0, 0, 0, 0.06),
+            inset 0 2px 4px rgba(255, 255, 255, 0.6);
+
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .cs-signup-cont {
+        width: 90vw;
+    }
+
+    .google-btn {
+        gap: 5px;
+    }
+}

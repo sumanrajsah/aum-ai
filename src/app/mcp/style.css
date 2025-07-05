@@ -1,0 +1,133 @@
+.mcp-page-body {
+    padding: 24px;
+    min-height: 90vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.mcp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.create-btn {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    width: 150px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.create-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.mcp-card-list {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px 0;
+    max-height: 100%;
+    overflow: auto;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.mcp-table-header {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr 1fr 0.6fr 2fr 0.5fr 1fr;
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid;
+    margin-bottom: 4px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    gap: 8px;
+}
+
+.mcp-table-header>div {
+    color: inherit;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    background: transparent;
+    display: flex;
+}
+
+.mcp-table-header>div:hover {
+    opacity: 1;
+}
+
+/* Light theme */
+html.light .mcp-table-header {
+    background: var(--prop-white-bg);
+    color: #374151;
+    border-bottom-color: rgba(var(--bg-color1), 0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme */
+html.dark .mcp-table-header {
+    background: var(--prop-dark-bg);
+    color: #d1d5db;
+    border-bottom-color: rgba(var(--bg-color1), 0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+    .mcp-table-header {
+        grid-template-columns: 1fr 0.6fr 1fr 0.5fr 1.3fr 0.7fr 1fr;
+        padding: 10px 12px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .mcp-table-header {
+        display: none;
+        /* Hide in favor of row-level data-labels */
+    }
+}
+
+/* Mobile fallback visible header */
+@media screen and (max-width: 768px) {
+    .mcp-table-header.mobile-visible {
+        display: block;
+        text-align: center;
+        padding: 16px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(var(--bg-color1), 0.2);
+        margin-bottom: 8px;
+    }
+
+    .mcp-table-header.mobile-visible::before {
+        content: "MCP Servers";
+        color: rgb(var(--bg-color1));
+    }
+}
+
+/* Title responsiveness */
+@media (max-width: 768px) {
+    .mcp-header h1 {
+        font-size: 20px;
+    }
+}

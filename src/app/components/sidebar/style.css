@@ -1,0 +1,241 @@
+.sidebar {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    top: 0%;
+    height: 100vh;
+    width: 260px;
+    z-index: 1;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    overflow: hidden;
+
+    /* Semi-transparent background */
+
+
+    /* Subtle shadow */
+
+    animation: slideOutSidebar 0.2s ease-in-out;
+
+}
+
+.sidebar-2 {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    top: 0%;
+    height: 100vh;
+    width: 60px;
+    z-index: 1;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    /* Semi-transparent background */
+    /* Blur effect for a modern look */
+    /* box-shadow: 0 4px 6px rgba(var(--bg-color1), 0.2);
+
+    border: 2px solid rgba(var(--bg-color1), 0.4); */
+    overflow: hidden;
+    animation: slideInSidebar 0.2s ease-in-out;
+
+}
+
+
+.sidebar-2-bottom-cont {
+    position: absolute;
+    bottom: 1%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-2-top-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    top: 0%;
+}
+
+
+
+
+label {
+    text-align: left;
+    width: 90%;
+    font-size: 14px;
+}
+
+.date-label {
+    color: rgb(163, 161, 161);
+    font-size: 14px;
+}
+
+@keyframes slideInSidebar {
+    from {
+        width: 260px;
+    }
+
+    to {
+        width: 60px;
+    }
+}
+
+@keyframes slideOutSidebar {
+    from {
+        width: 60px;
+
+    }
+
+    to {
+        width: 260px;
+    }
+}
+
+
+.sidebar-button {
+    display: flex;
+    width: 94%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: left;
+    padding: 8px 8px;
+    gap: 10px;
+    font-size: 14px;
+    height: 36px;
+    white-space: nowrap;
+
+    &:hover {
+        background: rgba(94, 129, 173, 0.2);
+        box-shadow:
+            0 6px 10px rgba(0, 0, 0, 0.35),
+            inset 0 1px 2px rgba(255, 255, 255, 0.25);
+    }
+
+    transition: background 0.2s ease-in-out;
+
+    animation: slideOutSidebarButton 0.2s ease-in-out;
+}
+
+.close-sidebar {
+    position: absolute;
+    right: 2%;
+}
+
+.sidebar-button-2 {
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 5px;
+    gap: 10px;
+    font-size: 14px;
+    height: 40px;
+    width: 40px;
+
+    &:hover {
+        background: rgba(94, 129, 173, 0.2);
+        box-shadow:
+            0 6px 10px rgba(0, 0, 0, 0.35),
+            inset 0 1px 2px rgba(255, 255, 255, 0.25);
+    }
+
+    transition: background 0.2s ease-in-out;
+    animation: slideInSidebarButton 0.2s ease-in-out;
+}
+
+.toggle-sidebar {
+    display: none;
+}
+
+.sidebar-2:hover .toggle-sidebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-2:hover .slogo-cont {
+    display: none;
+}
+
+.search-chat-btn {
+    display: flex;
+    width: 95%;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 10px;
+    gap: 10px;
+    font-size: 14px;
+    height: 40px;
+    white-space: nowrap;
+
+
+    background: rgba(128, 128, 128, 0.24);
+
+
+    transition: background 0.2s ease-in-out;
+
+    animation: slideOutSidebarButton 0.2s ease-in-out;
+}
+
+@keyframes slideInSidebarButton {
+    from {
+        width: 95%;
+    }
+
+    to {
+        width: 30px;
+    }
+}
+
+@keyframes slideOutSidebarButton {
+    from {
+        width: 30px;
+    }
+
+    to {
+        width: 95%;
+    }
+}
+
+
+
+@media screen and (max-width: 1000px) {
+
+
+    .sidebar-2 {
+        display: none;
+    }
+
+}
+
+html.dark {
+
+    .sidebar,
+    .sidebar-2 {
+        background: linear-gradient(to right, #1C273B, #191E2B);
+    }
+}
+
+html.light {
+
+    .sidebar,
+    .sidebar-2 {
+        background: linear-gradient(to right, #D6E2FB, #E3EBFD);
+    }
+}

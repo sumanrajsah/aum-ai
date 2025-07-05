@@ -1,0 +1,84 @@
+.workspace-create-body {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+}
+
+.wcreate-close-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    gap: 5px;
+    border-radius: 50%;
+    height: 30px;
+    border: 2px solid gray;
+}
+
+.wcreate-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid gray;
+    padding: 5px 10px;
+}
+
+.wcreate-cont {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
+    /* Subtle shadow */
+    border: 1px solid rgba(128, 128, 128, 0.25);
+    border-radius: 20px;
+    gap: 20px;
+    padding: 20px 20px;
+}
+
+.wcreate-input-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+
+}
+
+.wcreate-label {
+    color: gray;
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+}
+
+.wcreate-input {
+    width: 96%;
+    font-size: 14px;
+    padding: 5px;
+    background: transparent;
+    border: 1px solid gray;
+    border-radius: 5px;
+    outline: none;
+}

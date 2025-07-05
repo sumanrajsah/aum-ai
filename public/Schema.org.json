@@ -1,0 +1,14 @@
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "0xxplorer - AI Blockchain Explorer",
+    "url": "https://0xxplorer.com/",
+    "description": "0xXplorer AI- Your AI-powered assistant for seamless blockchain exploration and insights.",
+    "image": "https://0xxplorer.com/0xai512.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Qubicsquare Technologies Private Limited",
+        "createdBy": "SquareX Labs",
+        "url": "https://qubicsquare.tech/"
+    }
+}

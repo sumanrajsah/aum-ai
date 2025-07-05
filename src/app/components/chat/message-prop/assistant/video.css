@@ -1,0 +1,213 @@
+.video-card {
+    position: relative;
+    display: inline-block;
+    width: 300px;
+    max-width: 300px;
+    break-inside: avoid;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.video-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.video-card:hover .video-card-footer {
+    opacity: 1;
+    visibility: visible;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.video-card:hover .vid {
+    transform: scale(1.05);
+}
+
+.video-card-vid-cont {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    background: rgba(221, 220, 220, 0.1);
+}
+
+.vid,
+video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+}
+
+.loading-vid-container {
+    width: 300px;
+    height: 300px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-vid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-size: 400% 400%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: 10px;
+}
+
+html.light .loading-vid {
+    background: linear-gradient(-90deg,
+            #eaf2ff 0%,
+            /* lighter than #D6E2FB */
+            #dce8fc 25%,
+            /* lighter than #E3EBFD */
+            #cfe2fc 50%,
+            #dce8fc 75%,
+            #eaf2ff 100%);
+    background-size: 400% 400%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: 10px;
+}
+
+html.dark .loading-vid {
+    background: linear-gradient(-90deg,
+            #2a3548 0%,
+            /* lighter than #1C273B */
+            #232b3d 25%,
+            /* in between */
+            #1f2634 50%,
+            /* close to #191E2B */
+            #232b3d 75%,
+            #2a3548 100%);
+    background-size: 400% 400%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: 10px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
+
+
+.video-card-footer {
+    position: absolute;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.3) 50%,
+            rgba(0, 0, 0, 0.7) 100%);
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    gap: 10px;
+}
+
+.vid-card-footer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+}
+
+.vid-card-footer-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+}
+
+.vid-card-footer-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .video-card {
+        margin-bottom: 15px;
+    }
+
+    .vid-card-footer-btn {
+        width: 35px;
+        height: 35px;
+    }
+
+    .video-card-footer {
+        gap: 8px;
+        opacity: 1;
+        visibility: visible;
+        background: none;
+        bottom: 1%;
+        right: 1%;
+    }
+}
+
+/* Loading state improvements */
+.video-card.loading {
+    background: grey;
+}
+
+.video-card.loading .loading-vid {
+    height: 200px;
+}
+
+@media (max-width: 600px) {
+    .video-card.loading .loading-vid {
+        height: 150px;
+    }
+}
+
+@media (max-width: 350px) {
+    .video-card {
+        width: 100%;
+    }
+}
+
+/* Expand video modal styles */
+.expand-vid-cont {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+.expand-vid {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+}

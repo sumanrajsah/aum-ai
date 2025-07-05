@@ -1,0 +1,44 @@
+.image-playground-body {
+    position: relative;
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+    gap: 20px;
+    min-height: 70vh;
+    width: 100%;
+    padding-bottom: 10vh;
+}
+
+.image-playground-gallery {
+    display: flex;
+    column-gap: 5px;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 100%;
+    padding: 5px;
+
+}
+
+@media (max-width: 900px) {
+    .image-playground-gallery {
+        columns: 2;
+        column-gap: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .image-playground-gallery {
+        columns: 2;
+        column-gap: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .image-playground-gallery {
+        columns: 1;
+        column-gap: 0;
+    }
+}
