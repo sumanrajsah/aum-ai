@@ -5,7 +5,8 @@ import './settings-btn.css'
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
 import { useChat, useImagePlaygound, useVideoPlayground } from "../../context/ChatContext"
-import { imageModels, llmModels, vidoeModels } from "../utils/models-list"
+import { getAllLLMStyles, getLLMParamsByStyle, imageModels, llmModels, vidoeModels } from "../utils/models-list"
+import { useLLMStyleStore } from "@/store/useLLMStyleStore"
 
 interface SettingsButtonProps {
     openModal: boolean
@@ -19,6 +20,13 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
     const searchParams = useSearchParams();
     const router = useRouter()
     const modalRef = useRef<HTMLDivElement>(null);
+    const styles = getAllLLMStyles();
+    const { selectedStyle, setStyle } = useLLMStyleStore();
+
+    const handleStyleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const style = event.target.value;
+        setStyle(style);
+    };
     // console.log(imageSettings)
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -130,6 +138,18 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
 
                     </div>}
                     </>}
+                {chatMode === 'text' && <>
+                    <div className="settings-btn-cont">
+                        <label>style</label>
+                        <select className="select-model-btn" value={selectedStyle} onChange={handleStyleChange}>
+                            {styles.map(style => (
+                                <option key={style} value={style}>
+                                    {style}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </>}
 
             </div >
         </>

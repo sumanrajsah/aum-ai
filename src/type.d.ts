@@ -4,7 +4,8 @@ interface ChatHistory {
     uid: string;
     created_on: number;
     updated_on: number;
-    wid?: string
+    wid?: string;
+    aid?: string
 }
 type GroupedHistoryByDate = Record<string, ChatHistory[]>;
 
@@ -28,7 +29,6 @@ type MessageContent = string | MessageContentItem[];
 interface Message {
     msg_id: string;
     content: MessageContent;
-    isUser: boolean;
     type: string; // "text", "image", etc.
     role?: string;
     created_on: any;
@@ -36,6 +36,8 @@ interface Message {
         name: string;
         provider: string;
     }
+    tool_call_id?: string;
+    tool_calls?: any[]
 }
 
 interface MessageInterface {
@@ -49,6 +51,8 @@ interface MessageInterface {
         name: string;
         provider: string;
     }
+    tool_call_id?: string;
+    tool_calls?: any[]
 }
 
 interface McpServer {
@@ -69,7 +73,8 @@ interface MCPServerInfo {
     updated_on: number,
     auth: boolean,
     config: Config,
-    tools: string[]
+    tools: string[],
+    status: string,
 }
 interface Config {
     url: String,
@@ -128,4 +133,23 @@ type VideoMetadata = {
     wid?: string;
     revised_prompt: string;
     prompt: string;
+}
+
+type AgentInfo = {
+    name: string;
+    description: string;
+    handle: string;
+    image: string;
+    config: {
+        models: {
+            primary: ModelConfig,
+            secondary: ModelConfig
+        }
+        allowedTools?: string[];
+        mcp?: McpServerTool[]
+        demos: Demo[];
+    }
+    uid: string;
+    aid: string;
+    status: string;
 }

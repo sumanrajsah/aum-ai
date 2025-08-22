@@ -8,7 +8,6 @@ import { useTheme } from "next-themes";
 import { useAuth } from "../../../hooks/useAuth";
 import { useAlert } from "../../../context/alertContext";
 
-
 import { ReactNode } from "react";
 
 interface ModalProps {
@@ -16,24 +15,45 @@ interface ModalProps {
 }
 
 const ModalCont = ({ children }: ModalProps) => {
-    const router = useRouter();
-    const { theme } = useTheme();
-    const { user } = useAuth()
-    const alertMessage = useAlert()
-    const [workspaceName, setWorkspaceName] = useState("");
+    const [isVisible, setIsVisible] = useState(false);
 
+    useEffect(() => {
+        // Add fade-in animation
+        const timer = setTimeout(() => setIsVisible(true), 50);
+        return () => clearTimeout(timer);
+    }, []);
 
+    const handleClose = () => {
+        setIsVisible(false);
+        setTimeout(() => {
+            window.location.hash = '';
+        }, 200);
+    };
+
+    const handleBackdropClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget) {
+            handleClose();
+        }
+    };
 
     return (
-        <div className="modal-body">
-            <div className="modal-cont">
-                <button className="modal-close-btn" onClick={() => { window.location.hash = '' }}>
+        <div
+            className={`modal-body ${isVisible ? 'modal-visible' : ''}`}
+            onClick={handleBackdropClick}
+        >
+            <div className="modal-wrapper">
+                <button
+                    className="modal-close-btn"
+                    onClick={handleClose}
+                    aria-label="Close modal"
+                >
                     <X size={20} />
                 </button>
-                {children}
 
+                <div className="modal-cont">
+                    {children}
+                </div>
             </div>
-
         </div>
     );
 };

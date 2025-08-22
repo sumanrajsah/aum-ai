@@ -12,7 +12,8 @@
     line-height: 2;
     /* optional: glassmorphism effect */
     background: none;
-    width: 100%;
+    max-width: 800px;
+    width: 800px;
     position: relative;
     gap: 10px;
     justify-content: center;
@@ -24,17 +25,20 @@
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
     width: 100%;
-    padding: 5px 20px;
+    padding: 10px 30px;
     width: 100%;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: wrap;
     border-radius: 30px;
     /* Ensures text wraps properly */
+
     overflow: auto;
     background: linear-gradient(95deg,
             rgba(var(--bg-color1), 0.15),
             rgba(var(--bg-color1), 0.05));
+
+    color: gray;
 }
 
 .thought-header {
@@ -43,7 +47,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
+    padding: 5px;
     width: 100%;
     font-size: 14px;
     line-height: 1.2;
@@ -56,7 +60,6 @@
     flex-direction: column;
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
-    width: 100%;
     padding: 5px 20px;
     width: 100%;
     background: none;
@@ -66,4 +69,46 @@
     white-space: wrap;
     /* Ensures text wraps properly */
     overflow: auto;
+}
+
+.chat-footer {
+    position: relative;
+    padding: 5px;
+    height: auto;
+    gap: 5px;
+    display: flex;
+    flex-direction: row;
+    min-width: 100px;
+    width: auto;
+
+
+}
+
+.chat-footer-user {
+    position: relative;
+    padding: 5px;
+    height: auto;
+    gap: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 50px;
+    width: 40px;
+    height: 40px;
+}
+
+.model-label {
+    position: relative;
+    min-width: 100px;
+    max-width: 200px;
+    padding: 2px;
+    left: 5px;
+    font-style: italic;
+    font-size: smaller;
+}
+
+@media screen and (max-width: 1000px) {
+    .assistant-msg-cont {
+        width: 96vw;
+    }
 }

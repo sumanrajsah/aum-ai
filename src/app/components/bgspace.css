@@ -1,0 +1,905 @@
+/* Space Effects Base */
+.space-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* Stars */
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite alternate;
+}
+
+/* Star positions for 50 stars */
+.star:nth-child(1) {
+    top: 10%;
+    left: 15%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 0s;
+}
+
+.star:nth-child(2) {
+    top: 20%;
+    left: 80%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 0.5s;
+}
+
+.star:nth-child(3) {
+    top: 30%;
+    left: 40%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 1s;
+}
+
+.star:nth-child(4) {
+    top: 50%;
+    left: 70%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 1.5s;
+}
+
+.star:nth-child(5) {
+    top: 60%;
+    left: 20%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 2s;
+}
+
+.star:nth-child(6) {
+    top: 70%;
+    left: 90%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 2.5s;
+}
+
+.star:nth-child(7) {
+    top: 80%;
+    left: 10%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 3s;
+}
+
+.star:nth-child(8) {
+    top: 15%;
+    left: 60%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 0.3s;
+}
+
+.star:nth-child(9) {
+    top: 35%;
+    left: 85%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 0.8s;
+}
+
+.star:nth-child(10) {
+    top: 45%;
+    left: 5%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 1.3s;
+}
+
+.star:nth-child(11) {
+    top: 55%;
+    left: 45%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 1.8s;
+}
+
+.star:nth-child(12) {
+    top: 65%;
+    left: 75%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 2.3s;
+}
+
+.star:nth-child(13) {
+    top: 75%;
+    left: 35%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 2.8s;
+}
+
+.star:nth-child(14) {
+    top: 85%;
+    left: 65%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 3.3s;
+}
+
+.star:nth-child(15) {
+    top: 5%;
+    left: 95%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 0.7s;
+}
+
+.star:nth-child(16) {
+    top: 25%;
+    left: 25%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 1.2s;
+}
+
+.star:nth-child(17) {
+    top: 40%;
+    left: 95%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 1.7s;
+}
+
+.star:nth-child(18) {
+    top: 90%;
+    left: 50%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 2.2s;
+}
+
+.star:nth-child(19) {
+    top: 12%;
+    left: 30%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 2.7s;
+}
+
+.star:nth-child(20) {
+    top: 58%;
+    left: 88%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 3.2s;
+}
+
+.star:nth-child(21) {
+    top: 8%;
+    left: 45%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 0.2s;
+}
+
+.star:nth-child(22) {
+    top: 28%;
+    left: 78%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 0.9s;
+}
+
+.star:nth-child(23) {
+    top: 38%;
+    left: 12%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 1.4s;
+}
+
+.star:nth-child(24) {
+    top: 48%;
+    left: 92%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 1.9s;
+}
+
+.star:nth-child(25) {
+    top: 68%;
+    left: 33%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 2.4s;
+}
+
+.star:nth-child(26) {
+    top: 78%;
+    left: 83%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 2.9s;
+}
+
+.star:nth-child(27) {
+    top: 88%;
+    left: 18%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 3.4s;
+}
+
+.star:nth-child(28) {
+    top: 3%;
+    left: 63%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 0.4s;
+}
+
+.star:nth-child(29) {
+    top: 23%;
+    left: 53%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 1.1s;
+}
+
+.star:nth-child(30) {
+    top: 33%;
+    left: 73%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 1.6s;
+}
+
+.star:nth-child(31) {
+    top: 43%;
+    left: 23%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 2.1s;
+}
+
+.star:nth-child(32) {
+    top: 53%;
+    left: 93%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 2.6s;
+}
+
+.star:nth-child(33) {
+    top: 63%;
+    left: 8%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 3.1s;
+}
+
+.star:nth-child(34) {
+    top: 73%;
+    left: 58%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 0.6s;
+}
+
+.star:nth-child(35) {
+    top: 83%;
+    left: 38%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 1.3s;
+}
+
+.star:nth-child(36) {
+    top: 93%;
+    left: 68%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 2.8s;
+}
+
+.star:nth-child(37) {
+    top: 7%;
+    left: 28%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 0.1s;
+}
+
+.star:nth-child(38) {
+    top: 17%;
+    left: 48%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 0.6s;
+}
+
+.star:nth-child(39) {
+    top: 27%;
+    left: 88%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 1.1s;
+}
+
+.star:nth-child(40) {
+    top: 37%;
+    left: 3%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 1.6s;
+}
+
+.star:nth-child(41) {
+    top: 47%;
+    left: 43%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 2.1s;
+}
+
+.star:nth-child(42) {
+    top: 57%;
+    left: 63%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 2.6s;
+}
+
+.star:nth-child(43) {
+    top: 67%;
+    left: 13%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 3.1s;
+}
+
+.star:nth-child(44) {
+    top: 77%;
+    left: 93%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 0.8s;
+}
+
+.star:nth-child(45) {
+    top: 87%;
+    left: 33%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 1.5s;
+}
+
+.star:nth-child(46) {
+    top: 97%;
+    left: 73%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 2.2s;
+}
+
+.star:nth-child(47) {
+    top: 4%;
+    left: 18%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 0.3s;
+}
+
+.star:nth-child(48) {
+    top: 14%;
+    left: 38%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 1.8s;
+}
+
+.star:nth-child(49) {
+    top: 24%;
+    left: 58%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 2.5s;
+}
+
+.star:nth-child(50) {
+    top: 34%;
+    left: 98%;
+    width: 1px;
+    height: 1px;
+    animation-delay: 3.2s;
+}
+
+/* Shooting Stars */
+.shooting-star {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 50%;
+    animation: shooting 8s linear infinite;
+}
+
+.shooting-star:nth-child(1) {
+    top: 20%;
+    left: -100px;
+    width: 100px;
+    animation-delay: 0s;
+}
+
+.shooting-star:nth-child(2) {
+    top: 60%;
+    left: -80px;
+    width: 80px;
+    animation-delay: 3s;
+}
+
+.shooting-star:nth-child(3) {
+    top: 80%;
+    left: -120px;
+    width: 120px;
+    animation-delay: 6s;
+}
+
+.shooting-star:nth-child(4) {
+    top: 10%;
+    left: -90px;
+    width: 90px;
+    animation-delay: 2s;
+}
+
+.shooting-star:nth-child(5) {
+    top: 40%;
+    left: -110px;
+    width: 110px;
+    animation-delay: 5s;
+}
+
+/* Floating Particles */
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: float 15s ease-in-out infinite;
+}
+
+/* Particle positions for 25 particles */
+.particle:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+    top: 30%;
+    left: 30%;
+    width: 6px;
+    height: 6px;
+    animation-delay: 2s;
+}
+
+.particle:nth-child(3) {
+    top: 70%;
+    left: 80%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 4s;
+}
+
+.particle:nth-child(4) {
+    top: 90%;
+    left: 20%;
+    width: 5px;
+    height: 5px;
+    animation-delay: 6s;
+}
+
+.particle:nth-child(5) {
+    top: 50%;
+    left: 90%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 8s;
+}
+
+.particle:nth-child(6) {
+    top: 15%;
+    left: 60%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 10s;
+}
+
+.particle:nth-child(7) {
+    top: 40%;
+    left: 70%;
+    width: 5px;
+    height: 5px;
+    animation-delay: 12s;
+}
+
+.particle:nth-child(8) {
+    top: 65%;
+    left: 15%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 14s;
+}
+
+.particle:nth-child(9) {
+    top: 25%;
+    left: 85%;
+    width: 6px;
+    height: 6px;
+    animation-delay: 16s;
+}
+
+.particle:nth-child(10) {
+    top: 75%;
+    left: 55%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 18s;
+}
+
+.particle:nth-child(11) {
+    top: 35%;
+    left: 5%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 20s;
+}
+
+.particle:nth-child(12) {
+    top: 85%;
+    left: 75%;
+    width: 5px;
+    height: 5px;
+    animation-delay: 22s;
+}
+
+.particle:nth-child(13) {
+    top: 5%;
+    left: 45%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 1s;
+}
+
+.particle:nth-child(14) {
+    top: 45%;
+    left: 25%;
+    width: 6px;
+    height: 6px;
+    animation-delay: 3s;
+}
+
+.particle:nth-child(15) {
+    top: 55%;
+    left: 65%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 5s;
+}
+
+.particle:nth-child(16) {
+    top: 95%;
+    left: 35%;
+    width: 5px;
+    height: 5px;
+    animation-delay: 7s;
+}
+
+.particle:nth-child(17) {
+    top: 20%;
+    left: 95%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 9s;
+}
+
+.particle:nth-child(18) {
+    top: 60%;
+    left: 40%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 11s;
+}
+
+.particle:nth-child(19) {
+    top: 80%;
+    left: 10%;
+    width: 6px;
+    height: 6px;
+    animation-delay: 13s;
+}
+
+.particle:nth-child(20) {
+    top: 12%;
+    left: 78%;
+    width: 5px;
+    height: 5px;
+    animation-delay: 15s;
+}
+
+.particle:nth-child(21) {
+    top: 38%;
+    left: 52%;
+    width: 3px;
+    height: 3px;
+    animation-delay: 17s;
+}
+
+.particle:nth-child(22) {
+    top: 68%;
+    left: 88%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 19s;
+}
+
+.particle:nth-child(23) {
+    top: 88%;
+    left: 62%;
+    width: 6px;
+    height: 6px;
+    animation-delay: 21s;
+}
+
+.particle:nth-child(24) {
+    top: 22%;
+    left: 18%;
+    width: 5px;
+    height: 5px;
+    animation-delay: 23s;
+}
+
+.particle:nth-child(25) {
+    top: 52%;
+    left: 12%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 25s;
+}
+
+/* Moving White Particles - Coming toward viewer */
+.moving-particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    animation: comeTowardViewer 8s ease-out infinite;
+}
+
+.moving-particle:nth-child(1) {
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.moving-particle:nth-child(2) {
+    top: 25%;
+    left: 70%;
+    animation-delay: 1s;
+}
+
+.moving-particle:nth-child(3) {
+    top: 40%;
+    left: 30%;
+    animation-delay: 2s;
+}
+
+.moving-particle:nth-child(4) {
+    top: 60%;
+    left: 80%;
+    animation-delay: 3s;
+}
+
+.moving-particle:nth-child(5) {
+    top: 15%;
+    left: 50%;
+    animation-delay: 4s;
+}
+
+.moving-particle:nth-child(6) {
+    top: 75%;
+    left: 15%;
+    animation-delay: 5s;
+}
+
+.moving-particle:nth-child(7) {
+    top: 35%;
+    left: 85%;
+    animation-delay: 6s;
+}
+
+.moving-particle:nth-child(8) {
+    top: 80%;
+    left: 45%;
+    animation-delay: 7s;
+}
+
+.moving-particle:nth-child(9) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0.5s;
+}
+
+.moving-particle:nth-child(10) {
+    top: 55%;
+    left: 95%;
+    animation-delay: 1.5s;
+}
+
+.moving-particle:nth-child(11) {
+    top: 45%;
+    left: 25%;
+    animation-delay: 2.5s;
+}
+
+.moving-particle:nth-child(12) {
+    top: 65%;
+    left: 60%;
+    animation-delay: 3.5s;
+}
+
+.moving-particle:nth-child(13) {
+    top: 85%;
+    left: 75%;
+    animation-delay: 4.5s;
+}
+
+.moving-particle:nth-child(14) {
+    top: 5%;
+    left: 40%;
+    animation-delay: 5.5s;
+}
+
+.moving-particle:nth-child(15) {
+    top: 70%;
+    left: 55%;
+    animation-delay: 6.5s;
+}
+
+/* Animations */
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes shooting {
+    0% {
+        transform: translateX(0) translateY(0) rotate(45deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(calc(100vw + 100px)) translateY(calc(100vh + 100px)) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.6;
+    }
+
+    25% {
+        transform: translateY(-20px) rotate(90deg);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(0px) rotate(180deg);
+        opacity: 0.8;
+    }
+
+    75% {
+        transform: translateY(-10px) rotate(270deg);
+        opacity: 1;
+    }
+}
+
+@keyframes comeTowardViewer {
+    0% {
+        width: 0.5px;
+        height: 0.5px;
+        opacity: 0;
+        transform: scale(0.1);
+        filter: blur(2px);
+    }
+
+    20% {
+        opacity: 0.3;
+        filter: blur(1px);
+    }
+
+    50% {
+        width: 2px;
+        height: 2px;
+        opacity: 0.8;
+        transform: scale(0.5);
+        filter: blur(0.5px);
+    }
+
+    80% {
+        width: 4px;
+        height: 4px;
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+    }
+
+    100% {
+        width: 8px;
+        height: 8px;
+        opacity: 0;
+        transform: scale(2);
+        filter: blur(3px);
+    }
+}
+
+/* Light Theme Styles */
+html.light .star {
+    background: linear-gradient(45deg, #4A90E2, #87CEEB);
+    box-shadow: 0 0 6px rgba(74, 144, 226, 0.8);
+}
+
+html.light .shooting-star {
+    background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.9), transparent);
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
+}
+
+html.light .particle {
+    background: radial-gradient(circle, rgba(74, 144, 226, 0.6), rgba(135, 206, 235, 0.3));
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
+}
+
+/* Dark Theme Styles */
+html.dark .star {
+    background: linear-gradient(45deg, #4A90E2, #87CEEB);
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
+}
+
+html.dark .shooting-star {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.6);
+}
+
+html.dark .particle {
+    background: linear-gradient(45deg, #4A90E2, #87CEEB);
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+}

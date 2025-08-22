@@ -7,6 +7,8 @@ import { useAuth } from "../hooks/useAuth";
 import { v7 as uuidv7 } from 'uuid'
 import { useAlert } from "./alertContext";
 import VideoPlayground from "@/app/video-playground/page";
+import { useLLMStyleStore } from "@/store/useLLMStyleStore";
+import { getMediaSupportByModelName } from "@/app/utils/models-list";
 
 
 interface ChatContextType {
@@ -22,6 +24,7 @@ interface ChatContextType {
     language: string;
     chatId: String;
     aiTyping: boolean;
+    aiWriting: boolean;
     setAiTyping: React.Dispatch<React.SetStateAction<boolean>>;
     setIsChatRoom: React.Dispatch<React.SetStateAction<boolean>>;
     setChatPage: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,6 +35,11 @@ interface ChatContextType {
     memoizedHistory: GroupedHistoryByDate;
     setChatMode: React.Dispatch<React.SetStateAction<ChatMode>>;
     chatMode: ChatMode;
+
+    agentId: string;
+    setAgentId: React.Dispatch<React.SetStateAction<string>>;
+    setUserAgents: React.Dispatch<React.SetStateAction<any[]>>;
+    userAgents: any[];
 }
 interface MCPServerContextType {
     setMcpServers: React.Dispatch<React.SetStateAction<MCPServerInfo[]>>;
@@ -75,13 +83,84 @@ interface VideoPlayGroundContextType {
     expandVideo: VideoMetadata | {};
     setExpandVideo: React.Dispatch<React.SetStateAction<VideoMetadata>>;
 }
-
+interface AgentContextType {
+    agentLoading: boolean;
+}
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 const McpServerContext = createContext<MCPServerContextType | undefined>(undefined);
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefined);
 const ImagePlaygroundContext = createContext<ImagePlayGroundContextType | undefined>(undefined);
 const VideoPlaygroundContext = createContext<VideoPlayGroundContextType | undefined>(undefined);
+const AgentContext = createContext<AgentContextType | undefined>(undefined);
 
+
+const AgentProvider = ({ children }: { children: React.ReactNode }) => {
+    const { setUserAgents } = useChat();
+    const { user } = useAuth();
+    const alert = useAlert();
+    const [agentLoading, setAgentLoading] = useState(false)
+
+    const fetchAgentsByUID = async (uid: string) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/agents/uid/${uid}`, {
+                method: 'GET',
+                credentials: 'include', // include cookies if using auth
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to fetch agents');
+            }
+
+            return {
+                success: true,
+                agents: data.agents,
+            };
+        } catch (error: any) {
+            // console.error('Error fetching agents:', error.message);
+            return {
+                success: false,
+                error: error.message,
+                agents: [],
+            };
+        }
+    };
+    useEffect(() => {
+        if (!user?.uid) {
+            setAgentLoading(false)
+            return;
+        }
+
+        const loadAgents = async () => {
+            setAgentLoading(true)
+            try {
+
+                const result = await fetchAgentsByUID(user.uid);
+
+                if (result.success) {
+                    setUserAgents(result.agents);
+
+                } else {
+                    alert.warn('Something went wrong')
+                    setUserAgents([]);
+                }
+            } catch (err) {
+                alert.warn('Something went wrong')
+                setUserAgents([]);
+            } finally {
+                setAgentLoading(false)
+            }
+        };
+
+        loadAgents();
+    }, [user?.uid]);
+    return (
+        <AgentContext.Provider value={{ agentLoading }}>
+            {children}
+        </AgentContext.Provider>
+    )
+}
 const ImagePlaygroundProvider = ({ children }: { children: React.ReactNode }) => {
     const { Model, chatMode } = useChat();
     const { currentWorkspace } = useWorkspace()
@@ -352,6 +431,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const searchparams = useSearchParams();
     const [messages, setMessages] = useState<Message[]>([]);
     const [aiTyping, setAiTyping] = useState(false);
+    const [aiWriting, setAiWriting] = useState(false);
     const abortControllerRef = useRef<AbortController | null>(null);
     const router = useRouter();
     const [chatId, setChatId] = useState<String>("")
@@ -361,12 +441,18 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const [isChatPage, setChatPage] = useState<boolean>(false);
     const [alertModel, setAlertModel] = useState<boolean>(true);
 
-    const [Model, selectModel] = useState<string>('gpt-4o-mini');
+    const [Model, selectModel] = useState<string>('gpt-5-nano');
     const [editInput, setEditInput] = useState<string>('');
     const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
     const [currentWorkspace, setCurrentWorkspace] = useState<string>('');
     const [workspaceData, setWorkspaceData] = useState<any>(null);
     const [chatMode, setChatMode] = useState<ChatMode>('text'); // Replace 'default' with an actual ChatMode value
+    const { temperature, top_p, frequency_penalty, presence_penalty } = useLLMStyleStore();
+
+    //agents 
+    const [agentId, setAgentId] = useState('')
+    const [userAgents, setUserAgents] = useState<any[]>([])
+
     //console.log(editInput)
     const { user, status } = useAuth();
     const pathname = usePathname();
@@ -374,11 +460,13 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const alertMessage = useAlert()
 
     const chat = messages.map((msg) => ({
-        role: msg.isUser ? "user" : "assistant", // "user" or "assistant"
+        role: msg.role, // "user" or "assistant"
         content: msg.content, // The message content
+        tool_call_id: msg.tool_call_id,
+        tool_calls: msg.tool_calls
     }));
     let memoizedHistory;
-    // console.log(messages)
+    //console.log(messages, chat)
     useEffect(() => {
         const mode = searchparams.get('mode');
         if (mode) {
@@ -391,7 +479,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
             selectModel(model)
         } else {
             if (mode === 'text') {
-                selectModel('gpt-4o-mini')
+                selectModel('gpt-5-nano')
             }
         }
     }, [])
@@ -494,7 +582,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
         abortControllerRef.current = new AbortController();
         let chat_id;
 
-        if (user && !(pathname.startsWith('/c/') || (pathname.includes('/workspace/') && pathname.includes('/c/')))) {
+        if (user && !(pathname.startsWith('/c/') || (pathname.includes('/workspace/') && pathname.includes('/c/')) || (pathname.includes('/agents/') && pathname.includes('/c/')))) {
             try {
 
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URI}/v1/chat/newChat`, { withCredentials: true });
@@ -503,7 +591,11 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                     console.log(response.data.chat_id)
                     setChatId(response.data.chat_id)
                     // setHistory([{ title: chat_id, chat_id: chat_id }])
-                    router.push(currentWorkspace === '' ? `/c/${response.data.chat_id}?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/c/${response.data.chat_id}?model=${Model}&mode=${chatMode}`);
+                    if (agentId !== '') {
+                        router.push(`/agent/${agentId}/c/${response.data.chat_id}`)
+                    } else {
+                        router.push(currentWorkspace === '' ? `/c/${response.data.chat_id}?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/c/${response.data.chat_id}?model=${Model}&mode=${chatMode}`);
+                    }
                 };
                 // await updateChat(messageData, response.data.chat_id);
                 // return;
@@ -514,30 +606,58 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 
         setAiTyping(true);
 
-        if (!bot) {
-            const userMessage = { content: message, isUser: true, msg_id: `msg_${uuidv7()}`, type: 'text', created_on: Date.now(), role: 'user' };
-            setMessages((prev) => [...prev, userMessage]);
-        }
+        const userMessage = { content: message, msg_id: `msg_${uuidv7()}`, type: 'text', created_on: Date.now(), role: 'user' };
+        setMessages((prev) => [...prev, userMessage]);
+
 
         try {
 
             const messageData: MessageInterface = {
                 content: message,
-                role: bot ? 'bot' : 'user',
+                role: 'user',
                 msg_id: `msg_${uuidv7()}`
                 , type: 'text',
                 created_on: 0
             }
+            const config = {
+                model: Model,
+                mcp_server: mcpServers,
+                temperature: temperature,
+                top_p: top_p,
+                frequency_penalty: frequency_penalty,
+                presence_penalty: presence_penalty,
+                supportsMedia: getMediaSupportByModelName(Model)
+            }
+            let response;
             //console.log(chatId, chat_id)
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/chat/completion`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ messageData, history: chat, uid: `${user ? user?.uid : null}`, chat_id: chatId ? `${chatId}` : `${chat_id}`, language: `${lang ? lang : language}`, servers: mcpServers, model: Model, workspace: currentWorkspace }),
-                signal: abortControllerRef.current.signal,
-            });
-            // console.log(response)
+            if (agentId !== '') {
+                response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/agents/chat/completion`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'text/event-stream',
+                        'Cache-Control': 'no-cache',
+                        'Connection': 'keep-alive',
+                    },
+                    body: JSON.stringify({ messageData, history: chat, uid: `${user ? user?.uid : null}`, chat_id: chatId ? `${chatId}` : `${chat_id}`, workspace: currentWorkspace, config: config, aid: agentId }),
+                    signal: abortControllerRef.current.signal,
+                    credentials: 'include',
+                });
+            } else {
+                response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/chat/completion`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'text/event-stream',
+                        'Cache-Control': 'no-cache',
+                        'Connection': 'keep-alive',
+                    },
+                    body: JSON.stringify({ messageData, history: chat, uid: `${user ? user?.uid : null}`, chat_id: chatId ? `${chatId}` : `${chat_id}`, workspace: currentWorkspace, config: config }),
+                    signal: abortControllerRef.current.signal,
+                    credentials: 'include',
+                });
+            }
+            console.log(response)
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -566,29 +686,36 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                     try {
                         const jsonStr = line.replace(/^data:\s*/, ''); // Fix: Safe regex replace
                         const parsed = JSON.parse(jsonStr);
+                        console.log(parsed, parsed.tool_calls)
 
                         const msg_id = parsed.msg_id;
                         aiResponse += parsed.response;
                         //if (parsed.type === 'text') setAiTyping(false);
+                        setAiWriting(true)
                         if (parsed.type === 'error') {
                             alertMessage.error(parsed.response);
                             return;
+                        }
+                        if (parsed.type === 'event') {
+                            // alertMessage.error(parsed.response);
+
                         }
 
                         setMessages((prev) => {
                             return prev.some((msg) => msg.msg_id === msg_id)
                                 ? prev.map((msg) =>
                                     msg.msg_id === msg_id
-                                        ? { ...msg, content: msg.content + parsed.response, type: parsed.type, created_on: parsed.created, model: parsed.model, role: parsed.role } // Append new response
+                                        ? { ...msg, content: msg.content + parsed.response, type: parsed.type, created_on: parsed.created, model: parsed.model, role: parsed.role, tool_calls: parsed.tool_calls, tool_call_id: parsed.tool_call_id } // Append new response
                                         : msg
                                 )
-                                : [...prev, { msg_id, content: parsed.response, isUser: false, type: parsed.type, created_on: parsed.created, role: parsed.role, model: parsed.model }];
+                                : [...prev, { msg_id, content: parsed.response, type: parsed.type, created_on: parsed.created, role: parsed.role, model: parsed.model, tool_calls: parsed.tool_calls, tool_call_id: parsed.tool_call_id }];
                         });
 
 
                     } catch (error) {
                         alertMessage.error("Error parsing stream chunk.");
                         console.error("Error parsing stream chunk:", error, line);
+                        continue;
                     }
                 }
             }
@@ -596,7 +723,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 
 
         } catch (error: any) {
-            //console.error('Error fetching AI response:', error);
+            console.error('Error fetching AI response:', error.message);
             if (error.name === 'AbortError') {
                 alertMessage.error("Request aborted.");
                 setMessages((prev) => [
@@ -613,11 +740,10 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
         } finally {
             setAiTyping(false);
             setMessages(prevMessages => prevMessages.filter(message => message.type !== 'event'));
+            setAiWriting(false)
 
         }
     }, [user, router, chat, chatId]);
-
-
     return (
         <ChatContext.Provider
             value={{
@@ -639,7 +765,10 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 chatId,
                 setEditInput, editInput,
                 chatMode,
-                setChatMode
+                setChatMode,
+                aiWriting,
+                setAgentId,
+                agentId, userAgents, setUserAgents
 
             }}
         >
@@ -647,7 +776,9 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 <WorkspaceContext.Provider value={{ workspaces, setWorkspaces, currentWorkspace, setCurrentWorkspace, workspaceData, setWorkspaceData }}>
                     <ImagePlaygroundProvider>
                         <VideoPlaygroundProvider>
-                            {children}
+                            <AgentProvider>
+                                {children}
+                            </AgentProvider>
                         </VideoPlaygroundProvider>
                     </ImagePlaygroundProvider>
                 </WorkspaceContext.Provider>
@@ -688,6 +819,13 @@ export const useVideoPlayground = () => {
     const context = useContext(VideoPlaygroundContext);
     if (context === undefined) {
         throw new Error("error in VideoPlaygroundContextProvider");
+    }
+    return context;
+};
+export const useAgent = () => {
+    const context = useContext(AgentContext);
+    if (context === undefined) {
+        throw new Error("error in Agent Provider");
     }
     return context;
 };

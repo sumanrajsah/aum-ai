@@ -1,0 +1,14 @@
+.agent-quote {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 20%;
+    width: 100%;
+
+    p {
+        max-width: 500px;
+        text-align: center;
+    }
+}

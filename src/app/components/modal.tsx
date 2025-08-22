@@ -37,7 +37,7 @@ const Modal = () => {
             const hash = window.location.hash;
             //console.log('HASH:', hash);
 
-            setOpenMcpServerSetting(hash === '#server/settings');
+            setOpenMcpServerSetting(hash === '#server/add');
             setOpenMcpServer(hash === '#server');
             setOpenToolsModal(hash === '#tools');
             setOpenWorkspaceCreateModal(hash === '#workspace/create');

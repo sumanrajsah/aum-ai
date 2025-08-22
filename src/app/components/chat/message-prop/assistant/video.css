@@ -6,7 +6,7 @@
     break-inside: avoid;
     cursor: pointer;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 40px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -32,7 +32,7 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 40px;
     background: rgba(221, 220, 220, 0.1);
 }
 
@@ -41,7 +41,7 @@ video {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 10px;
+    border-radius: 40px;
     transition: transform 0.3s ease;
     object-fit: cover;
 }
@@ -64,7 +64,7 @@ video {
     justify-content: center;
     background-size: 400% 400%;
     animation: shimmer 1.5s ease-in-out infinite;
-    border-radius: 10px;
+    border-radius: 40px;
 }
 
 html.light .loading-vid {
@@ -78,7 +78,7 @@ html.light .loading-vid {
             #eaf2ff 100%);
     background-size: 400% 400%;
     animation: shimmer 1.5s ease-in-out infinite;
-    border-radius: 10px;
+    border-radius: 40px;
 }
 
 html.dark .loading-vid {
@@ -93,7 +93,7 @@ html.dark .loading-vid {
             #2a3548 100%);
     background-size: 400% 400%;
     animation: shimmer 1.5s ease-in-out infinite;
-    border-radius: 10px;
+    border-radius: 40px;
 }
 
 @keyframes shimmer {

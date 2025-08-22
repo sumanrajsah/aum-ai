@@ -1,5 +1,4 @@
 import { use, useEffect, useState } from "react";
-import './style.css';
 import { useMcpServer } from "../../../context/ChatContext";
 import { X, PlusCircle, Trash2, SquarePlus, SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";

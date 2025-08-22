@@ -29,13 +29,13 @@ import FilePreview from '@/app/components/filepreview';
 
 interface ChatMessageProps {
     content: string;
-    isUser: boolean;
+    role: string;
     type: string;
     filename?: string;
 }
 
 
-const TextUserMessage: React.FC<ChatMessageProps> = ({ content, isUser, type, filename }) => {
+const TextUserMessage: React.FC<ChatMessageProps> = ({ content, role, type, filename }) => {
     const alertMessage = useAlert()
 
     const [copyText, setCopyText] = useState<String>('Copy')
@@ -52,7 +52,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, isUser, type, fi
     const { theme } = useTheme();
 
     useEffect(() => {
-        if (type === 'image_url' && !isUser) {
+        if (type === 'image_url' && role !== 'user') {
             const img = document.createElement('img');
             const imageUrl = JSON.parse(content).image_url;
             // console.log(imageUrl)
@@ -118,7 +118,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, isUser, type, fi
                 href={props.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: isUser ? 'white' : 'skyblue', textDecoration: 'underline' }}
+                style={{ color: 'blue', textDecoration: 'underline' }}
             >
                 {props.children}
             </a>
@@ -274,14 +274,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, isUser, type, fi
             </div>
             }
             <div ref={containerRef}
-                style={{
-                    display: 'flex',
-                    // Align user messages to the right, AI messages to the left
-                    margin: '1px 0',
-                    justifyContent: isUser ? 'flex-end' : 'flex-start',
-                    background: 'transparent',
-                }}
-                className='chat-msg-cont'
+                className='user-chat-msg-cont'
                 onClick={() => { setOpenImageModal(false) }}
             >
 
@@ -293,44 +286,22 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, isUser, type, fi
                 {!(type === 'event') && <div
                     style={{
                         display: 'flex',
-                        flexDirection: isUser ? 'row-reverse' : 'row', // Align user messages to the right, AI messages to the left
+                        flexDirection: role === 'user' ? 'row-reverse' : 'row', // Align user messages to the right, AI messages to the left
                         alignItems: 'flex-end', // Align items to the bottom
                         maxWidth: '100%', // Limit the width of the message container
                         background: 'transparent',
                     }}
                 >
                     {/* Message Bubble */}
+                    {(type === 'image_url' && role === 'user') && <div className='chat-image_url-cont' >
+                        <Image src={content} alt={'user-image'} width={1024} height={1024} className='chat-image_url-cont' />
+                    </div>
+                    }
                     <div
                         ref={messageRef}
                         className='user-msg-cont'
                     >
 
-                        {/* {!isUser && !(type === 'loading') && <div
-                 style={{
-                   display: window.innerWidth < 768 ? 'none' : 'flex',
-                   position: 'relative', // Align user icon to the right, AI icon to the left
-   
-                 }}
-               >
-                 <Image
-                   src={'/sitraone.png'} // Icons stored in the public folder
-                   alt={'0xXplorer AI'}
-                   width={20}
-                   height={20}
-                   style={{
-                     position: 'relative',
-                     borderRadius: '5px', // Circular icons
-                     objectFit: 'cover', // Ensure the image fits well
-                     top: '10px'
-   
-                   }}
-                 />
-               </div>} */}
-
-                        {(type === 'image_url' && isUser) && <div className='image_url-cont' onClick={(e) => { e.stopPropagation(); setSelectImage(content); setOpenImageModal(true) }}>
-                            <Image src={content} alt={'user-image'} width={1024} height={1024} className='image_url-cont' />
-                        </div>
-                        }
 
                         {type === 'text' && <div className='user-msg-box'  >
 
@@ -371,10 +342,10 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, isUser, type, fi
                                     td: ({ children }) => <td style={{ border: '1px solid #ddd', padding: '8px' }}>{children}</td>,
                                 }}
                             >
-                                {!isUser ? extractThoughts(content).visibleText : content}
+                                {content}
                             </Markdown>
                         </div>}
-                        {isUser && !aiTyping && type === 'text' && (
+                        {!aiTyping && type === 'text' && (
                             <div className='chat-footer-user'>
                                 <button
                                     onClick={() => copyMessageToClipboard(content)}

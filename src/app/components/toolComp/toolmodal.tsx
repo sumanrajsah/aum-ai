@@ -12,27 +12,12 @@ interface SelectToolButtonProps {
     onClose: () => void
     [key: string]: any // for {...props}
 }
-const SelectToolButton = ({ openModal, onClose, ...props }: SelectToolButtonProps) => {
 
+const SelectToolButton = () => {
     const searchParams = useSearchParams();
     const router = useRouter()
     const modalRef = useRef<HTMLDivElement>(null);
     const [selectedTools, setSelectedTools] = useState<string[]>([])
-    // console.log(imageSettings)
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                onClose(); // close modal if clicked outside
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    const { mcpServers, setMcpServers, setSelectedServers, selectedServers, setMcpResources, selectMcpResource, mcpResource, mcpResources, mcpTools } = useMcpServer();
     const { theme } = useTheme()
 
     const toggleToolSelection = (toolName: string) => {
@@ -43,37 +28,69 @@ const SelectToolButton = ({ openModal, onClose, ...props }: SelectToolButtonProp
         );
     };
 
-
-    if (!openModal) return null;
+    const tools = [
+        {
+            id: 'image',
+            name: 'Create an Image',
+            description: 'Generate AI-powered images and visual content',
+            icon: Images
+        },
+        {
+            id: 'search',
+            name: 'Search on Web',
+            description: 'Browse and search the internet for information',
+            icon: Globe
+        }
+    ];
 
     return (
-        <>
-            <div className="selecttool-btn-modal" ref={modalRef} >
-                <label>Select Tools</label>
-                <div className="selecttool-btn-cont">
-                    <div className="tool-checkbox" onClick={() => { toggleToolSelection('image') }}>
-                        <div className="tool-name"><Images size={14} />create an image</div>
-                        <div className="tool-check">
-                            <ToggleSwitch
-                                checked={selectedTools.some((s) => s === 'image')}
-                                onChange={() => toggleToolSelection('image')}
-                                id={`toggle-${'image'}`}
-                            />
+        <div className="selecttool-btn-modal">
+            <div className="modal-header">
+                <h3 className="modal-title">
+                    <Sparkles size={18} />
+                    Select Tools
+                </h3>
+                <p className="modal-subtitle">Choose the tools you want to enable for this session</p>
+            </div>
+
+            <div className="selecttool-btn-cont">
+                {tools.map((tool) => {
+                    const IconComponent = tool.icon;
+                    const isSelected = selectedTools.includes(tool.id);
+
+                    return (
+                        <div
+                            key={tool.id}
+                            className={`tool-checkbox ${isSelected ? 'selected' : ''}`}
+                            onClick={() => toggleToolSelection(tool.id)}
+                        >
+                            <div className="tool-content">
+                                <div className="tool-header">
+                                    <div className="tool-icon">
+                                        <IconComponent size={16} />
+                                    </div>
+                                    <div className="tool-name">{tool.name}</div>
+                                </div>
+                                <div className="tool-description">{tool.description}</div>
+                            </div>
+                            <div className="tool-check">
+                                <ToggleSwitch
+                                    checked={isSelected}
+                                    onChange={() => toggleToolSelection(tool.id)}
+                                    id={`toggle-${tool.id}`}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="tool-checkbox" onClick={() => { toggleToolSelection('search') }}>
-                        <div className="tool-name"><Globe size={14} />search on web</div>
-                        <div className="tool-check">
-                            <ToggleSwitch
-                                checked={selectedTools.some((s) => s === 'search')}
-                                onChange={() => toggleToolSelection('search')}
-                                id={`toggle-${'search'}`}
-                            />
-                        </div>
-                    </div>
+                    );
+                })}
+            </div>
+
+            <div className="modal-footer">
+                <div className="selected-count">
+                    {selectedTools.length} tool{selectedTools.length !== 1 ? 's' : ''} selected
                 </div>
-            </div >
-        </>
+            </div>
+        </div>
     )
 }
 

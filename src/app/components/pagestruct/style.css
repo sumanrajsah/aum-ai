@@ -54,7 +54,6 @@
 @media screen and (max-width: 1000px) {
     .page-struct1-body {
         width: 100vw;
-        overflow: hidden;
     }
 
     .collapsed-page {

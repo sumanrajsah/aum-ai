@@ -1,5 +1,4 @@
 import { useState } from "react";
-import './style.css';
 import { useMcpServer } from "../../../context/ChatContext";
 import { ToastContainer, toast } from "react-toastify";
 import { Oval } from "react-loader-spinner";
@@ -25,6 +24,7 @@ interface McpServer {
 }
 
 const McpServerModalSetting = () => {
+    const [create, setCreate] = useState(false)
     const [mcpServer, setMcpServer] = useState<McpServer>({
         label: "",
         description: "",
@@ -76,7 +76,8 @@ const McpServerModalSetting = () => {
                 header: {
                     key: serverInfo.header.key,
                     value: serverInfo.header.value
-                }
+                },
+                type: serverInfo.type
             }
             const response = await MCP(server);
             if (response.mcpClient !== null) {
@@ -147,7 +148,7 @@ const McpServerModalSetting = () => {
     return (
         <ModalCont>
             <div className="mcpserver-cont">
-                <div className="mcpserver-sbox">
+                {create && <div className="mcpserver-sbox">
                     <label>Server Label</label>
                     <input
                         placeholder="SitrAi"
@@ -169,10 +170,11 @@ const McpServerModalSetting = () => {
                     <select onChange={(e) => { updateServer("type", e.target.value) }} defaultValue={'http'}>
                         <option value={'http'}>Streamable HTTP</option>
                         <option value={'sse'}>SSE</option>
+                        {/* <option value={'sse'}>SSE</option> */}
                     </select>
                     <label>URI</label>
                     <input
-                        placeholder="https://api.sitrai.com/sse"
+                        placeholder="https://mcp.sitrai.com/mcp"
                         value={mcpServer.uri}
                         onChange={(e) => updateServer("uri", e.target.value)}
                         type="url"
@@ -212,16 +214,29 @@ const McpServerModalSetting = () => {
                             </button>
                         )}
                     </div>
-                </div>
+                </div>}
 
                 <div className="server-btn-cont">
-                    <button
+                    {create && <button
                         className="mcp-save-btn"
                         onClick={SaveServer}
                         disabled={!mcpServer.label?.trim() || !mcpServer.uri?.trim()}
                     >
                         Save
-                    </button>
+                    </button>}
+                    {!create && <button
+                        className="mcp-save-btn"
+                        onClick={() => setCreate(true)}
+                    >
+                        Add Mcp Server
+                    </button>}
+                    {!create && <button
+                        className="mcp-save-btn disabled-btn"
+                        onClick={() => setCreate(true)}
+                        disabled
+                    >
+                        Create Mcp Server
+                    </button>}
                 </div>
             </div>
 

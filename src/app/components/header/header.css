@@ -88,12 +88,19 @@
 /* Default styles */
 .connect-button {
 
-    padding: 10px 15px;
+    position: relative;
+    padding: clamp(5px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
     cursor: pointer;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 14px;
+    border-radius: clamp(6px, 1.5vw, 10px);
+    font-size: clamp(12px, 2.2vw, 14px);
+    font-weight: 600;
     border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.2px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
 }
 
 .account-button {
@@ -167,31 +174,29 @@ html.dark {
 
     .connect-button {
         background: linear-gradient(145deg,
-                rgba(var(--bg-color1), 0.15),
-                rgba(var(--bg-color1), 0.05));
+                rgba(var(--bg-color1), 0.18),
+                rgba(var(--bg-color1), 0.08));
         box-shadow:
-            0 6px 14px rgba(0, 0, 0, 0.3),
-            inset 0 1px 2px rgba(255, 255, 255, 0.05),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.15);
-
+            0 8px 25px rgba(0, 0, 0, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.08),
+            inset 0 -2px 6px rgba(0, 0, 0, 0.2);
+        color: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(var(--bg-color1), 0.15);
     }
-
-
-
 }
 
-/* ☀️ Light Mode */
 html.light {
 
     .connect-button {
         background: linear-gradient(145deg,
-                rgba(var(--bg-color1), 0.15),
-                rgba(var(--bg-color1), 0.05));
+                rgba(var(--bg-color1), 0.12),
+                rgba(var(--bg-color1), 0.06));
         box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.1),
-            0 4px 12px rgba(0, 0, 0, 0.06),
-            inset 0 2px 4px rgba(255, 255, 255, 0.6);
-
+            0 10px 30px rgba(0, 0, 0, 0.12),
+            0 6px 18px rgba(0, 0, 0, 0.08),
+            inset 0 2px 4px rgba(255, 255, 255, 0.8);
+        color: #0E1111;
+        border: 1px solid rgba(var(--bg-color1), 0.15);
     }
 }
 
@@ -212,9 +217,6 @@ html.light {
 }
 
 @media screen and (max-width: 768px) {
-    .connect-button {
-        padding: 5px 10px;
-    }
 
     .select-workspace-btn {
         font-size: 12px;

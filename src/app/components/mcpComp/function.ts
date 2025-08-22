@@ -26,14 +26,26 @@ export async function MCP(serverInfo: any) {
             headers[serverInfo.header.key] = `Bearer ${serverInfo.header.value}`;
         }
 
-        const transport = new StreamableHTTPClientTransport(
-            new URL(serverInfo.uri),
-            {
-                requestInit: {
-                    headers
-                },
-            }
-        );
+        let transport;
+        if (serverInfo.type === 'http') {
+            transport = new StreamableHTTPClientTransport(
+                new URL(String(serverInfo.uri)),
+                {
+                    requestInit: {
+                        headers
+                    },
+                }
+            );
+        } else {
+            transport = new SSEClientTransport(
+                new URL(String(serverInfo.uri)),
+                {
+                    requestInit: {
+                        headers
+                    },
+                }
+            );
+        }
 
         // Connect to the transport - this returns a promise
         await mcpClient.connect(transport);
@@ -77,10 +89,10 @@ export async function MCP(serverInfo: any) {
             }
         }));
 
-        return { tools, mcpClient, resources };
+        return { tools, mcpClient, resources, error: null };
 
     } catch (error: any) {
-        console.error("MCP Connection Error:", error.message);
+        console.warn("MCP Connection Error:", error.message);
 
         // Clean up the client if connection failed
         try {

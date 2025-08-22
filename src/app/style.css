@@ -230,173 +230,6 @@ button:hover {
   font-size: 16px;
 }
 
-.history-panel {
-  position: absolute;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: left;
-  bottom: 0%;
-  gap: 5px;
-  width: 100%;
-  height: 60vh;
-
-
-
-  label {
-    height: 30px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: left;
-    text-align: left;
-    padding: 2px;
-    gap: 5px;
-  }
-}
-
-.history-panel-cont {
-  position: relative;
-
-  padding-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  text-align: left;
-  bottom: 0%;
-  gap: 10px;
-  width: 100%;
-  height: 90%;
-  overflow-y: scroll;
-
-  overflow-x: hidden;
-}
-
-.history-date-group {
-  position: relative;
-
-  padding-bottom: 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: left;
-  bottom: 0%;
-  gap: 2px;
-  width: 100%;
-  height: auto;
-  overflow: none;
-}
-
-.history-box {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  align-items: flex-start;
-  text-align: left;
-  border-radius: 10px;
-  padding: 8px 8px;
-  cursor: pointer;
-  width: 94%;
-  white-space: nowrap;
-  font-size: 14px;
-  height: 36px;
-
-  p {
-    display: flex;
-    overflow-x: hidden;
-    width: 98%;
-    text-align: left;
-  }
-
-}
-
-.history-box:hover {
-  background: rgba(94, 129, 173, 0.2);
-
-  p {
-    width: 90%;
-    text-overflow: ellipsis;
-  }
-
-  .chath-menu-btn {
-    display: flex;
-
-  }
-}
-
-
-
-.chath-menu-btn {
-  position: absolute;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  z-index: 1;
-  top: 0%;
-  right: 0%;
-  height: 100%;
-  width: 30px;
-  padding: 1px;
-  border-radius: 5px;
-
-}
-
-
-.chath-menu {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  z-index: 1;
-  gap: 5px;
-  right: 5%;
-  top: 80%;
-  height: 30px;
-  padding: 5px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(var(--bg-color1), 0.1);
-  /* Subtle shadow */
-
-  width: 130px;
-  height: auto;
-
-  hr {
-    width: 98%;
-    box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
-    border-color: rgba(128, 128, 128, 0.144);
-  }
-}
-
-.chath-menu-list {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  font-size: 12px;
-  padding: 10px 15px;
-  border-radius: 10px;
-  width: 98%;
-  gap: 10px;
-}
-
-.chath-menu-list:hover {
-  background: rgba(128, 128, 128, 0.24);
-
-  cursor: pointer;
-}
-
-.delete {
-  color: #e5383b;
-}
-
-.delete:hover {
-  background: #e5383b46;
-}
 
 .alert-cont {
   position: absolute;
@@ -509,28 +342,42 @@ button:hover {
 
 .chat-cont {
   position: absolute;
-  flex-grow: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  top: 0%;
   gap: 20px;
-  height: 100%;
-  padding-bottom: 10vh;
+  height: 95%;
+  padding-bottom: 20vh;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: scroll;
 }
 
 .chat-cont-message {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
+  display: block;
   background: transparent;
   gap: 20px;
   height: auto;
-  width: 96%;
+  width: 800px;
+}
+
+/* Container for multiple images in the same message */
+.chat-cont-message .chat-image-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+  .chat-cont-message .chat-image-container>* {
+    max-width: 100%;
+    /* Stack images on mobile */
+  }
 }
 
 .not-found-body {
@@ -571,7 +418,10 @@ button:hover {
 }
 
 /* Adjust for small screens (tablets and phones) */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
+  .chat-cont-message {
+    width: 96vw;
+  }
 
   .connect-button,
   .account-button {

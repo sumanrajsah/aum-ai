@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import './style.css'
 import { useChat, useImagePlaygound, useMcpServer, useVideoPlayground } from '../../context/ChatContext';
 import Image from 'next/image';
-import { CircleStop, Paperclip, Pickaxe, Server, Settings, Settings2, Wrench, X } from 'lucide-react';
+import { ArrowUp, CircleStop, Paperclip, Pickaxe, Plus, Server, Settings, Settings2, Wrench, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../../hooks/useAuth';
 import { handleDataExtraction } from '../utils/extractData';
@@ -410,8 +410,8 @@ const ChatInput = () => {
   return (
     <>
       <div className='input-body'>
-        {messages.length === 0 && user && !input && (selectedFiles.length === 0) && !(pathname.includes('/image-playground')) && !(pathname.includes('/video-playground')) && <div className='chatmode-cont'>
-          <button className={chatMode === 'text' ? 'active' : ''} onClick={() => { setChatMode('text'); router.push(`/?model=gpt-4o-mini&mode=${'text'}`); selectModel('gpt-4o-mini') }} >Text</button>
+        {messages.length === 0 && user && !input && (selectedFiles.length === 0) && !(pathname.includes('/image-playground')) && !(pathname.includes('/video-playground')) && !(pathname.includes('/agent')) && <div className='chatmode-cont'>
+          <button className={chatMode === 'text' ? 'active' : ''} onClick={() => { setChatMode('text'); router.push(`/?model=gpt-5-nano&mode=${'text'}`); selectModel('gpt-5-nano') }} >Text</button>
           <button className={chatMode === 'image' ? 'active' : ''} onClick={() => { setChatMode('image'); router.push(`/?model=dalle-3&mode=${'image'}`); selectModel('dalle-3') }} >Image</button>
           <button className={chatMode === 'video' ? 'active' : ''} onClick={() => { setChatMode('video'); router.push(`/?model=sora&mode=${'video'}`); selectModel('sora') }}>Video</button>
         </div>}
@@ -556,37 +556,35 @@ const ChatInput = () => {
                 setOpenAttachModal(!openAttachModal);
               }}>
 
-                <Paperclip size={16} />
+                <Plus size={20} />
               </button>}
-              {user && <SelectModelButton />}
-              {user && (chatMode === 'image' || chatMode === 'video') && <button className='server-btn' onClick={() => { setSettingsModal(!openSettingsModal) }}><Settings size={18} /></button>}
+              {user && !(pathname.includes('/agent')) && <SelectModelButton />}
+              {user && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { setSettingsModal(!openSettingsModal) }}><Settings size={18} /></button>}
             </div>
 
 
 
             <div className='input-btn-cont-right'>
-              {user && showToolsBtn && chatMode === 'text' && <button className='server-btn' onClick={() => { setSelectMcpModal(!openSelectMcpModal) }}><Server size={18} /><span>MCP</span></button>}
-              {user && showToolsBtn && chatMode === 'text' && <button className='server-btn' onClick={() => { setSelectToolModal(!openSelectToolModal) }}><Settings2 size={18} /><span>Tools</span></button>}
-              {(!aiTyping || !creatingImage) && <button
-                className='button-send'
+              {user && showToolsBtn && chatMode === 'text' && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { window.location.hash = '#tools' }}><Settings2 size={18} /></button>}
+              {!((aiTyping) || (creatingImage)) && <button
+                className='button-send send'
                 onClick={handleSubmit}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM13 12H16L12 8L8 12H11V16H13V12Z"></path></svg>
+                <ArrowUp />
               </button>}
-              {/* {user && <button className='tool-btn' onClick={() => { window.location.hash = '#tools' }}><Wrench size={18} />Tools</button>} */}
               {((aiTyping) || (creatingImage)) && (
                 <button
                   type="button"
                   onClick={handleStop}
-                  className='button-send'
+                  className='stop-button'
                 >
-                  <CircleStop size={20} />
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <rect x="7" y="7" width="10" height="10" rx="2" />
+                  </svg>
                 </button>)}
             </div>
           </div>
           {<SettingsButton openModal={openSettingsModal} onClose={() => { setSettingsModal(false) }} />}
-          {<SelectMcpButton openModal={openSelectMcpModal} onClose={() => { setSelectMcpModal(false) }} />}
-          {<SelectToolButton openModal={openSelectToolModal} onClose={() => { setSelectToolModal(false) }} />}
           {openAttachModal && <div className='attach-btn-modal' ref={attachModalRef} onClick={(e) => { e.stopPropagation(); }}>
             <button
               className="attach-child-btn"

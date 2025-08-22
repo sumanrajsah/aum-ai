@@ -3,7 +3,8 @@ import axios from 'axios';
 interface User {
     uid: string;
     name?: string;
-    image?: string
+    image?: string;
+    email: string;
 }
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null);

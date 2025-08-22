@@ -102,7 +102,7 @@ export default function CollabSignUp() {
             </div> : <div className="collab-sbody">
                 <button className="collab-sbutton" onClick={() => { router.push('/login') }} style={{ width: "auto" }}>Login</button>
                 <div className="cs-heading">
-                    <Image src={'/sitraone.png'} height={80} width={80} alt="sitraone" />
+                    <Image src={'/sitraone.png'} height={50} width={50} alt="sitraone" />
                     <br />
                     <h1>Create an account</h1>
                     <p>Enter your details</p>

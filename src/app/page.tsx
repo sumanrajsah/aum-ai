@@ -26,6 +26,7 @@ import { useAlert } from "../context/alertContext";
 import PageStruct1 from "./components/pagestruct/struct1";
 import TextAssistantMessage from "./components/chat/message-prop/assistant/text-assistant";
 import TextUserMessage from "./components/chat/message-prop/user/text-user";
+import ToolResultRender from "./components/chat/message-prop/assistant/toolsResult";
 
 
 export default function Home() {
@@ -127,40 +128,67 @@ export default function Home() {
                       break;
                     case "file":
                       messageContent = `${item.file.file_url}`;
-                      filename = `${item.file.filename}`
+                      filename = `${item.file.filename}`;
                       break;
                     default:
                       messageContent = "Unsupported message type";
                   }
 
-                  // Create unique key for each content item
                   const contentKey = `${msg.msg_id}-${item.type}-${idx}`;
 
-                  return msg.role === 'assistant' ? (
+                  if (msg.role === 'assistant') {
+                    return (
+                      <TextAssistantMessage
+                        key={contentKey}
+                        content={messageContent}
+                        type={item.type}
+                        role={msg.role}
+                        model={msg.model ?? { name: '', provider: '' }}
+                      />
+                    );
+                  } else if (msg.role === 'tool') {
+                    return (
+                      <ToolResultRender
+                        key={contentKey}
+                        content={messageContent}
+                      />
+                    );
+                  } else {
+                    return (
+                      <TextUserMessage
+                        key={contentKey}
+                        content={messageContent}
+                        type={item.type}
+                        role={msg.role ?? ''}
+                        filename={filename}
+                      />
+                    );
+                  }
+                })
+              ) : (
+                <>
+                  {msg.role === 'assistant' ? (
                     <TextAssistantMessage
-                      key={contentKey}
-                      content={messageContent}
-                      type={msg.type === 'tooldata' ? 'tooldata' : item.type}
-                      isUser={false}
+                      key={msg.msg_id}
+                      content={msg.content}
+                      role={msg.role ?? ''}
+                      type={msg.type}
                       model={msg.model ?? { name: '', provider: '' }}
+                    />
+                  ) : msg.role === 'tool' ? (
+                    <ToolResultRender
+                      key={msg.msg_id}
+                      content={msg.content}
                     />
                   ) : (
                     <TextUserMessage
-                      key={contentKey}
-                      content={messageContent}
-                      isUser={msg.isUser}
-                      type={msg.type === 'tooldata' ? 'tooldata' : item.type}
-                      filename={filename}
+                      key={msg.msg_id}
+                      content={msg.content}
+                      role={msg.role ?? ''}
+                      type={msg.type}
                     />
-                  );
-                })
-              ) : (
-                <ChatMessage
-                  key={`${msg.msg_id}-single`}
-                  message={msg.content}
-                  isUser={msg.isUser}
-                  type={msg.type || "text"}
-                />
+                  )}
+                </>
               )}
             </div>
           ))}

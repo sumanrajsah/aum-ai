@@ -3,14 +3,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10vh 0 10vh 0;
-    width: 100vw;
+    padding: clamp(5vh, 10vh, 15vh) clamp(20px, 5vw, 50px);
+    width: 100%;
     min-height: 100vh;
-    overflow-y: hidden;
-    gap: 50px;
+    overflow-y: auto;
+    gap: clamp(10px, 8vw, 20px);
+    box-sizing: border-box;
+    background: radial-gradient(ellipse at center,
+            rgba(var(--bg-color1), 0.03) 0%,
+            transparent 70%);
 
     p {
         color: gray;
+        font-size: clamp(14px, 2.5vw, 16px);
+        line-height: 1.6;
+        max-width: 600px;
+        text-align: center;
+        opacity: 0.8;
+        font-weight: 400;
+        letter-spacing: 0.3px;
     }
 }
 
@@ -21,73 +32,205 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    max-width: 90vw;
+    animation: fadeInUp 0.8s ease-out;
+
+    h1,
+    h2,
+    h3 {
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        margin-bottom: clamp(5px, 2vw, 15px);
+        line-height: 1.2;
+        font-weight: 700;
+        background: linear-gradient(135deg,
+                rgba(var(--bg-color1), 0.9),
+                rgba(var(--bg-color1), 0.6));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+    }
+
+    h1::after,
+    h2::after,
+    h3::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg,
+                rgba(var(--bg-color1), 0.8),
+                rgba(var(--bg-color1), 0.3));
+        border-radius: 2px;
+        animation: slideIn 1s ease-out 0.3s both;
+    }
 
     p {
         color: gray;
+        font-size: clamp(14px, 2.5vw, 16px);
+        line-height: 1.2;
+        margin: 0;
+        opacity: 0.85;
+        animation: fadeIn 1s ease-out 0.5s both;
     }
 }
 
 .collab-button {
-
-    padding: 10px 15px;
+    position: relative;
+    padding: clamp(10px, 2vw, 12px) clamp(12px, 2vw, 20px);
     cursor: pointer;
-    border-radius: 5px;
-    font-size: medium;
-    font-weight: bold;
+    border-radius: clamp(8px, 2vw, 12px);
+    font-size: clamp(14px, 2.5vw, 16px);
+    font-weight: 600;
     width: 100%;
+    max-width: 400px;
     border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    animation: slideInUp 0.6s ease-out;
 }
 
-.collab-button:hover {
-    transform: scale(1.03);
+.collab-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent);
+    transition: left 0.5s ease;
+}
+
+.collab-button:hover::before {
+    left: 100%;
+}
+
+.collab-button:hover,
+.collab-button:focus {
+    transform: translateY(-2px) scale(1.02);
     background-clip: none;
+    outline: none;
+    box-shadow: 0 10px 30px rgba(var(--bg-color1), 0.15);
+}
+
+.collab-button:active {
+    transform: translateY(0) scale(0.98);
 }
 
 .google-btn {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    background: whitesmoke;
+    background: linear-gradient(135deg,
+            rgba(245, 245, 245, 0.95),
+            rgba(240, 240, 240, 0.9));
     color: #0E1111;
-    padding: 10px 15px;
+    padding: clamp(10px, 2vw, 12px) clamp(12px, 2vw, 20px);
     cursor: pointer;
-    border-radius: 5px;
-    border: 1px solid #0E1111;
-    font-size: medium;
-    font-weight: bold;
+    border-radius: clamp(8px, 2vw, 12px);
+    border: 1px solid rgba(14, 17, 17, 0.15);
+    font-size: clamp(14px, 2.5vw, 16px);
+    font-weight: 600;
     width: 100%;
-    gap: 10px;
+    max-width: 400px;
+    gap: clamp(8px, 2vw, 12px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    animation: slideInUp 0.6s ease-out 0.1s both;
+    overflow: hidden;
 
     svg {
-        height: 24px;
+        height: clamp(20px, 4vw, 24px);
+        width: clamp(20px, 4vw, 24px);
+        flex-shrink: 0;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        transition: transform 0.3s ease;
     }
 
-    &:hover {
-        transform: scale(1.03);
-        background: whitesmoke;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent);
+        transition: left 0.5s ease;
+    }
+
+    &:hover::before {
+        left: 100%;
+    }
+
+    &:hover,
+    &:focus {
+        transform: translateY(-2px) scale(1.02);
+        background: linear-gradient(135deg,
+                rgba(250, 250, 250, 0.98),
+                rgba(245, 245, 245, 0.95));
         color: #0E1111;
+        outline: none;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
 
+    &:hover svg {
+        transform: scale(1.1) rotate(2deg);
+    }
+
+    &:active {
+        transform: translateY(0) scale(0.98);
+    }
 }
 
 .collab-sbutton {
     position: absolute;
-    padding: 10px 15px;
+    padding: clamp(5px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
     cursor: pointer;
-    border-radius: 5px;
-    font-size: medium;
-    font-weight: bold;
-    width: 100%;
-    top: 2%;
-    right: 5%;
+    border-radius: clamp(6px, 1.5vw, 10px);
+    font-size: clamp(12px, 2.2vw, 14px);
+    font-weight: 600;
+    width: auto;
+    min-width: clamp(80px, 15vw, 120px);
+    top: clamp(15px, 3vh, 25px);
+    right: clamp(15px, 3vw, 25px);
     border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(10px);
+    animation: fadeInDown 0.6s ease-out 0.2s both;
+    z-index: 10;
 }
 
-.collab-sbutton:hover {
-    transform: scale(1.03);
+.collab-sbutton:hover,
+.collab-sbutton:focus {
+    transform: translateY(-1px) scale(1.05);
     background-clip: none;
+    outline: none;
+}
 
+.collab-sbutton:active {
+    transform: translateY(0) scale(0.95);
 }
 
 .cs-signup-cont {
@@ -96,76 +239,381 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    border-radius: 20px;
-    gap: 20px;
-    width: 400px;
+    padding: clamp(15px, 2.5vw, 25px);
+    border-radius: clamp(18px, 4vw, 25px);
+    gap: clamp(10px, 2vw, 14px);
+    width: 100%;
+    max-width: clamp(320px, 90vw, 450px);
     height: auto;
+    box-sizing: border-box;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(var(--bg-color1), 0.1);
+    background: linear-gradient(135deg,
+            rgba(var(--bg-color1), 0.03),
+            rgba(var(--bg-color1), 0.01));
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
 
+.cs-signup-cont::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg,
+            rgba(var(--bg-color1), 0.15),
+            rgba(var(--bg-color1), 0.05));
+    mask: linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask-composite: xor;
+    pointer-events: none;
 }
 
 .cs-signup-box {
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
     justify-content: center;
-    width: 98%;
+    width: 100%;
+    gap: clamp(5px, 1.5vw, 6px);
+    animation: fadeInUp 0.6s ease-out 0.5s both;
 
     label {
         color: gray;
+        font-size: clamp(13px, 2.2vw, 15px);
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        margin-bottom: 4px;
+        opacity: 0.9;
     }
 
     input {
         width: 100%;
-        font-size: 20px;
-        padding: 5px;
-        background: none;
-        border: 1px solid gray;
-        border-radius: 5px;
+        font-size: clamp(16px, 3vw, 18px);
+        padding: clamp(8px, 1.8vw, 10px);
+        background: rgba(var(--bg-color1), 0.02);
+        border: 1.5px solid rgba(128, 128, 128, 0.3);
+        border-radius: clamp(6px, 1.5vw, 10px);
+        box-sizing: border-box;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        font-weight: 400;
+        letter-spacing: 0.3px;
+        backdrop-filter: blur(5px);
+    }
+
+    input:focus {
+        outline: none;
+        border-color: rgba(var(--bg-color1), 0.6);
+        box-shadow: 0 0 0 3px rgba(var(--bg-color1), 0.1);
+        background: rgba(var(--bg-color1), 0.04);
+        transform: translateY(-1px);
+    }
+
+    input::placeholder {
+        font-size: clamp(14px, 2.5vw, 16px);
+        opacity: 0.5;
+        font-weight: 300;
+        letter-spacing: 0.2px;
+    }
+
+    input:hover {
+        border-color: rgba(var(--bg-color1), 0.4);
+        background: rgba(var(--bg-color1), 0.03);
     }
 }
 
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+
+    to {
+        width: 60px;
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Dark Mode */
 html.dark {
 
     .collab-button,
     .collab-sbutton {
         background: linear-gradient(145deg,
-                rgba(var(--bg-color1), 0.15),
-                rgba(var(--bg-color1), 0.05));
+                rgba(var(--bg-color1), 0.18),
+                rgba(var(--bg-color1), 0.08));
         box-shadow:
-            0 6px 14px rgba(0, 0, 0, 0.3),
-            inset 0 1px 2px rgba(255, 255, 255, 0.05),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.15);
-
+            0 8px 25px rgba(0, 0, 0, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.08),
+            inset 0 -2px 6px rgba(0, 0, 0, 0.2);
+        color: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(var(--bg-color1), 0.15);
     }
 
+    .cs-signup-box input {
+        color: rgba(255, 255, 255, 0.9);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.02);
+    }
 
+    .cs-signup-box input:focus {
+        border-color: rgba(var(--bg-color1), 0.6);
+        color: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 0.04);
+    }
 
+    .cs-signup-box input:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .cs-signup-box label {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .cs-signup-cont {
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.02));
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
 }
 
-/* ☀️ Light Mode */
+/* Light Mode */
 html.light {
 
     .collab-button,
     .collab-sbutton {
         background: linear-gradient(145deg,
-                rgba(var(--bg-color1), 0.15),
-                rgba(var(--bg-color1), 0.05));
+                rgba(var(--bg-color1), 0.12),
+                rgba(var(--bg-color1), 0.06));
         box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.1),
-            0 4px 12px rgba(0, 0, 0, 0.06),
-            inset 0 2px 4px rgba(255, 255, 255, 0.6);
+            0 10px 30px rgba(0, 0, 0, 0.12),
+            0 6px 18px rgba(0, 0, 0, 0.08),
+            inset 0 2px 4px rgba(255, 255, 255, 0.8);
+        color: #0E1111;
+        border: 1px solid rgba(var(--bg-color1), 0.15);
+    }
 
+    .cs-signup-box input {
+        color: #0E1111;
+        border-color: rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    .cs-signup-box input:focus {
+        border-color: rgba(var(--bg-color1), 0.6);
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .cs-signup-box input:hover {
+        border-color: rgba(0, 0, 0, 0.25);
+        background: rgba(255, 255, 255, 0.8);
+    }
+
+    .cs-signup-cont {
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.6),
+                rgba(255, 255, 255, 0.4));
+        border-color: rgba(0, 0, 0, 0.08);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     }
 }
 
-@media screen and (max-width: 500px) {
+/* Mobile Optimizations */
+@media screen and (max-width: 600px) {
+    .collab-sbody {
+        padding: 5vh 15px;
+        gap: 25px;
+    }
+
     .cs-signup-cont {
-        width: 90vw;
+        width: calc(100vw - 30px);
+        max-width: none;
+        margin: 0 15px;
+        padding: 20px;
     }
 
     .google-btn {
-        gap: 5px;
+        gap: 8px;
+        flex-wrap: nowrap;
+    }
+
+    .collab-sbutton {
+        position: fixed;
+        z-index: 1000;
+    }
+}
+
+/* Tablet Optimizations */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+    .collab-sbody {
+        padding: 8vh 40px;
+    }
+
+    .cs-signup-cont {
+        width: 70vw;
+        max-width: 500px;
+    }
+}
+
+/* Large Screen Optimizations */
+@media screen and (min-width: 1025px) {
+    .collab-sbody {
+        padding: 10vh 50px;
+    }
+
+    .cs-signup-cont {
+        width: 450px;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+
+    .collab-button,
+    .google-btn,
+    .collab-sbutton {
+        padding: 14px 24px;
+        font-size: 16px;
+    }
+
+    .cs-signup-box input {
+        font-size: 16px;
+        padding: 14px;
+    }
+}
+
+/* High DPI Screen Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+
+    .collab-button,
+    .google-btn,
+    .collab-sbutton {
+        border-width: 0.5px;
+    }
+}
+
+/* Landscape Mobile Optimizations */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .collab-sbody {
+        padding: 2vh 20px;
+        gap: 20px;
+    }
+
+    .cs-signup-cont {
+        padding: 15px;
+        gap: 15px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .collab-sbutton {
+        display: none;
+    }
+
+    .collab-sbody {
+        padding: 20px;
+        min-height: auto;
+    }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .collab-button:hover,
+    .google-btn:hover,
+    .collab-sbutton:hover {
+        transform: none;
+    }
+}
+
+/* Focus Visible for Keyboard Navigation */
+.collab-button:focus-visible,
+.google-btn:focus-visible,
+.collab-sbutton:focus-visible {
+    outline: 3px solid rgba(var(--bg-color1), 0.6);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(var(--bg-color1), 0.15);
+}
+
+/* Container Queries (Modern Browser Support) */
+@container (max-width: 400px) {
+    .cs-signup-cont {
+        padding: 15px;
+        gap: 15px;
     }
 }

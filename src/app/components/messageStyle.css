@@ -1,5 +1,6 @@
 .chat-msg-cont {
-    width: 800px;
+    max-width: 800px;
+    width: 100%;
 
 
 }
@@ -199,10 +200,66 @@
     justify-content: space-between;
     min-width: 70px;
     width: 40px;
+    height: 40px;
 }
 
 .message-box-loading {
-    animation: zoom 1s infinite;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    max-width: 800px;
+    width: auto;
+    height: 5vh;
+    left: 20px;
+
+    gap: 10px;
+
+    .msg-loading-img {
+        animation: zoom 1s infinite;
+
+    }
+}
+
+.thinking-text::after {
+    content: '. . .';
+    animation: dots 1.5s steps(3, end) infinite;
+}
+
+.thinking-text {
+    animation: pulseText 1s infinite ease-in-out;
+}
+
+@keyframes pulseText {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+
+@keyframes dots {
+    0% {
+        content: '';
+    }
+
+    33% {
+        content: '.';
+    }
+
+    66% {
+        content: '..';
+    }
+
+    100% {
+        content: '...';
+    }
 }
 
 @keyframes zoom {

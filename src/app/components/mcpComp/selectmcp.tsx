@@ -7,6 +7,7 @@ import { useTheme } from "next-themes"
 import { useMcpServer } from "@/context/ChatContext"
 import { MCP } from "./function"
 import ToggleSwitch from "../toggleSwitch"
+import { useAlert } from "@/context/alertContext"
 
 interface SelectMcpButtonProps {
     openModal: boolean
@@ -20,26 +21,15 @@ interface McpServerWithTools {
     expanded: boolean;
 }
 
-const SelectMcpButton = ({ openModal, onClose, ...props }: SelectMcpButtonProps) => {
+const SelectMcpButton = () => {
     const searchParams = useSearchParams();
     const router = useRouter()
     const modalRef = useRef<HTMLDivElement>(null);
     const [serversWithTools, setServersWithTools] = useState<McpServerWithTools[]>([]);
     const [selectedTools, setSelectedTools] = useState<string[]>([]);
     const [loadingServers, setLoadingServers] = useState<Set<string>>(new Set());
+    const alert = useAlert();
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                onClose();
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [onClose]);
 
     const { mcpServers, setMcpServers, setSelectedServers, selectedServers, setMcpResources, selectMcpResource, mcpResource, mcpResources, setMcpTools } = useMcpServer();
     const { theme } = useTheme()
@@ -57,6 +47,14 @@ const SelectMcpButton = ({ openModal, onClose, ...props }: SelectMcpButtonProps)
                 ? prevSelected.filter((s) => s.sid !== server.sid) // Remove if exists
                 : [...prevSelected, server] // Add if not exists
         );
+        if (isCurrentlySelected) {
+            const tools = mcpServers.filter((s) => s.sid === server.sid)
+            tools[0].tools.map((toolName) => setSelectedTools((prevSelected) =>
+                prevSelected.includes(toolName)
+                    ? prevSelected.filter((t) => t !== toolName) // Remove if exists
+                    : [] // Add if not exists
+            ))
+        }
     };
 
     const toggleToolSelection = (toolName: string) => {
@@ -86,81 +84,126 @@ const SelectMcpButton = ({ openModal, onClose, ...props }: SelectMcpButtonProps)
             }
 
             try {
-                const serverToolsData = await Promise.all(
-                    selectedServers.map(async (server: any) => {
-                        try {
-                            const endpoint = {
-                                auth: server.auth,
-                                uri: server.config.url,
-                                header: {
-                                    key: server.config.header.key,
-                                    value: server.config.header.value
-                                }
-                            };
+                const serverToolsPromises = selectedServers.map(async (server: any) => {
+                    // Check if server already exists in serversWithTools
+                    if (serversWithTools.some((s) => s.server.sid === server.sid)) {
+                        return null; // Skip this server
+                    }
 
-                            const result = await MCP(endpoint);
-                            const tools = result.tools || [];
-                            const resources = result.resources || [];
+                    // Add server to loading state
+                    setLoadingServers(prev => new Set(prev).add(server.sid));
 
-                            // Update global resources
-                            const mappedResources = resources.map((r: any) => ({
-                                uri: r.uri,
-                                name: r.name,
-                                ...r
-                            }));
-                            setMcpResources(prev => [...prev, ...mappedResources]);
+                    try {
+                        const endpoint = {
+                            auth: server.auth,
+                            uri: server.config.url,
+                            header: {
+                                key: server.config.header.key,
+                                value: server.config.header.value
+                            }
+                        };
 
-                            // Remove server from loading state
-                            setLoadingServers(prev => {
-                                const newSet = new Set(prev);
-                                newSet.delete(server.sid);
-                                return newSet;
-                            });
+                        const result = await MCP(endpoint);
 
-                            return {
-                                server,
-                                tools: tools.map(tool => tool.function.name),
-                                expanded: false
-                            };
-                        } catch (error) {
-                            console.error(`Error fetching tools for server ${server.label}:`, error);
-
-                            // Remove server from loading state even on error
-                            setLoadingServers(prev => {
-                                const newSet = new Set(prev);
-                                newSet.delete(server.sid);
-                                return newSet;
-                            });
-
-                            return {
-                                server,
-                                tools: [],
-                                expanded: false
-                            };
+                        if (result.error !== null) {
+                            throw new Error(result.error);
                         }
-                    })
-                );
 
-                setServersWithTools(serverToolsData);
+                        const tools = result.tools
+                            ?.filter((tool: any) => server.tools.includes(tool.function.name))
+                            ?.map((tool: any) => tool) || [];
+
+                        const resources = result.resources || [];
+
+                        // Update selected tools for this server
+                        const selecttools = mcpServers.filter((s) => s.sid === server.sid);
+                        if (selecttools.length > 0) {
+                            setSelectedTools((prevSelected) => {
+                                const newTools = selecttools[0].tools.filter(
+                                    (toolName) => !prevSelected.includes(toolName)
+                                );
+                                return [...prevSelected, ...newTools];
+                            });
+                        }
+
+                        // Update global resources
+                        const mappedResources = resources.map((r: any) => ({
+                            uri: r.uri,
+                            name: r.name,
+                            ...r
+                        }));
+
+                        setMcpResources(prev => {
+                            // Avoid duplicates based on URI
+                            const existingUris = new Set(prev.map(resource => resource.uri));
+                            const newResources = mappedResources.filter((resource: { uri: string }) => !existingUris.has(resource.uri));
+                            return [...prev, ...newResources];
+                        });
+
+                        // Remove server from loading state
+                        setLoadingServers(prev => {
+                            const newSet = new Set(prev);
+                            newSet.delete(server.sid);
+                            return newSet;
+                        });
+
+                        return {
+                            server,
+                            tools: tools.map(tool => tool.function.name),
+                            expanded: false
+                        };
+                    } catch (error) {
+                        console.error(`Error fetching tools for server ${server.label}:`, error);
+                        alert.error(`Error fetching tools for ${server.label}: ${error}`);
+
+                        // Remove server from loading state even on error
+                        setLoadingServers(prev => {
+                            const newSet = new Set(prev);
+                            newSet.delete(server.sid);
+                            return newSet;
+                        });
+
+                        return {
+                            server,
+                            tools: [],
+                            expanded: false
+                        };
+                    }
+                });
+
+                const serverToolsData = (await Promise.all(serverToolsPromises)).filter(Boolean) as McpServerWithTools[];
+
+                // Update serversWithTools by merging with existing data
+                setServersWithTools(prev => {
+                    const existingServerIds = new Set(prev.map(swt => swt.server.sid));
+                    const newServersWithTools = serverToolsData.filter(swt => !existingServerIds.has(swt.server.sid));
+                    return [...prev, ...newServersWithTools];
+                });
 
                 // Update global tools list
-                const allTools = serverToolsData.flatMap(swt => swt.tools);
-                setMcpTools(allTools);
+                const allNewTools = serverToolsData.flatMap(swt => swt.tools);
+                setMcpTools(prev => {
+                    const existingTools = new Set(prev);
+                    const uniqueNewTools = allNewTools.filter(tool => !existingTools.has(tool));
+                    return [...prev, ...uniqueNewTools];
+                });
 
             } catch (error) {
                 console.error('Error in fetchToolsForServers:', error);
+                alert.error(`Something went wrong: ${error}`);
                 // Clear loading state on general error
                 setLoadingServers(new Set());
             }
         };
 
         fetchToolsForServers();
-    }, [selectedServers]);
+    }, [selectedServers]); // Consider adding other dependencies if needed
+    console.log(serversWithTools)
 
-    if (!openModal) return null;
+    //if (!openModal) return null;
 
     return (
-        <div className="selectmcp-btn-modal" ref={modalRef}>
+        <div className="selectmcp-btn-modal">
             <label>Select MCP Servers & Tools</label>
             <div className="selectmcp-btn-cont">
                 {mcpServers.map((server, index) => {
@@ -173,14 +216,14 @@ const SelectMcpButton = ({ openModal, onClose, ...props }: SelectMcpButtonProps)
                             <div className="mcp-checkbox server-checkbox">
                                 <div className="mcp-content">
                                     <div className="mcp-name">{server.label}</div>
-                                    {serverWithTools && serverWithTools.tools.length > 0 && (
+                                    {server.tools.length > 0 && (
                                         <div className="mcp-tools-count">
-                                            {serverWithTools.tools.length} tools
+                                            {server.tools.length} tools
                                         </div>
                                     )}
                                 </div>
                                 <div className="mcp-controls">
-                                    {loadingServers.has(server.sid.toString()) ? (
+                                    {loadingServers.has(`${server.sid}`) ? (
                                         <div className="mcp-loader">
                                             <div className="spinner" />
                                         </div>
@@ -193,7 +236,7 @@ const SelectMcpButton = ({ openModal, onClose, ...props }: SelectMcpButtonProps)
                                             />
                                         </div>
                                     )}
-                                    {isSelected && serverWithTools && serverWithTools.tools.length > 0 && (
+                                    {isSelected && serverWithTools && server.tools.length > 0 && (
                                         <button
                                             className="expand-btn"
                                             onClick={(e) => {
@@ -232,6 +275,7 @@ const SelectMcpButton = ({ openModal, onClose, ...props }: SelectMcpButtonProps)
                     );
                 })}
             </div>
+            <button className="add-mcp-btn" onClick={() => location.hash = '#server/add'}>+ Add Mcp</button>
 
             {/* Selected Tools Summary */}
             {selectedTools.length > 0 && (

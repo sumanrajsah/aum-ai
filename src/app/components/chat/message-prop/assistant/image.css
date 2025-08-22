@@ -6,7 +6,7 @@
     break-inside: avoid;
     cursor: pointer;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 40px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -32,7 +32,7 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 40px;
     background: rgba(221, 220, 220, 0.1);
 }
 
@@ -40,7 +40,7 @@
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 10px;
+    border-radius: 40px;
     transition: transform 0.3s ease;
     object-fit: cover;
 }
@@ -61,7 +61,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 40px;
 }
 
 html.light .loading-img {
@@ -75,7 +75,7 @@ html.light .loading-img {
             #eaf2ff 100%);
     background-size: 400% 400%;
     animation: shimmer 1.5s ease-in-out infinite;
-    border-radius: 10px;
+    border-radius: 40px;
 }
 
 html.dark .loading-img {
@@ -90,7 +90,7 @@ html.dark .loading-img {
             #2a3548 100%);
     background-size: 400% 400%;
     animation: shimmer 1.5s ease-in-out infinite;
-    border-radius: 10px;
+    border-radius: 40px;
 }
 
 @keyframes shimmer {
@@ -116,7 +116,7 @@ html.dark .loading-img {
             rgba(0, 0, 0, 0.3) 50%,
             rgba(0, 0, 0, 0.7) 100%);
     transition: all 0.3s ease;
-    border-radius: 10px;
+    border-radius: 40px;
     gap: 10px;
 }
 
@@ -161,7 +161,16 @@ html.dark .loading-img {
         visibility: visible;
         background: none;
         bottom: 1%;
-        right: 1%;
+        right: 5%;
+    }
+
+    .image-card:hover .image-card-footer {
+        opacity: 1;
+        visibility: none;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 }
 

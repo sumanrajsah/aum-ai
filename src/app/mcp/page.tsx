@@ -13,8 +13,7 @@ import Sidebar from "@/app/components/sidebar/sidebar";
 import axios from "axios";
 import { useAuth } from "@/hooks/useAuth";
 import { useMcpServer } from "@/context/ChatContext";
-import MCPServerCard from "../components/mcpComp/mcp-server-card";
-import MCPServerTable from "../components/mcpComp/mcp-table";
+import MCPServerCard from "../components/mcpComp/mcpcard";
 
 export default function MCPPage() {
 
@@ -34,20 +33,11 @@ export default function MCPPage() {
                 <button
                     className="create-btn"
                     onClick={() => {
-                        location.hash = "#server/settings";
+                        location.hash = "#server/add";
                     }}
                 >
                     + Create
                 </button>
-            </div>
-            <div className="mcp-table-header">
-                <div className="header-name">Name</div>
-                <div className="header-connection-type">Type</div>
-                <div className="header-endpoint">Endpoint</div>
-                <div className="header-auth">Auth</div>
-                <div className="header-tools">Tools</div>
-                <div className="header-created">Created</div>
-                <div className="header-action">Action</div>
             </div>
 
             {isFetching ? (
@@ -59,7 +49,7 @@ export default function MCPPage() {
             ) : (
                 <div className="mcp-card-list">
                     {mcpServers.map((server, index) => (
-                        <MCPServerTable key={index} mcp={server} />
+                        <MCPServerCard key={index} mcp={server} />
                     ))}
                 </div>
             )}

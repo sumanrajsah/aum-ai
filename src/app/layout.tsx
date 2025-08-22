@@ -15,6 +15,7 @@ import ThemeP from "./themeProvider";
 import { AlertProvider } from "../context/alertContext";
 import PageStruct1 from "./components/pagestruct/struct1";
 import { AuthProvider } from "@/context/AuthContext";
+import SpaceBackground from "./components/bgspace";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://0xxplorer.com"),
@@ -132,6 +133,7 @@ export default async function RootLayout({
               />
               <ThemeP>
                 <PageStruct1>
+                  <SpaceBackground />
                   {children}
                 </PageStruct1>
               </ThemeP>

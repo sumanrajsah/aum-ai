@@ -8,9 +8,7 @@
     height: 100vh;
     width: 260px;
     z-index: 1;
-    padding-top: 10px;
     padding-bottom: 20px;
-    overflow: hidden;
 
     /* Semi-transparent background */
 
@@ -33,12 +31,6 @@
     z-index: 1;
     padding-top: 10px;
     padding-bottom: 20px;
-    /* Semi-transparent background */
-    /* Blur effect for a modern look */
-    /* box-shadow: 0 4px 6px rgba(var(--bg-color1), 0.2);
-
-    border: 2px solid rgba(var(--bg-color1), 0.4); */
-    overflow: hidden;
     animation: slideInSidebar 0.2s ease-in-out;
 
 }
@@ -55,14 +47,19 @@
 }
 
 .sidebar-2-top-cont {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    top: 0%;
+    top: 5px;
+    width: 100%;
+    max-height: 86%;
 }
 
-
+.slogo-cont {
+    top: 5px;
+}
 
 
 label {
@@ -115,9 +112,6 @@ label {
 
     &:hover {
         background: rgba(94, 129, 173, 0.2);
-        box-shadow:
-            0 6px 10px rgba(0, 0, 0, 0.35),
-            inset 0 1px 2px rgba(255, 255, 255, 0.25);
     }
 
     transition: background 0.2s ease-in-out;
@@ -147,13 +141,32 @@ label {
 
     &:hover {
         background: rgba(94, 129, 173, 0.2);
-        box-shadow:
-            0 6px 10px rgba(0, 0, 0, 0.35),
-            inset 0 1px 2px rgba(255, 255, 255, 0.25);
     }
 
     transition: background 0.2s ease-in-out;
     animation: slideInSidebarButton 0.2s ease-in-out;
+}
+
+.sidebar-button-2::after {
+    content: '';
+    position: absolute;
+    left: calc(100% + 10px);
+    /* Center vertically */
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    z-index: 1000;
+    min-width: max-content;
+    /* Ensure tooltip doesn't shrink */
+}
+
+.sidebar-button-2:hover::after {
+    content: attr(data-tooltip);
+    opacity: 1;
 }
 
 .toggle-sidebar {
@@ -170,7 +183,9 @@ label {
     display: none;
 }
 
+
 .search-chat-btn {
+    position: relative;
     display: flex;
     width: 95%;
     border: none;
@@ -178,19 +193,272 @@ label {
     border-radius: 20px;
     align-items: center;
     justify-content: left;
-    padding: 5px 10px;
+    padding: 10px 20px;
     gap: 10px;
     font-size: 14px;
-    height: 40px;
     white-space: nowrap;
 
 
-    background: rgba(128, 128, 128, 0.24);
+    background: rgba(94, 129, 173, 0.2);
 
 
     transition: background 0.2s ease-in-out;
 
     animation: slideOutSidebarButton 0.2s ease-in-out;
+
+    input {
+        background: none;
+        border: none;
+        outline: none;
+    }
+}
+
+.history-panel {
+    position: absolute;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    bottom: 0%;
+    gap: 5px;
+    width: 100%;
+    height: 85vh;
+
+
+
+    label {
+        height: 30px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+        text-align: left;
+        padding: 2px;
+        gap: 5px;
+    }
+}
+
+.history-panel-cont {
+    position: relative;
+
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    text-align: left;
+    bottom: 0%;
+    gap: 10px;
+    width: 100%;
+    height: 95%;
+    overflow-y: scroll;
+
+    overflow-x: hidden;
+}
+
+.history-date-group {
+    position: relative;
+
+    padding-bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+    bottom: 0%;
+    gap: 2px;
+    width: 100%;
+    height: auto;
+    overflow: none;
+}
+
+.history-box {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: flex-start;
+    text-align: left;
+    border-radius: 10px;
+    padding: 8px 8px;
+    cursor: pointer;
+    width: 94%;
+    white-space: nowrap;
+    font-size: 14px;
+    height: 36px;
+
+    p {
+        display: flex;
+        overflow-x: hidden;
+        width: 98%;
+        text-align: left;
+    }
+
+}
+
+.history-box:hover {
+    background: rgba(94, 129, 173, 0.2);
+
+    p {
+        width: 90%;
+        text-overflow: ellipsis;
+    }
+
+    .chath-menu-btn {
+        display: flex;
+
+    }
+}
+
+
+
+.chath-menu-btn {
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1;
+    top: 0%;
+    right: 0%;
+    height: 100%;
+    width: 30px;
+    padding: 1px;
+    border-radius: 5px;
+
+}
+
+
+.chath-menu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1;
+    gap: 5px;
+    right: 5%;
+    top: 80%;
+    height: 30px;
+    padding: 5px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(var(--bg-color1), 0.1);
+    /* Subtle shadow */
+
+    width: 130px;
+    height: auto;
+
+    hr {
+        width: 98%;
+        box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
+        border-color: rgba(128, 128, 128, 0.144);
+    }
+}
+
+.chath-menu-list {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    width: 98%;
+    gap: 10px;
+}
+
+.chath-menu-list:hover {
+    background: rgba(128, 128, 128, 0.24);
+
+    cursor: pointer;
+}
+
+.delete {
+    color: #e5383b;
+}
+
+.delete:hover {
+    background: #e5383b46;
+}
+
+.sidebar-dropdown-cont {
+    position: relative;
+    top: 0%;
+    left: 5%;
+    display: flex;
+    flex-direction: column;
+    max-height: 30vh;
+    width: 90%;
+    height: auto;
+    align-items: flex-start;
+    gap: 2px;
+
+    hr {
+        width: 98%;
+        box-shadow: 0 4px 6px rgba(var(--bg-color1), 114, 0.1);
+        border-color: rgba(var(--bg-color1), 0.144);
+    }
+
+    border-left: 2px solid rgba(94, 129, 173, 0.2);
+}
+
+.dropdown-list {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 15px;
+    width: 90%;
+    gap: 10px;
+    margin-left: 5px;
+    border-radius: 10px;
+    height: 36px;
+}
+
+.dropdown-list:hover {
+    background: rgba(94, 129, 173, 0.2);
+
+    cursor: pointer;
+}
+
+.expand-sidebar-icon {
+    position: absolute;
+    right: 20px;
+    display: flex;
+}
+
+.account-btn {
+    position: absolute;
+    bottom: 5px;
+    height: 50px;
+    border-radius: 20px;
+    text-align: left;
+
+    span.plan {
+        font-size: 12;
+        color: gray;
+    }
+
+    &:hover {
+        box-shadow: none;
+    }
+}
+
+.avatar {
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+
+}
+
+.profile-sidebar-cont {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+    bottom: 5%;
+    left: 60px;
 }
 
 @keyframes slideInSidebarButton {
@@ -230,6 +498,11 @@ html.dark {
     .sidebar-2 {
         background: linear-gradient(to right, #1C273B, #191E2B);
     }
+
+    .sidebar-button-2:hover::after {
+        background: linear-gradient(to right, #D6E2FB, #E3EBFD);
+        color: var(--prop-dark-bg);
+    }
 }
 
 html.light {
@@ -237,5 +510,10 @@ html.light {
     .sidebar,
     .sidebar-2 {
         background: linear-gradient(to right, #D6E2FB, #E3EBFD);
+    }
+
+    .sidebar-button-2:hover::after {
+        background: linear-gradient(to right, #1C273B, #191E2B);
+        color: var(--prop-white-bg);
     }
 }

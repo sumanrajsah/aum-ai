@@ -1,3 +1,11 @@
+.user-chat-msg-cont {
+    max-width: 800px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
 .user-msg-cont {
     display: flex;
     flex-direction: column;
@@ -34,4 +42,12 @@
     white-space: wrap;
     /* Ensures text wraps properly */
     overflow: auto;
+}
+
+.chat-image_url-cont {
+    height: 200px;
+    width: 200px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid gray;
 }

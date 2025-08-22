@@ -29,6 +29,7 @@ import ChatInput from "@/app/components/chatInput";
 import TextAssistantMessage from "@/app/components/chat/message-prop/assistant/text-assistant";
 import TextUserMessage from "@/app/components/chat/message-prop/user/text-user";
 import { llmModels } from "@/app/utils/models-list";
+import ToolResultRender from "@/app/components/chat/message-prop/assistant/toolsResult";
 
 
 
@@ -112,13 +113,14 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, wid
                 // console.log('Chat data:', data);
 
                 const chat: Message[] = data.chats.map((msg: MessageInterface) => ({
-                    isUser: msg.role === "user" ? true : msg.role === "assistant" ? false : null,
                     content: msg.content,
                     msg_id: msg.msg_id,
                     type: msg.type,
                     role: msg.role,
                     createdOn: msg.created_on,
-                    model: msg.model
+                    model: msg.model,
+                    tool_call_id: msg.tool_call_id,
+                    tool_calls: msg.tool_calls
                 }));
 
                 // console.log(chat);
@@ -175,7 +177,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, wid
                 >
                 <div
                     className="chat-cont"
-                >{loadingChat ? <div className='message-box-loading'> <Image
+                >{false ? <div className='message-box-loading'> <Image
                     src={'/sitraone.png'} // Icons stored in the public folder
                     alt={'0xXplorer AI'}
                     width={20}
@@ -201,40 +203,67 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, wid
                                             break;
                                         case "file":
                                             messageContent = `${item.file.file_url}`;
-                                            filename = `${item.file.filename}`
+                                            filename = `${item.file.filename}`;
                                             break;
                                         default:
                                             messageContent = "Unsupported message type";
                                     }
 
-                                    // Create unique key for each content item
                                     const contentKey = `${msg.msg_id}-${item.type}-${idx}`;
 
-                                    return msg.role === 'assistant' ? (
+                                    if (msg.role === 'assistant') {
+                                        return (
+                                            <TextAssistantMessage
+                                                key={contentKey}
+                                                content={messageContent}
+                                                type={item.type}
+                                                role={msg.role}
+                                                model={msg.model ?? { name: '', provider: '' }}
+                                            />
+                                        );
+                                    } else if (msg.role === 'tool') {
+                                        return (
+                                            <ToolResultRender
+                                                key={contentKey}
+                                                content={messageContent}
+                                            />
+                                        );
+                                    } else {
+                                        return (
+                                            <TextUserMessage
+                                                key={contentKey}
+                                                content={messageContent}
+                                                type={item.type}
+                                                role={msg.role ?? ''}
+                                                filename={filename}
+                                            />
+                                        );
+                                    }
+                                })
+                            ) : (
+                                <>
+                                    {msg.role === 'assistant' ? (
                                         <TextAssistantMessage
-                                            key={contentKey}
-                                            content={messageContent}
-                                            type={msg.type === 'tooldata' ? 'tooldata' : item.type}
-                                            isUser={false}
+                                            key={msg.msg_id}
+                                            content={msg.content}
+                                            role={msg.role ?? ''}
+                                            type={msg.type}
                                             model={msg.model ?? { name: '', provider: '' }}
+                                        />
+                                    ) : msg.role === 'tool' ? (
+                                        <ToolResultRender
+                                            key={msg.msg_id}
+                                            content={msg.content}
                                         />
                                     ) : (
                                         <TextUserMessage
-                                            key={contentKey}
-                                            content={messageContent}
-                                            isUser={msg.isUser}
-                                            type={msg.type === 'tooldata' ? 'tooldata' : item.type}
-                                            filename={filename}
+                                            key={msg.msg_id}
+                                            content={msg.content}
+                                            role={msg.role ?? ''}
+                                            type={msg.type}
                                         />
-                                    );
-                                })
-                            ) : (
-                                <ChatMessage
-                                    key={`${msg.msg_id}-single`}
-                                    message={msg.content}
-                                    isUser={msg.isUser}
-                                    type={msg.type || "text"}
-                                />
+                                    )}
+                                </>
                             )}
                         </div>
                     ))}

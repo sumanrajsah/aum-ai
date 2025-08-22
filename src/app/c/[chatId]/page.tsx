@@ -26,6 +26,7 @@ import PageStruct1 from "@/app/components/pagestruct/struct1";
 import TextAssistantMessage from "@/app/components/chat/message-prop/assistant/text-assistant";
 import TextUserMessage from "@/app/components/chat/message-prop/user/text-user";
 import { llmModels } from "@/app/utils/models-list";
+import ToolResultRender from "@/app/components/chat/message-prop/assistant/toolsResult";
 
 
 
@@ -107,13 +108,14 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                 console.log('Chat data:', data);
 
                 const chat: Message[] = data.chats.map((msg: MessageInterface) => ({
-                    isUser: msg.role === "user" ? true : msg.role === "assistant" ? false : null,
                     content: msg.content,
                     msg_id: msg.msg_id,
                     type: msg.type,
                     role: msg.role,
                     createdOn: msg.created_on,
-                    model: msg.model
+                    model: msg.model,
+                    tool_call_id: msg.tool_call_id,
+                    tool_calls: msg.tool_calls
                 }));
 
                 console.log(chat);
@@ -151,6 +153,24 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
 
         }
     }
+    const beautifyJSON = (input: string | object): string => {
+        try {
+            let obj = typeof input === 'string' ? input : JSON.stringify(input);
+
+            // Try first parse
+            obj = JSON.parse(obj);
+
+            // If the result is still a string, try parsing again
+            if (typeof obj === 'string') {
+                obj = JSON.parse(obj);
+            }
+
+            return JSON.stringify(obj, null, 2);
+        } catch (error) {
+            console.error("Beautify error:", error);
+            return typeof input === 'string' ? input : JSON.stringify(input);
+        }
+    };
 
     return (
         <>
@@ -170,87 +190,157 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                 >
                 <div
                     className="chat-cont"
-                >{loadingChat ? <div className='message-box-loading'> <Image
-                    src={'/sitraone.png'} // Icons stored in the public folder
-                    alt={'0xXplorer AI'}
-                    width={20}
-                    height={20}
-                /></div> : <>
+                >
                     {(messages.length == 0) && <div className="quote" >
                         {user && <p>How can I assist, {user.name}</p>}
                         {!user && <p>Get Started With AUM AI</p>}
                     </div>}
-                    {messages.map((msg, index) => (
-                        <div className="chat-cont-message" key={msg.msg_id}>
-                            {Array.isArray(msg.content) ? (
-                                msg.content.map((item: MessageContentItem, idx) => {
-                                    let messageContent: string;
-                                    let filename: string = '';
+                    {messages.map((msg, index) => {
+                        // Group consecutive image_url items together
+                        const groupedContent: any[] = [];
+                        let currentImageGroup: any[] = [];
 
-                                    switch (item.type) {
-                                        case "text":
-                                            messageContent = item.text;
-                                            break;
-                                        case "image_url":
-                                            messageContent = item.image_url;
-                                            break;
-                                        case "file":
-                                            messageContent = `${item.file.file_url}`;
-                                            filename = `${item.file.filename}`
-                                            break;
-                                        default:
-                                            messageContent = "Unsupported message type";
+                        if (Array.isArray(msg.content)) {
+                            msg.content.forEach((item, idx) => {
+                                if (item.type === "image_url") {
+                                    currentImageGroup.push({ item, idx });
+                                } else {
+                                    // If we have accumulated images, add them as a group
+                                    if (currentImageGroup.length > 0) {
+                                        groupedContent.push({ type: 'image_group', items: currentImageGroup });
+                                        currentImageGroup = [];
                                     }
+                                    // Add the non-image item
+                                    groupedContent.push({ type: 'single', item, idx });
+                                }
+                            });
 
-                                    // Create unique key for each content item
-                                    const contentKey = `${msg.msg_id}-${item.type}-${idx}`;
+                            // Don't forget any remaining images
+                            if (currentImageGroup.length > 0) {
+                                groupedContent.push({ type: 'image_group', items: currentImageGroup });
+                            }
+                        }
 
-                                    return msg.role === 'assistant' ? (
-                                        <TextAssistantMessage
-                                            key={contentKey}
-                                            content={messageContent}
-                                            type={msg.type === 'tooldata' ? 'tooldata' : item.type}
-                                            isUser={false}
-                                            model={msg.model ?? { name: '', provider: '' }}
-                                        />
-                                    ) : (
-                                        <TextUserMessage
-                                            key={contentKey}
-                                            content={messageContent}
-                                            isUser={msg.isUser}
-                                            type={msg.type === 'tooldata' ? 'tooldata' : item.type}
-                                            filename={filename}
-                                        />
-                                    );
-                                })
-                            ) : (
-                                <>{msg.role === 'assistant' ? (
-                                    <TextAssistantMessage
-                                        key={msg.msg_id}
-                                        content={msg.content}
-                                        type={msg.type === 'tooldata' ? 'tooldata' : msg.type}
-                                        isUser={msg.isUser}
-                                        model={msg.model ?? { name: '', provider: '' }}
-                                    />
+                        return (
+                            <div className="chat-cont-message" key={msg.msg_id}>
+                                {Array.isArray(msg.content) ? (
+                                    groupedContent.map((group, groupIdx) => {
+                                        if (group.type === 'image_group') {
+                                            // Render multiple images in a row
+                                            return (
+                                                <div key={`${msg.msg_id}-image-group-${groupIdx}`} className="chat-image-container">
+                                                    {group.items.map(({ item, idx }) => {
+                                                        const contentKey = `${msg.msg_id}-${item.type}-${idx}`;
+
+                                                        if (msg.role === 'assistant') {
+                                                            return (
+                                                                <TextAssistantMessage
+                                                                    key={contentKey}
+                                                                    content={item.image_url}
+                                                                    type={item.type}
+                                                                    role={msg.role}
+                                                                    model={msg.model ?? { name: '', provider: '' }}
+                                                                />
+                                                            );
+                                                        } else {
+                                                            return (
+                                                                <TextUserMessage
+                                                                    key={contentKey}
+                                                                    content={item.image_url}
+                                                                    type={item.type}
+                                                                    role={msg.role ?? ''}
+                                                                    filename=""
+                                                                />
+                                                            );
+                                                        }
+                                                    })}
+                                                </div>
+                                            );
+                                        } else {
+                                            // Render single non-image item
+                                            const { item, idx } = group;
+                                            let messageContent = '';
+                                            let filename = '';
+
+                                            switch (item.type) {
+                                                case "text":
+                                                    messageContent = item.text;
+                                                    break;
+                                                case "file":
+                                                    messageContent = `${item.file.file_url}`;
+                                                    filename = `${item.file.filename}`;
+                                                    break;
+                                                default:
+                                                    messageContent = "Unsupported message type";
+                                            }
+
+                                            const contentKey = `${msg.msg_id}-${item.type}-${idx}`;
+
+                                            if (msg.role === 'assistant') {
+                                                return (
+                                                    <TextAssistantMessage
+                                                        key={contentKey}
+                                                        content={messageContent}
+                                                        type={item.type}
+                                                        role={msg.role}
+                                                        model={msg.model ?? { name: '', provider: '' }}
+                                                    />
+                                                );
+                                            } else if (msg.role === 'tool') {
+                                                return (
+                                                    <ToolResultRender
+                                                        key={contentKey}
+                                                        content={messageContent}
+                                                    />
+                                                );
+                                            } else {
+                                                return (
+                                                    <TextUserMessage
+                                                        key={contentKey}
+                                                        content={messageContent}
+                                                        type={item.type}
+                                                        role={msg.role ?? ''}
+                                                        filename={filename}
+                                                    />
+                                                );
+                                            }
+                                        }
+                                    })
                                 ) : (
-                                    <TextUserMessage
-                                        key={msg.msg_id}
-                                        content={msg.content}
-                                        isUser={msg.isUser}
-                                        type={msg.type === 'tooldata' ? 'tooldata' : msg.type}
+                                    <>
+                                        {msg.role === 'assistant' ? (
+                                            <TextAssistantMessage
+                                                key={msg.msg_id}
+                                                content={msg.content}
+                                                role={msg.role ?? ''}
+                                                type={msg.type}
+                                                model={msg.model ?? { name: '', provider: '' }}
+                                            />
+                                        ) : msg.role === 'tool' ? (
+                                            <ToolResultRender
+                                                key={msg.msg_id}
+                                                content={msg.content}
+                                            />
+                                        ) : (
+                                            <TextUserMessage
+                                                key={msg.msg_id}
+                                                content={msg.content}
+                                                role={msg.role ?? ''}
+                                                type={msg.type}
+                                            />
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        );
+                    })}
 
-                                    />
-                                )}</>
-                            )}
-                        </div>
-                    ))}
 
                     {(aiTyping) && (
                         <ChatMessage message={''} isUser={false} type={'loading'} />
 
 
                     )}
-                </>}
                 </div>
                 <ChatInput />
             </>

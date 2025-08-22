@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './video.css';
 import { useChat, useImagePlaygound, useVideoPlayground } from '@/context/ChatContext';
-import { Download, Expand, Info, SquarePen, Video } from 'lucide-react';
+import { Download, Expand, Info, Play, SquarePen, Video } from 'lucide-react';
 import { set } from 'lodash';
 import { useAlert } from '@/context/alertContext';
 
@@ -125,7 +125,7 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
             <div className="video-card">
                 <div className="loading-vid-container">
                     <div className="loading-vid" >
-                        <Video size={40} color='grey' />
+                        <Play size={40} color='grey' />
                     </div>
                 </div>
             </div>
@@ -141,7 +141,7 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
                 {(!shouldLoadVideo || (!videoLoaded && !videoError)) && (
                     <div className="loading-vid-container">
                         <div className="loading-vid" >
-                            <Video size={40} color='grey' />
+                            <Play size={40} color='grey' />
                         </div>
                     </div>
                 )}

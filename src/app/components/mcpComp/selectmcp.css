@@ -1,22 +1,15 @@
 .selectmcp-btn-modal {
-    position: absolute;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
+    text-align: left;
     gap: 5px;
-    padding: 15px;
-    border-radius: 20px;
-    box-shadow: 0 4px 6px rgba(var(--bg-color1), 0.1);
-    box-shadow:
-        0 15px 30px rgba(0, 0, 0, 0.2),
-        0 5px 10px rgba(0, 0, 0, 0.1),
-        inset 0 1px 1px rgba(255, 255, 255, 0.04);
-    min-width: 300px;
+    padding: 5px 10px;
+    min-width: 90%;
     max-width: 90vw;
-    z-index: 1;
-    bottom: 50px;
     max-height: 80vh;
+    min-height: 20vh;
     overflow: hidden;
 }
 
@@ -30,7 +23,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    text-align: center;
+    text-align: left;
     font-weight: 600;
     margin-bottom: 5px;
 }
@@ -47,11 +40,11 @@
 }
 
 .mcp-server-group {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
     border-radius: 10px;
-    overflow: hidden;
     transition: all 0.2s ease;
 }
 
@@ -67,7 +60,6 @@
     cursor: pointer;
     width: 100%;
     text-align: left;
-    min-height: 40px;
 }
 
 .server-checkbox {
@@ -91,19 +83,14 @@
 }
 
 .mcp-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    overflow: hidden;
-    min-width: 0;
+    position: relative;
+    min-height: 50px;
     /* Allows flex items to shrink below content size */
 }
 
 .mcp-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    position: relative;
+    min-height: 50px;
 }
 
 .expand-btn {
@@ -212,6 +199,8 @@
     border-radius: 8px;
     background: rgba(94, 129, 173, 0.1);
     border: 1px solid rgba(94, 129, 173, 0.2);
+    max-height: 10vh;
+    overflow-y: scroll;
 }
 
 .summary-label {
@@ -265,6 +254,12 @@
     transition: all 0.2s;
 }
 
+.add-mcp-btn {
+    width: 100%;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
 .remove-tool-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     color: rgba(var(--text-color), 0.9);
@@ -289,18 +284,6 @@
     background: rgba(94, 129, 173, 0.5);
 }
 
-/* Theme-specific styles */
-html.dark .selectmcp-btn-modal {
-    background: linear-gradient(to right, #1C273B, #191E2B);
-    --text-color: 255, 255, 255;
-    --border-color: 255, 255, 255;
-}
-
-html.light .selectmcp-btn-modal {
-    background: linear-gradient(to right, #D6E2FB, #E3EBFD);
-    --text-color: 0, 0, 0;
-    --border-color: 0, 0, 0;
-}
 
 html.dark .mcptool-checkbox {
     background: rgba(255, 255, 255, 0.05);
@@ -332,11 +315,6 @@ html.light .tool-tag {
 
 @media screen and (max-width: 500px) {
     .selectmcp-btn-modal {
-        min-width: 95vw;
-    }
-
-    .mcp-name,
-    .mcptool-name {
-        font-size: 10px;
+        min-width: 100%;
     }
 }

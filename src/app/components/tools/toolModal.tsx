@@ -7,6 +7,9 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import { fetchApps } from "./utils";
+import ModalCont from "../modal/modalCont";
+import SelectMcpButton from "../mcpComp/selectmcp";
+import SelectToolButton from "../toolComp/toolmodal";
 
 
 const ToolsModal = () => {
@@ -15,22 +18,20 @@ const ToolsModal = () => {
 
     const [apps, setApps] = useState<any[]>([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            const apps = await fetchApps()
-            setApps(apps);
-            console.log('APPS:', apps);
-        }
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         const apps = await fetchApps()
+    //         setApps(apps);
+    //         console.log('APPS:', apps);
+    //     }
+    //     fetchData();
+    // }, []);
 
     return (
-        <div className="tools-body" style={{ backgroundColor: theme === "dark" ? "#0E1111" : "whitesmoke" }}>
-            <button className="tools-close-btn" onClick={() => { window.location.hash = '' }}>
-                <X size={20} /> Close
-            </button>
-            <ToastContainer theme="dark" />
-        </div>
+        <ModalCont>
+            <SelectToolButton />
+            <SelectMcpButton />
+        </ModalCont>
     );
 };
 

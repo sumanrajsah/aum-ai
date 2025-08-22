@@ -24,12 +24,13 @@ import { useTheme } from 'next-themes';
 import { SyncLoader } from 'react-spinners';
 import { useAlert } from '@/context/alertContext';
 import { llmModels } from '@/app/utils/models-list';
+import { usePathname } from 'next/navigation';
 
 
 
 interface ChatMessageProps {
     content: string;
-    isUser: boolean;
+    role: string;
     type: string;
     model: {
         name: string;
@@ -38,16 +39,16 @@ interface ChatMessageProps {
 }
 
 
-const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, type, model }) => {
+const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type, model }) => {
     const alertMessage = useAlert()
-
+    if (content === '') return null;
     const [copyText, setCopyText] = useState<String>('Copy')
     // console.log(bytecode, abi)
     const { aiTyping, setAiTyping, setEditInput } = useChat();
     const [isImageLoaded, setImageLoaded] = useState(false);
     const [openImageModal, setOpenImageModal] = useState(false);
     const [selectedImage, setSelectImage] = useState<string | null>(null);
-
+    const pathname = usePathname();
     const messageRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [autoScroll, setAutoScroll] = useState(true);
@@ -68,7 +69,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
     const { theme } = useTheme();
 
     useEffect(() => {
-        if (type === 'image_url' && !isUser) {
+        if (type === 'image_url' && role === 'assistant') {
             const img = document.createElement('img');
             const imageUrl = JSON.parse(content).image_url;
             // console.log(imageUrl)
@@ -134,7 +135,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                 href={props.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: isUser ? 'white' : 'skyblue', textDecoration: 'underline' }}
+                style={{ color: role === 'assistant' ? 'white' : 'skyblue', textDecoration: 'underline' }}
             >
                 {props.children}
             </a>
@@ -312,7 +313,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                 className='chat-msg-cont'
                 onClick={() => { setOpenImageModal(false) }}
             >
-                {type === 'event' && aiTyping && !isUser && <>
+                {type === 'event' && aiTyping && role !== 'assistant' && <>
                     {(content === 'Creating...') ? <div className='image-box'><div className='message-box-loading'> <Image
                         src={'/sitraone.png'} // Icons stored in the public folder
                         alt={'0xXplorer AI'}
@@ -359,7 +360,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                  />
                </div>} */}
 
-                        {(type === 'image_url' && !isUser) && <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}> <div className='image-box' onClick={(e) => { e.stopPropagation(), setSelectImage(JSON.parse(content).image_url), setOpenImageModal(true) }}>
+                        {(type === 'image_url' && role !== 'assistant') && <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}> <div className='image-box' onClick={(e) => { e.stopPropagation(), setSelectImage(JSON.parse(content).image_url), setOpenImageModal(true) }}>
                             {isImageLoaded && <img className='ai-image' src={JSON.parse(content).image_url} alt={'image'} width={1024} height={1024} />}
                             {!isImageLoaded && !aiTyping && <img className='ai-image-blur' src={JSON.parse(content).image_url} alt={'image'} width={1024} height={1024} />}
                         </div>
@@ -369,7 +370,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                                 <Download />
                             </div>}
                         </div>}
-                        {(type === 'error' && !isUser) && <div className='error-message'>
+                        {(type === 'error' && role !== 'assistant') && <div className='error-message'>
                             {content}
                         </div>}
                         {(type === 'tooldata') &&
@@ -388,7 +389,6 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                                     boxShadow: "0 6px 10px rgba(0, 0, 0, 0.35),inset 0 1px 2px rgba(255, 255, 255, 0.25)",
                                 }}
                             >
-
                                 {/* Header Section */}
                                 <div
                                     style={{
@@ -455,7 +455,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                                     {thoughtData && (
                                         <div className='thought-cont'>
                                             <div className='thought-header'>
-                                                <p style={{ fontSize: '16px', fontWeight: 'lighter' }}>{visibleText.length > 0 ? 'Thought' : 'Thinking...'}</p>
+                                                <h3 style={{ fontSize: '16px', fontWeight: 'lighter' }}>{visibleText.length > 0 ? 'Thought' : 'Thinking...'}</h3>
                                                 <button
                                                     onClick={() => setShowThought(!showThought)}
                                                     className='copy-tool-button'
@@ -464,33 +464,48 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                                                 </button>
                                             </div>
                                             {showThought && (
-                                                <SyntaxHighlighter
-                                                    style={dracula}
-                                                    language={'text'} // Changed from 'txt' to 'text'
-                                                    PreTag="div"
-                                                    customStyle={{
-                                                        position: 'relative',
-                                                        padding: '10px',
-                                                        background: 'none',
-                                                        fontSize: "14px",
-                                                        lineHeight: "1.5",
-                                                        overflowX: "auto",
-                                                        width: "100%",
-                                                        height: "auto",
-                                                        borderRadius: "8px",
-                                                        fontFamily: "monospace"
+                                                <Markdown
+                                                    remarkPlugins={[remarkGfm, remarkMath]}
+                                                    rehypePlugins={[rehypeRaw, rehypeKatex, [rehypeExternalLinks, { target: '_blank', rel: 'noopener noreferrer' }]]}
+                                                    // @ts-ignore
+                                                    components={{
+                                                        a: renderLink,
+                                                        code: renderCode,
+                                                        img: renderImage,
+                                                        ul: ({ children }) => (
+                                                            <ul style={{ paddingLeft: '20px', margin: '10px 0' }}>{children}</ul>
+                                                        ),
+                                                        li: ({ children }) => (
+                                                            <li style={{ marginBottom: '6px' }}>{children}</li>
+                                                        ),
+                                                        p: ({ children, ...props }) => {
+                                                            const hasImage = React.Children.toArray(children).some(
+                                                                (child) => React.isValidElement(child) && child.type === renderImage
+                                                            );
+                                                            return hasImage
+                                                                ? <div {...props}>{children}</div>
+                                                                : <p style={{ margin: "8px 0", fontWeight: 'normal' }} {...props}>{children}</p>;
+                                                        },
+                                                        h1: ({ children }) => <h1 style={{ fontSize: '24px', margin: '16px 0' }}>{children}</h1>,
+                                                        h2: ({ children }) => <h2 style={{ fontSize: '20px', margin: '14px 0' }}>{children}</h2>,
+                                                        h3: ({ children }) => <h3 style={{ fontSize: '18px', margin: '12px 0' }}>{children}</h3>,
+                                                        h4: ({ children }) => <h4 style={{ fontSize: '16px', margin: '10px 0' }}>{children}</h4>,
+                                                        h5: ({ children }) => <h5 style={{ fontSize: '14px', margin: '8px 0' }}>{children}</h5>,
+                                                        h6: ({ children }) => <h6 style={{ fontSize: '12px', margin: '6px 0' }}>{children}</h6>,
+                                                        table: ({ children }) => (
+                                                            <div style={{ overflowX: 'auto', width: '100%', maxHeight: '100%' }}>
+                                                                <table style={{ borderCollapse: 'collapse', width: '100%', tableLayout: 'fixed', margin: '10px 0' }}>
+                                                                    {children}
+                                                                </table>
+                                                            </div>
+                                                        ),
+                                                        th: ({ children }) => <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: 'transparent' }}>{children}</th>,
+                                                        td: ({ children }) => <td style={{ border: '1px solid #ddd', padding: '8px' }}>{children}</td>,
                                                     }}
-                                                    codeTagProps={{
-                                                        style: {
-                                                            fontFamily: "monospace",
-                                                            fontWeight: "400",
-                                                            color: 'gray'
-                                                        }
-                                                    }}
-                                                    wrapLongLines={true}
                                                 >
                                                     {thoughtData}
-                                                </SyntaxHighlighter>
+                                                </Markdown>
+
                                             )}
                                         </div>
                                     )}
@@ -539,7 +554,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                                 </div>
                             );
                         })()}
-                        {!isUser && !aiTyping && (
+                        {!aiTyping && (
                             <div className='chat-footer'>
                                 <button
                                     onClick={() => copyMessageToClipboard(content)}
@@ -549,27 +564,14 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                                     <Copy size={16} />
 
                                 </button>
-                                <button className='copy-button' title='Good Response' onClick={() => { alertMessage.success('Thank you') }} ><ThumbsUp size={16} /> </button>
-                                <button className='copy-button' title='Bad Response' onClick={() => { alertMessage.success('Thank you') }}><ThumbsDown size={16} /></button>
-                                <label className='copy-button' title='Bad Response'>{llmModels.find(m => m.value === model.name)?.label}</label>
-                            </div>
-                        )}
-                        {isUser && !aiTyping && type === 'text' && (
-                            <div className='chat-footer-user'>
-                                <button
-                                    onClick={() => copyMessageToClipboard(content)}
-                                    className='copy-button'
-                                    title='copy'
-                                >
-                                    <Copy size={16} />
-
-                                </button>
-                                <button className='copy-button' title='Bad Response' onClick={() => { setEditInput(content) }}><Pencil size={16} /></button>
+                                {!(pathname.includes('/agent')) && < button className='copy-button' title='Good Response' onClick={() => { alertMessage.success('Thank you') }} ><ThumbsUp size={16} /> </button>}
+                                {!(pathname.includes('/agent')) && <button className='copy-button' title='Bad Response' onClick={() => { alertMessage.success('Thank you') }}><ThumbsDown size={16} /></button>}
+                                {!(pathname.includes('/agent')) && <label className='model-label'>{llmModels.find(m => m.value === model.name)?.label}</label>}
                             </div>
                         )}
 
 
-                        {(type === 'loading') && !isUser && <div className='message-box-loading'> <Image
+                        {(type === 'loading') && <div className='message-box-loading'> <Image
                             src={'/sitraone.png'} // Icons stored in the public folder
                             alt={'0xXplorer AI'}
                             width={20}
@@ -580,7 +582,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, isUser, typ
                     </div>
                 </div>}
 
-            </div>
+            </div >
         </>
     );
 };

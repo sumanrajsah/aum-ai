@@ -109,8 +109,7 @@ export default function VideoPlayground({ params }: { params: Promise<{ wid: str
         const width = window.innerWidth;
         if (width < 600) return 1;
         if (width < 900) return 2;
-        if (width < 1200) return 3;
-        return 4;
+        return 3;
     };
 
     const updateColumns = () => {

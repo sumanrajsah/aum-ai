@@ -1,7 +1,7 @@
 'use client'
 import React, { use, useEffect, useRef, useState } from "react"
 import './header.css'
-import { AlignLeft, CircleFadingPlus, Layers, PanelRightClose, User2 } from "lucide-react"
+import { AlignLeft, CircleFadingPlus, Layers, PanelRightClose, PenLine, Plus, SquarePen, User2 } from "lucide-react"
 import ProfileCont from "./profile"
 import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "../../../hooks/useAuth"
@@ -60,11 +60,11 @@ const Header = () => {
                     }}>
                         <AlignLeft size={20} />
                     </button>}
-                    {user && <button className="select-workspace-btn" onClick={() => { setOpenWorkspaceModel(!openWorkspaceModel); setOpenDisconnectModel(false) }}>
+                    {(pathname.includes('/workspace')) && user && <button className="select-workspace-btn" onClick={() => { setOpenWorkspaceModel(!openWorkspaceModel); setOpenDisconnectModel(false) }}>
                         <Layers size={20} /> {currentWorkspace === '' ? 'Aum Ai' : `${workspaceName}`}
                     </button>}
                     {user && <button className="ham-btn" onClick={() => { router.push(currentWorkspace === '' ? `/?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>
-                        <CircleFadingPlus size={20} />
+                        <SquarePen size={20} />
                     </button>}
                 </div>
                 {openWorkspaceModel && user && <div className="workspace-cont" ref={modalRef}>
@@ -72,23 +72,24 @@ const Header = () => {
                 </div>}
                 {/* {pathname !== '/' && !pathname.startsWith('/c/') && <button onClick={() => router.push('/')} className="connect-button">Home</button>} */}
                 <div className="btn-cont">
-                    {pathname === '/agents/explorer' && user && <button onClick={() => router.push('/agents/create')} className="connect-button">Create</button>}
-                    {pathname.startsWith('/agents/create') && <button onClick={() => router.push('/agents/explorer')} className="connect-button">Explore Agents</button>}
+                    {/*agents*/}
+                    {pathname.startsWith('/store/agents') && user && <button onClick={() => router.push('/create/agent')} className="connect-button">Create</button>}
+                    {pathname === '/store/agents' && user && <button onClick={() => router.push('/store/agents/mine')} className="connect-button">My Agents</button>}
+                    {/*MCP*/}
+                    {pathname.startsWith('/store/mcp') && user && <button onClick={() => router.push('/create/mcp')} className="connect-button">Create</button>}
+                    {pathname === '/store/mcp' && user && <button onClick={() => router.push('/store/mcp/mine')} className="connect-button">My MCP</button>}
 
                     {!(user) ? <button className="connect-button"
                         onClick={() => {
                             router.push('/login')
                         }}
-                    >Sign In</button> : <button className="account-button" onClick={async (e) => { e.stopPropagation(); setOpenDisconnectModel(true) }}>{user.image ? <Image className="avatar" src={user?.image as string} alt="t" height={50} width={50} /> : <User2 size={20} />}</button>}
+                    >Sign In</button> : null}
                     {!(user) ? <button className="connect-button"
                         onClick={() => {
                             router.push('/signup')
                         }}
                     >Sign Up</button> : ""}
                 </div>
-                {openDisconnecModel && <div className="profile-cont" ref={modalRef} >
-                    <ProfileCont />
-                </div>}
 
             </div>
         </>
