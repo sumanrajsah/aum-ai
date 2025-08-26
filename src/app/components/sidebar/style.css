@@ -492,6 +492,15 @@ label {
 
 }
 
+@media screen and (max-width: 360px) {
+
+
+    .profile-sidebar-cont {
+        left: 5px;
+    }
+
+}
+
 html.dark {
 
     .sidebar,

@@ -16,7 +16,7 @@ const AgentStoreCard = forwardRef<HTMLDivElement, AgentStoreCardProps>(
     ({ agentData, onClick }, ref) => {
         const {
             agent: { name, description, image, handle },
-            owner: { name: ownerName },
+            owner: { username },
             pricing_info: { amount, currency }
         } = agentData;
 
@@ -48,7 +48,7 @@ const AgentStoreCard = forwardRef<HTMLDivElement, AgentStoreCardProps>(
                     <div className="card-footer">
                         <div className="owner-info">
                             <div className="owner-label">Created By</div>
-                            <div className="owner-name">{ownerName}</div>
+                            <div className="owner-name">{username}</div>
                         </div>
                         <div className="card-price-container">
                             <label>price</label>

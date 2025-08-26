@@ -1,6 +1,6 @@
 'use client'
-import React, { useEffect, useRef, useState } from "react"
-import { Layers, PanelRightClose, User2 } from "lucide-react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import { Check, ChevronDown, Layers, PanelRightClose, User2 } from "lucide-react"
 import './selectModel.css'
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -10,34 +10,119 @@ import { imageModels, llmModels, vidoeModels } from "../utils/models-list"
 
 const SelectModelButton = () => {
     const { selectModel, Model, chatMode } = useChat();
-    const searchParams = useSearchParams();
-    const router = useRouter()
-    return (
-        <>
-            {chatMode === 'text' && <select className="select-model-btn" onChange={(e) => { selectModel(e.target.value); router.push(`?model=${e.target.value}&mode=${chatMode}`) }} defaultValue={Model} >
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedModel, setSelectedModel] = useState(Model);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
+    const scrollToItem = useCallback((node: HTMLDivElement | null) => {
+        if (node) {
+            node.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    }, []);
+    // Get the appropriate models based on chat mode
+    const getModels = () => {
+        switch (chatMode) {
+            case 'text': return llmModels;
+            case 'image': return imageModels;
+            case 'video': return vidoeModels;
+            default: return llmModels;
+        }
+    };
 
-                {llmModels.map((llmModel: { value: string; label: string }) => (
-                    <option key={llmModel.value} value={llmModel.value}>
-                        {llmModel.label}
-                    </option>
-                ))}
-            </select>}
-            {chatMode === 'image' && <select className="select-model-btn" onChange={(e) => { selectModel(e.target.value); router.push(`?model=${e.target.value}&mode=${chatMode}`) }} defaultValue={Model} >
-                {imageModels.map((model: { value: string; label: string }) => (
-                    <option key={model.value} value={model.value}>
-                        {model.label}
-                    </option>
-                ))}
-            </select>}
-            {chatMode === 'video' && <select className="select-model-btn" onChange={(e) => { selectModel(e.target.value); router.push(`?model=${e.target.value}&mode=${chatMode}`) }} defaultValue={Model} >
-                {vidoeModels.map((model: { value: string; label: string }) => (
-                    <option key={model.value} value={model.value}>
-                        {model.label}
-                    </option>
-                ))}
-            </select>}
-        </>
-    )
-}
+    const models = getModels();
+    const currentModel = models.find(model => model.value === selectedModel) || models[0];
+
+    // Handle model selection
+    const handleModelSelect = (modelValue: any) => {
+        setSelectedModel(modelValue);
+        selectModel(modelValue);
+        router.push(`?model=${modelValue}&mode=${chatMode}`);
+        setIsOpen(false);
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // Update selected model when Model prop changes
+    useEffect(() => {
+        setSelectedModel(Model);
+    }, [Model]);
+    // add near top of file
+    type IOCredit = { inputCredits: number; outputCredits: number };
+    type FlatCredit = { credits: number };
+    const hasIOCredits = (m: any): m is IOCredit =>
+        typeof m?.inputCredits === "number" && typeof m?.outputCredits === "number";
+    const hasFlatCredit = (m: any): m is FlatCredit =>
+        typeof m?.credits === "number";
+
+
+    return (
+        <div className="custom-model-selector" ref={dropdownRef}>
+            <button
+                className="model-selector-trigger"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-expanded={isOpen}
+                aria-haspopup="listbox"
+            >
+                <span className="selected-model-label">{currentModel.label}</span>
+                <ChevronDown
+                    className={`chevron-icon ${isOpen ? 'rotated' : ''}`}
+                    size={16}
+                />
+            </button>
+
+            {isOpen && (
+                <div className="model-dropdown">
+                    <div className="dropdown-header">
+                        <span className="dropdown-title">Select Model</span>
+                        <span className="mode-badge">{chatMode}</span>
+                    </div>
+                    <ul className="model-list" role="listbox">
+                        {models.map((model) => (
+                            <li
+                                key={model.value}
+                                className={`model-option ${selectedModel === model.value ? 'selected' : ''}`}
+                                onClick={() => handleModelSelect(model.value)}
+                                role="option"
+                                aria-selected={selectedModel === model.value}
+                            >
+                                <div className="model-info">
+                                    <span className="model-name">{model.label}</span>
+                                    {hasIOCredits(model) ? (
+                                        <div className="model-credits">
+                                            <span className="credit-item">Input: {model.inputCredits}</span>
+                                            <span className="credit-item">Output: {model.outputCredits}</span>
+                                        </div>
+                                    ) : hasFlatCredit(model) ? (
+                                        <div className="model-credits">
+                                            <span className="credit-item">Credits: {model.credits}</span>
+                                        </div>
+                                    ) : null}
+
+                                </div>
+                                {selectedModel === model.value && (
+                                    <Check className="check-icon" size={16} />
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
+};
+
 
 export default SelectModelButton;

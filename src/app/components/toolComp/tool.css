@@ -14,12 +14,12 @@
 
 }
 
-.modal-header {
+.tool-modal-header {
     text-align: center;
     margin-bottom: 8px;
 }
 
-.modal-title {
+.tool-modal-title {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,7 +42,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 2px;
+    gap: 5px;
 }
 
 .tool-checkbox {
@@ -51,7 +51,7 @@
     align-items: flex-start;
     flex-direction: row;
     justify-content: space-between;
-    padding: 16px;
+    padding: 5px;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
@@ -59,14 +59,10 @@
     text-align: left;
     background: rgba(var(--bg-secondary), 0.3);
     border: 1px solid rgba(var(--border-color), 0.1);
-    min-height: 76px;
 }
 
 .tool-checkbox:hover {
     background: rgba(94, 129, 173, 0.15);
-    border-color: rgba(94, 129, 173, 0.3);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(94, 129, 173, 0.15);
 }
 
 .tool-checkbox.selected {
@@ -163,7 +159,7 @@
         border-radius: 12px;
     }
 
-    .modal-title {
+    .tool-modal-title {
         font-size: 18px;
     }
 
@@ -172,8 +168,7 @@
     }
 
     .tool-checkbox {
-        padding: 14px;
-        min-height: 70px;
+        padding: 5px;
     }
 
     .tool-name {
@@ -198,8 +193,7 @@
     }
 
     .tool-checkbox {
-        padding: 12px;
-        min-height: 66px;
+        padding: 5px;
     }
 
     .tool-content {
@@ -231,13 +225,12 @@
         gap: 12px;
     }
 
-    .modal-title {
+    .tool-modal-title {
         font-size: 16px;
     }
 
     .tool-checkbox {
-        padding: 10px;
-        min-height: 62px;
+        padding: 5px;
     }
 
     .tool-icon {

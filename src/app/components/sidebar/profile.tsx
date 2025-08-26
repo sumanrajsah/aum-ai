@@ -85,7 +85,9 @@ const ProfileCont = () => {
                     >
                         {getUserInitials(user?.name)}
                     </div>
+
                 </div>
+                <span className="plan" style={{ textTransform: 'uppercase', fontWeight: '600' }}>{user?.plan}</span>
                 <div className="user-info">
                     <div className="user-name">
                         {user?.name || 'User'}
@@ -96,6 +98,10 @@ const ProfileCont = () => {
                 </div>
             </div>
 
+            <hr />
+            <button className="profile-btn" onClick={() => { router.push('/plan') }}>
+                <User2 size={20} />Upgrade Plan
+            </button>
             <hr />
 
             {/* Menu Items */}

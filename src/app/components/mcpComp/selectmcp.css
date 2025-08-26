@@ -199,7 +199,7 @@
     border-radius: 8px;
     background: rgba(94, 129, 173, 0.1);
     border: 1px solid rgba(94, 129, 173, 0.2);
-    max-height: 10vh;
+    max-height: 50vh;
     overflow-y: scroll;
 }
 

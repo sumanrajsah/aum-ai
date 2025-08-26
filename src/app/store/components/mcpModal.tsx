@@ -107,9 +107,10 @@ const McpPopupModal: React.FC<AgentPopupModalProps> = ({ sid, onClose }) => {
                     {/* Owner Section */}
                     <div className="section">
                         <h3 className="section-title">Created by</h3>
-                        <div className="owner-modal-info">
+                        <div className="owner-modal-info" onClick={() => router.push(`/store/profile/${data.owner_handle}`)}>
                             <div className="owner-avatar">
-                                <span>{data.owner_name[0].toUpperCase()}</span>
+                                {!data.avatar && <span>{data.owner_name[0].toUpperCase()}</span>}
+                                {data.avatar && <img className='owner-avatar' src={data.avatar} alt={`${data.owner_name}`} />}
                             </div>
                             <div>
                                 <p className="owner-name">{data.owner_name}</p>
@@ -149,7 +150,7 @@ const McpPopupModal: React.FC<AgentPopupModalProps> = ({ sid, onClose }) => {
                         <div className="ratings-chart">
                             {[5, 4, 3, 2, 1].map((rating) => {
                                 // Calculate percentage based on mock data - you can replace with real data
-                                const mockData = { 5: 85, 4: 25, 3: 15, 2: 8, 1: 12 };
+                                const mockData: any = { 5: 85, 4: 25, 3: 15, 2: 8, 1: 12 };
                                 const percentage = mockData[rating];
 
                                 return (

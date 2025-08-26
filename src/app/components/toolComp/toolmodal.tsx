@@ -4,7 +4,7 @@ import { Globe, Image, Images, Layers, MonitorSmartphone, PanelRightClose, Spark
 import './tool.css'
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
-import { useMcpServer } from "@/context/ChatContext"
+import { useChat, useMcpServer } from "@/context/ChatContext"
 import ToggleSwitch from "../toggleSwitch"
 
 interface SelectToolButtonProps {
@@ -17,11 +17,11 @@ const SelectToolButton = () => {
     const searchParams = useSearchParams();
     const router = useRouter()
     const modalRef = useRef<HTMLDivElement>(null);
-    const [selectedTools, setSelectedTools] = useState<string[]>([])
+    const { tools: prevTools, setTools } = useChat();
     const { theme } = useTheme()
 
     const toggleToolSelection = (toolName: string) => {
-        setSelectedTools(prev =>
+        setTools(prev =>
             prev.includes(toolName)
                 ? prev.filter(t => t !== toolName)
                 : [...prev, toolName]
@@ -45,8 +45,8 @@ const SelectToolButton = () => {
 
     return (
         <div className="selecttool-btn-modal">
-            <div className="modal-header">
-                <h3 className="modal-title">
+            <div className="tool-modal-header">
+                <h3 className="tool-modal-title">
                     <Sparkles size={18} />
                     Select Tools
                 </h3>
@@ -56,7 +56,7 @@ const SelectToolButton = () => {
             <div className="selecttool-btn-cont">
                 {tools.map((tool) => {
                     const IconComponent = tool.icon;
-                    const isSelected = selectedTools.includes(tool.id);
+                    const isSelected = prevTools.includes(tool.id);
 
                     return (
                         <div
@@ -71,7 +71,6 @@ const SelectToolButton = () => {
                                     </div>
                                     <div className="tool-name">{tool.name}</div>
                                 </div>
-                                <div className="tool-description">{tool.description}</div>
                             </div>
                             <div className="tool-check">
                                 <ToggleSwitch
@@ -85,9 +84,9 @@ const SelectToolButton = () => {
                 })}
             </div>
 
-            <div className="modal-footer">
+            <div className="tool-modal-footer">
                 <div className="selected-count">
-                    {selectedTools.length} tool{selectedTools.length !== 1 ? 's' : ''} selected
+                    {prevTools.length} tool{prevTools.length !== 1 ? 's' : ''} selected
                 </div>
             </div>
         </div>

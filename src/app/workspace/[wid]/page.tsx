@@ -24,6 +24,9 @@ import Modal from "@/app/components/modal";
 import Sidebar from "@/app/components/sidebar/sidebar";
 import PageStruct1 from "@/app/components/pagestruct/struct1";
 import { useAlert } from "../../../context/alertContext";
+import TextAssistantMessage from "@/app/components/chat/message-prop/assistant/text-assistant";
+import ToolResultRender from "@/app/components/chat/message-prop/assistant/toolsResult";
+import TextUserMessage from "@/app/components/chat/message-prop/user/text-user";
 
 
 type MessageContent = string | MessageContentItem[];
@@ -134,10 +137,11 @@ export default function Workspace({ params }: { params: Promise<{ wid: string }>
                     </div>}
 
                     {messages.map((msg, index) => (
-                        <div className="chat-cont-message" key={index}>
+                        <div className="chat-cont-message" key={msg.msg_id}>
                             {Array.isArray(msg.content) ? (
                                 msg.content.map((item: MessageContentItem, idx) => {
                                     let messageContent: string;
+                                    let filename: string = '';
 
                                     switch (item.type) {
                                         case "text":
@@ -147,27 +151,68 @@ export default function Workspace({ params }: { params: Promise<{ wid: string }>
                                             messageContent = item.image_url;
                                             break;
                                         case "file":
-                                            messageContent = `${item.file.filename} (File attached)`; // Or customize this
+                                            messageContent = `${item.file.file_url}`;
+                                            filename = `${item.file.filename}`;
                                             break;
                                         default:
                                             messageContent = "Unsupported message type";
                                     }
 
-                                    return (
-                                        <ChatMessage
-                                            key={idx}
-                                            message={messageContent}
-                                            isUser={msg.isUser}
-                                            type={item.type}
-                                        />
-                                    );
+                                    const contentKey = `${msg.msg_id}-${item.type}-${idx}`;
+
+                                    if (msg.role === 'assistant') {
+                                        return (
+                                            <TextAssistantMessage
+                                                key={contentKey}
+                                                content={messageContent}
+                                                type={item.type}
+                                                role={msg.role}
+                                                model={msg.model ?? { name: '', provider: '' }}
+                                            />
+                                        );
+                                    } else if (msg.role === 'tool') {
+                                        return (
+                                            <ToolResultRender
+                                                key={contentKey}
+                                                content={messageContent}
+                                            />
+                                        );
+                                    } else {
+                                        return (
+                                            <TextUserMessage
+                                                key={contentKey}
+                                                content={messageContent}
+                                                type={item.type}
+                                                role={msg.role ?? ''}
+                                                filename={filename}
+                                            />
+                                        );
+                                    }
                                 })
                             ) : (
-                                <ChatMessage
-                                    message={msg.content}
-                                    isUser={msg.isUser}
-                                    type={msg.type || "text"}
-                                />
+                                <>
+                                    {msg.role === 'assistant' ? (
+                                        <TextAssistantMessage
+                                            key={msg.msg_id}
+                                            content={msg.content}
+                                            role={msg.role ?? ''}
+                                            type={msg.type}
+                                            model={msg.model ?? { name: '', provider: '' }}
+                                        />
+                                    ) : msg.role === 'tool' ? (
+                                        <ToolResultRender
+                                            key={msg.msg_id}
+                                            content={msg.content}
+                                        />
+                                    ) : (
+                                        <TextUserMessage
+                                            key={msg.msg_id}
+                                            content={msg.content}
+                                            role={msg.role ?? ''}
+                                            type={msg.type}
+                                        />
+                                    )}
+                                </>
                             )}
                         </div>
                     ))}

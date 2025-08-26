@@ -4,7 +4,7 @@ import React, { createContext, useContext, ReactNode, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth'; // adjust the import as per your folder structure
 
 interface AuthContextType {
-    user: { uid: string; name?: string; image?: string } | null;
+    user: { uid: string; plan: string | 'free'; name?: string; image?: string } | null;
     status: string;
     isAuthLoading: boolean;
 }

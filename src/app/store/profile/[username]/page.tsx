@@ -1,10 +1,10 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { Star, Globe, Users, Download, Calendar, MapPin, Github, Twitter, Linkedin, Bot, Code, FileText, BrainCircuit } from 'lucide-react';
 import './style.css'
-import ProfileAgentsPage from './components/agent/agent';
-import ProfileMCPPage from './components/mcp/mcp';
 import { useAuth } from '@/hooks/useAuth';
+import ProfileAgentsPage from '../components/agent/agent';
+import ProfileMCPPage from '../components/mcp/mcp';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Oval } from 'react-loader-spinner';
@@ -29,59 +29,36 @@ interface DevProfile {
     verified: boolean;
     badge: string;
 }
-const DevProfile = () => {
+
+
+const DevProfile = ({ params }: { params: Promise<{ username: string }> }) => {
     const [activeTab, setActiveTab] = useState('agents');
     const { status, isAuthLoading, user } = useAuth()
-    const [profile, setProfile] = useState<DevProfile>();
-    const [loading, setLoading] = useState(false);
+    const [profile, setProfile] = useState<DevProfile>()
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const { username } = use(params)
     const fetchProfile = async () => {
-        setLoading(true);
+        setLoading(true)
         try {
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_API_URI}/v1/store/dev`,
                 {
-                    params: { uid: user?.uid },
+                    params: { username },
                     withCredentials: true,
                 }
             );
-
-            setProfile(response.data.profile);
-        } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                if (err.response) {
-                    // backend responded with error code
-                    console.error("Server error:", err.response.data);
-                    alert(
-                        `Error ${err.response.status}: ${(err.response.data as any)?.error || "Request failed"
-                        }`
-                    );
-                } else if (err.request) {
-                    // request made but no response
-                    console.error("No response from server:", err.request);
-                    alert("No response from server. Please try again later.");
-                } else {
-                    // something went wrong setting up request
-                    console.error("Axios error:", err.message);
-                    alert("Unexpected error: " + err.message);
-                }
-            } else {
-                console.error("Unexpected error:", err);
-                alert("Unexpected error occurred.");
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
+            //console.log(response.data)
+            setProfile(response.data.profile)
+            setLoading(false)
+        } catch (e) { console.log(e) }
+    }
 
     useEffect(() => {
         if (user?.uid) {
             fetchProfile();
         }
     }, [user])
-
-
 
     const formatNumber = (num: any) => {
         if (num >= 1000) {
@@ -119,9 +96,25 @@ const DevProfile = () => {
 
         return firstInitial + lastInitial;
     };
+    async function followAction(
+        followerUid: string,
+        targetUid: string,
+        action: "follow" | "unfollow"
+    ) {
+        try {
+            const res = await axios.put(
+                `${process.env.NEXT_PUBLIC_API_URI}/v1/store/dev/follow`,
+                { followerUid, targetUid, action },
+                { withCredentials: true }
+            );
+            return res.data;
+        } catch (err: any) {
+            console.error("Follow action failed:", err);
+            return { status: false, message: err.response?.data?.message || "Request failed" };
+        }
+    }
 
-
-    if (loading) {
+    if (loading || !user) {
         return <div className="profile-container"><Oval
             visible={true}
             height="50"
@@ -163,7 +156,7 @@ const DevProfile = () => {
                         >
                             {getUserInitials(profile.display_name)}
                         </div>}
-                        {user?.uid == profile.uid && <button onClick={() => { router.push('/store/profile/edit') }} className="follow-btn">Edit</button>}
+                        {user?.uid == profile.uid ? <button onClick={() => { router.push('/store/profile/edit') }} className="follow-btn">Edit</button> : <button className="follow-btn" onClick={() => { followAction(user?.uid, profile.uid, 'follow') }}>Follow</button>}
                     </div>
 
                     <div className="profile-info">

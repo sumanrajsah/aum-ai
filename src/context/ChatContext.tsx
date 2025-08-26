@@ -31,7 +31,7 @@ interface ChatContextType {
     setAlertModel: React.Dispatch<React.SetStateAction<boolean>>;
     alertModel: boolean;
     abortControllerRef: React.MutableRefObject<AbortController | null>;
-    handleSendMessage: (message: MessageContentItem[], mcpServers: any[], bot?: boolean, lang?: string) => Promise<void>;
+    handleSendMessage: (message: MessageContentItem[], mcpServers: any[], mcp_tools: any[], bot?: boolean, lang?: string) => Promise<void>;
     memoizedHistory: GroupedHistoryByDate;
     setChatMode: React.Dispatch<React.SetStateAction<ChatMode>>;
     chatMode: ChatMode;
@@ -40,6 +40,9 @@ interface ChatContextType {
     setAgentId: React.Dispatch<React.SetStateAction<string>>;
     setUserAgents: React.Dispatch<React.SetStateAction<any[]>>;
     userAgents: any[];
+
+    setTools: React.Dispatch<React.SetStateAction<any[]>>;
+    tools: any[];
 }
 interface MCPServerContextType {
     setMcpServers: React.Dispatch<React.SetStateAction<MCPServerInfo[]>>;
@@ -189,7 +192,7 @@ const ImagePlaygroundProvider = ({ children }: { children: React.ReactNode }) =>
 
 
                 const response = await axios.get(url, { withCredentials: true });
-                //console.log("Fetching images from:", url);
+                ////console.log("Fetching images from:", url);
 
                 if (response.status === 201 && response.data?.success) {
                     setAllImages(response.data.data);
@@ -215,7 +218,7 @@ const ImagePlaygroundProvider = ({ children }: { children: React.ReactNode }) =>
     }, [imageSettings])
 
 
-    //console.log(currentWorkspace)
+    ////console.log(currentWorkspace)
     async function createImage(prompt: string) {
         if (currentWorkspace) {
             router.push(`/workspace/${currentWorkspace}/image-playground?model=${Model}&mode=${chatMode}`)
@@ -289,7 +292,7 @@ const VideoPlaygroundProvider = ({ children }: { children: React.ReactNode }) =>
 
 
                 const response = await axios.get(url, { withCredentials: true });
-                //console.log("Fetching images from:", url);
+                ////console.log("Fetching images from:", url);
 
                 if (response.status === 201 && response.data?.success) {
                     setAllVideos(response.data.data);
@@ -315,7 +318,7 @@ const VideoPlaygroundProvider = ({ children }: { children: React.ReactNode }) =>
     }, [videoSettings])
 
 
-    //console.log(currentWorkspace)
+    ////console.log(currentWorkspace)
     async function createVideo(prompt: string) {
         if (currentWorkspace) {
             router.push(`/workspace/${currentWorkspace}/video-playground?model=${Model}&mode=${chatMode}`)
@@ -384,7 +387,7 @@ const McpServerProvider = ({ children }: { children: React.ReactNode }) => {
                 const serverResult = await axios.get(`${process.env.NEXT_PUBLIC_API_URI}/v1/servers?uid=${user.uid}`, { withCredentials: true })
 
                     ;
-                // console.log(userResult, serverResult)
+                // //console.log(userResult, serverResult)
                 // Handle workspace result
 
                 // Handle server result independently
@@ -440,7 +443,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const [language, selectLanguage] = useState<string>('English');
     const [isChatPage, setChatPage] = useState<boolean>(false);
     const [alertModel, setAlertModel] = useState<boolean>(true);
-
+    const [tools, setTools] = useState<any[]>([])
     const [Model, selectModel] = useState<string>('gpt-5-nano');
     const [editInput, setEditInput] = useState<string>('');
     const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -453,10 +456,10 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const [agentId, setAgentId] = useState('')
     const [userAgents, setUserAgents] = useState<any[]>([])
 
-    //console.log(editInput)
+    ////console.log(editInput)
     const { user, status } = useAuth();
     const pathname = usePathname();
-    //  console.log(user)
+    //  //console.log(user)
     const alertMessage = useAlert()
 
     const chat = messages.map((msg) => ({
@@ -466,7 +469,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
         tool_calls: msg.tool_calls
     }));
     let memoizedHistory;
-    //console.log(messages, chat)
+    ////console.log(messages, chat)
     useEffect(() => {
         const mode = searchparams.get('mode');
         if (mode) {
@@ -501,7 +504,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                     axios.get(`${process.env.NEXT_PUBLIC_API_URI}/v1/user/workspaces/${user?.uid}`, { withCredentials: true }),
                     axios.get(`${process.env.NEXT_PUBLIC_API_URI}/v1/user/chathistory/${user.uid}?wid=${currentWorkspace}`, { withCredentials: true })
                 ]);
-                // console.log(userResult, serverResult)
+                // //console.log(userResult, serverResult)
                 // Handle workspace result
                 if (workspaceResult.status === 'fulfilled') {
                     const workspaceResponse = workspaceResult.value;
@@ -568,7 +571,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
         if (user) getData();
     }, [user, memoizedHistory, currentWorkspace, aiTyping, status])
     memoizedHistory = useMemo(() => historyItems, [historyItems]);
-    // console.log(memoizedHistory)
+    // //console.log(memoizedHistory)
     useEffect(() => {
         return () => {
             if (abortControllerRef.current) {
@@ -578,7 +581,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     }, []);
 
 
-    const handleSendMessage = useCallback(async (message: MessageContentItem[], mcpServers: any[], bot?: boolean, lang?: string) => {
+    const handleSendMessage = useCallback(async (message: MessageContentItem[], mcpServers: any[], mcp_tools: any[], bot?: boolean, lang?: string) => {
         abortControllerRef.current = new AbortController();
         let chat_id;
 
@@ -588,7 +591,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URI}/v1/chat/newChat`, { withCredentials: true });
                 if (response.data.status === 'success') {
                     chat_id = response.data.chat_id;
-                    console.log(response.data.chat_id)
+                    //console.log(response.data.chat_id)
                     setChatId(response.data.chat_id)
                     // setHistory([{ title: chat_id, chat_id: chat_id }])
                     if (agentId !== '') {
@@ -600,7 +603,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 // await updateChat(messageData, response.data.chat_id);
                 // return;
             } catch (error: any) {
-                console.log(error.message);
+                //console.log(error.message);
             }
         }
 
@@ -622,6 +625,8 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
             const config = {
                 model: Model,
                 mcp_server: mcpServers,
+                mcp_tools: mcp_tools,
+                tools: tools,
                 temperature: temperature,
                 top_p: top_p,
                 frequency_penalty: frequency_penalty,
@@ -629,7 +634,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 supportsMedia: getMediaSupportByModelName(Model)
             }
             let response;
-            //console.log(chatId, chat_id)
+            ////console.log(chatId, chat_id)
             if (agentId !== '') {
                 response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/agents/chat/completion`, {
                     method: 'POST',
@@ -657,7 +662,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                     credentials: 'include',
                 });
             }
-            console.log(response)
+            //console.log(response)
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -686,7 +691,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                     try {
                         const jsonStr = line.replace(/^data:\s*/, ''); // Fix: Safe regex replace
                         const parsed = JSON.parse(jsonStr);
-                        console.log(parsed, parsed.tool_calls)
+                        //console.log(parsed, parsed.tool_calls)
 
                         const msg_id = parsed.msg_id;
                         aiResponse += parsed.response;
@@ -768,7 +773,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 setChatMode,
                 aiWriting,
                 setAgentId,
-                agentId, userAgents, setUserAgents
+                agentId, userAgents, setUserAgents, tools, setTools
 
             }}
         >

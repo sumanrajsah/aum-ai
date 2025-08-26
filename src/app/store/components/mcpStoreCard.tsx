@@ -15,7 +15,7 @@ const McpCard = forwardRef<HTMLDivElement, McpCardProps>(
     ({ mcpData, onClick }, ref) => {
         const {
             mcp: { label, description, sid, tools, image },
-            owner: { name: ownerName },
+            owner: { username },
             pricing_info: { amount, currency }
         } = mcpData;
 
@@ -74,7 +74,7 @@ const McpCard = forwardRef<HTMLDivElement, McpCardProps>(
                     <div className="card-footer">
                         <div className="owner-info">
                             <div className="owner-label">Created By</div>
-                            <div className="owner-name">{ownerName}</div>
+                            <div className="owner-name">{username}</div>
                         </div>
                         <div className="card-price-container">
                             <label>price</label>

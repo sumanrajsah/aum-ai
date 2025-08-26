@@ -35,7 +35,7 @@ interface FileData {
 
 const ChatInput = () => {
   const { handleSendMessage, aiTyping, abortControllerRef, setAiTyping, messages, editInput, setChatMode, chatMode, Model, selectModel } = useChat();
-  const { mcpServers, setMcpServers, setSelectedServers, selectedServers, setMcpResources, selectMcpResource, mcpResource, mcpResources } = useMcpServer();
+  const { selectedServers, mcpResources, mcpTools } = useMcpServer();
   const { createImage, creatingImage, allImages } = useImagePlaygound();
   const { createVideo, creatingVideo, allVideos } = useVideoPlayground();
   const [input, setInput] = useState('');
@@ -306,7 +306,7 @@ const ChatInput = () => {
         });
       }
 
-      handleSendMessage(messageData, selectedServers.map(server => server.sid), false);
+      handleSendMessage(messageData, selectedServers.map(server => server.sid), mcpTools, false);
 
       setInput('');
       setSelectedFiles([]);
@@ -366,7 +366,7 @@ const ChatInput = () => {
           });
         }
 
-        handleSendMessage(messageData, selectedServers.map(server => server.sid), false);
+        handleSendMessage(messageData, selectedServers.map(server => server.sid), mcpTools, false);
         setInput('');
         setSelectedFiles([]);
         if (textareaRef.current) {

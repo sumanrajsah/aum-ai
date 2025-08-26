@@ -1,30 +1,72 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Camera, Upload, MapPin, Globe, Calendar, Github, Twitter, Linkedin, Save, ArrowLeft } from 'lucide-react';
 import './style.css'
+import { useAuth } from '@/hooks/useAuth';
+import axios from 'axios';
+import { useAlert } from '@/context/alertContext';
 
 const EditProfile = () => {
+    const { user } = useAuth();
+    const alert = useAlert();
     const [formData, setFormData] = useState({
+        _id: '',
         display_name: "QubicSquare",
         username: "qubicsquare",
         bio: "We build AI agents and MCP tools that revolutionize how businesses interact with artificial intelligence. Passionate about creating innovative solutions.",
         website: "https://qubicsquare.com",
         location: "San Francisco, CA",
-        github: "qubicsquare",
-        twitter: "qubicsquare",
-        linkedin: "qubicsquare"
+        social_links: {
+            "github": "https://github.com/qubicsquare",
+            "twitter": "https://twitter.com/qubicsquare",
+            "linkedin": "https://linkedin.com/in/qubicsquare",
+        },
+        banner_image: '',
+        avatar_url: ''
     });
 
-    const [avatarPreview, setAvatarPreview] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face");
-    const [bannerPreview, setBannerPreview] = useState("https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=300&fit=crop");
+    const [avatarPreview, setAvatarPreview] = useState("");
+    const [bannerPreview, setBannerPreview] = useState("");
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);;
+    const [bannerFile, setBannerFile] = useState<File | null>(null);;
     const [isUploading, setIsUploading] = useState({ avatar: false, banner: false });
 
     const handleInputChange = (field: any, value: any) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
+        if (field === 'github' || field === 'twitter' || field === 'linkedin') {
+            setFormData(prev => ({
+                ...prev,
+                social_links: {
+                    ...prev.social_links,
+                    [field]: value
+                }
+            }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [field]: value
+            }));
+        }
     };
+
+    const fetchProfile = async () => {
+        try {
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_API_URI}/v1/store/dev`,
+                {
+                    params: { uid: user?.uid },
+                    withCredentials: true,
+                }
+            );
+            console.log(response.data)
+            setFormData(response.data.profile)
+        } catch (e) { console.log(e) }
+    }
+
+    useEffect(() => {
+        if (user?.uid) {
+            fetchProfile();
+        }
+    }, [user])
 
     const handleFileUpload = (type: any, event: any) => {
         const file = event.target.files[0];
@@ -36,8 +78,10 @@ const EditProfile = () => {
             reader.onload = (e: any) => {
                 setTimeout(() => {
                     if (type === 'avatar') {
+                        setAvatarFile(file)
                         setAvatarPreview(e.target.result);
                     } else {
+                        setBannerFile(file)
                         setBannerPreview(e.target.result);
                     }
                     setIsUploading(prev => ({ ...prev, [type]: false }));
@@ -47,10 +91,41 @@ const EditProfile = () => {
         }
     };
 
-    const handleSave = () => {
-        // Simulate save action
-        console.log('Saving profile:', formData);
-        alert('Profile updated successfully!');
+
+    const getUserInitials = (name: string | undefined) => {
+        if (!name) return 'U';
+
+        const nameParts = name.trim().split(' ');
+        if (nameParts.length === 1) {
+            return nameParts[0].charAt(0).toUpperCase();
+        }
+
+        const firstInitial = nameParts[0].charAt(0).toUpperCase();
+        const lastInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+
+        return firstInitial + lastInitial;
+    };
+    const handleSave = async () => {
+        try {
+            const { _id, ...rest } = formData; // remove _id
+
+            const fd = new FormData();
+            fd.append('uid', String(user?.uid));                 // simple fields as strings
+            fd.append('profileData', JSON.stringify(rest));     // all profile fields
+            if (avatarFile) fd.append('avatar', avatarFile);    // <input type="file" name="avatar" />
+            if (bannerFile) fd.append('banner', bannerFile);    // <input type="file" name="banner" />
+
+            const resp = await axios.put(
+                `${process.env.NEXT_PUBLIC_API_URI}/v1/store/dev`,
+                fd,
+                { withCredentials: true } // axios sets Content-Type boundary automatically for FormData
+            );
+
+            alert.success('Profile updated successfully');
+        } catch (err) {
+            console.error(err);
+            alert.warn('Error updating profile');
+        }
     };
 
     return (
@@ -62,7 +137,7 @@ const EditProfile = () => {
             <div className="edit-container">
 
                 <div className="banner-section">
-                    <img src={bannerPreview} alt="Profile" className="banner" />
+                    {(bannerPreview || formData.banner_image) && <img src={bannerPreview ? bannerPreview : formData.banner_image} alt="Profile" className="banner" />}
                     <div className="banner-overlay">
                         <input
                             type="file"
@@ -83,7 +158,12 @@ const EditProfile = () => {
 
                 <div className="avatar-section">
                     <div className="avatar-container">
-                        <img src={avatarPreview} alt="Profile" className="avatar" />
+                        {(avatarPreview || formData.avatar_url) && <img src={avatarPreview ? avatarPreview : formData.avatar_url} alt="Profile" className="avatar" />}
+                        {!(avatarPreview || formData.avatar_url) && <div
+                            className="avatar"
+                        >
+                            {getUserInitials(formData.display_name)}
+                        </div>}
                         <div className="avatar-overlay">
                             <input
                                 type="file"
@@ -178,43 +258,43 @@ const EditProfile = () => {
                         <h3 className="section-title">Social Links</h3>
                         <div className="social-grid">
                             <div className="form-group">
-                                <label className="form-label">GitHub Username</label>
+                                <label className="form-label">GitHub Link</label>
                                 <div className="input-group">
                                     <Github className="input-icon" size={18} />
                                     <input
-                                        type="text"
+                                        type="url"
                                         className="form-input input-with-icon"
-                                        value={formData.github}
-                                        onChange={(e) => handleInputChange('github', e.target.value.replace(/[^a-zA-Z0-9-]/g, ''))}
-                                        placeholder="github-username"
+                                        value={formData.social_links.github}
+                                        onChange={(e) => handleInputChange('github', e.target.value)}
+                                        placeholder="https://github.com/username"
                                     />
                                 </div>
                             </div>
 
                             <div className="form-group">
-                                <label className="form-label">Twitter Username</label>
+                                <label className="form-label">Twitter Link</label>
                                 <div className="input-group">
                                     <Twitter className="input-icon" size={18} />
                                     <input
-                                        type="text"
+                                        type="url"
                                         className="form-input input-with-icon"
-                                        value={formData.twitter}
-                                        onChange={(e) => handleInputChange('twitter', e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
-                                        placeholder="twitter_username"
+                                        value={formData.social_links.twitter}
+                                        onChange={(e) => handleInputChange('twitter', e.target.value)}
+                                        placeholder="https://twitter.com/username"
                                     />
                                 </div>
                             </div>
 
                             <div className="form-group">
-                                <label className="form-label">LinkedIn Username</label>
+                                <label className="form-label">LinkedIn Link</label>
                                 <div className="input-group">
                                     <Linkedin className="input-icon" size={18} />
                                     <input
-                                        type="text"
+                                        type="url"
                                         className="form-input input-with-icon"
-                                        value={formData.linkedin}
-                                        onChange={(e) => handleInputChange('linkedin', e.target.value.replace(/[^a-zA-Z0-9-]/g, ''))}
-                                        placeholder="linkedin-username"
+                                        value={formData.social_links.linkedin}
+                                        onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                                        placeholder="https://linkedin.com/in/username"
                                     />
                                 </div>
                             </div>

@@ -59,7 +59,7 @@ export default function Home() {
     };
   }, [openDisconnecModel]);
 
-  //console.log(session)
+  ////console.log(session)
 
   useEffect(() => {
 
@@ -80,7 +80,7 @@ export default function Home() {
           withCredentials: true,
         }
       );
-      console.log(response)
+      //console.log(response)
 
       if (response.data.status === 'success') { setSelectedChat(''); alertMessage.success('Deleted'); };
     } catch {

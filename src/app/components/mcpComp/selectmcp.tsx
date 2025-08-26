@@ -29,9 +29,11 @@ const SelectMcpButton = () => {
     const [selectedTools, setSelectedTools] = useState<string[]>([]);
     const [loadingServers, setLoadingServers] = useState<Set<string>>(new Set());
     const alert = useAlert();
+    const [showTools, setShowTools] = useState(false)
+    const [showFunctions, setShowFunctions] = useState(false)
 
 
-    const { mcpServers, setMcpServers, setSelectedServers, selectedServers, setMcpResources, selectMcpResource, mcpResource, mcpResources, setMcpTools } = useMcpServer();
+    const { mcpServers, setMcpServers, setSelectedServers, selectedServers, setMcpResources, selectMcpResource, mcpResource, mcpResources, setMcpTools, mcpTools } = useMcpServer();
     const { theme } = useTheme()
 
     const toggleServerSelection = (server: any) => {
@@ -57,23 +59,48 @@ const SelectMcpButton = () => {
         }
     };
 
-    const toggleToolSelection = (toolName: string) => {
+    const toggleToolSelection = (toolName: string, server?: any) => {
         setSelectedTools((prevSelected) =>
             prevSelected.includes(toolName)
                 ? prevSelected.filter((t) => t !== toolName) // Remove if exists
                 : [...prevSelected, toolName] // Add if not exists
         );
+        setMcpTools((prevSelected) =>
+            prevSelected.includes(toolName)
+                ? prevSelected.filter((t) => t !== toolName) // Remove if exists
+                : [...prevSelected, toolName] // Add if not exists
+        );
+        setSelectedServers((prevSelected) =>
+            prevSelected.some((s) => s.sid === server.sid)
+                ? prevSelected
+                : [...prevSelected, server]
+        );
+
+    };
+    const toggleAllTools = (server: any) => {
+        if (!server.tools && selectedServers.some((s) => s.sid === server.sid)) return;
+
+        setSelectedTools((prev) => {
+            const allSelected = server.tools.every((t: any) =>
+                prev.some((p: any) => p.name === t.name)
+            );
+
+            return allSelected
+                ? prev.filter((p: any) => !server.tools.some((t: any) => t.name === p.name))
+                : [...prev, ...server.tools.filter((t: any) => !prev.some((p: any) => p.name === t.name))];
+        });
+
+        setMcpTools((prev) => {
+            const allSelected = server.tools.every((t: any) =>
+                prev.some((p: any) => p.name === t.name)
+            );
+
+            return allSelected
+                ? prev.filter((p: any) => !server.tools.some((t: any) => t.name === p.name))
+                : [...prev, ...server.tools.filter((t: any) => !prev.some((p: any) => p.name === t.name))];
+        });
     };
 
-    const toggleServerExpansion = (serverSid: String) => {
-        setServersWithTools(prev =>
-            prev.map(swt =>
-                swt.server.sid === serverSid
-                    ? { ...swt, expanded: !swt.expanded }
-                    : { ...swt, expanded: false } // Close all other servers
-            )
-        );
-    };
 
     useEffect(() => {
         const fetchToolsForServers = async () => {
@@ -113,19 +140,18 @@ const SelectMcpButton = () => {
                             ?.filter((tool: any) => server.tools.includes(tool.function.name))
                             ?.map((tool: any) => tool) || [];
 
+
                         const resources = result.resources || [];
 
-                        // Update selected tools for this server
-                        const selecttools = mcpServers.filter((s) => s.sid === server.sid);
-                        if (selecttools.length > 0) {
-                            setSelectedTools((prevSelected) => {
-                                const newTools = selecttools[0].tools.filter(
-                                    (toolName) => !prevSelected.includes(toolName)
-                                );
-                                return [...prevSelected, ...newTools];
-                            });
-                        }
-
+                        // const selecttools = mcpServers.filter((s) => s.sid === server.sid);
+                        // if (selecttools.length > 0) {
+                        //     setSelectedTools((prevSelected) => {
+                        //         const newTools = selecttools[0].tools.filter(
+                        //             (toolName) => !prevSelected.includes(toolName)
+                        //         );
+                        //         return [...prevSelected, ...newTools];
+                        //     });
+                        // }
                         // Update global resources
                         const mappedResources = resources.map((r: any) => ({
                             uri: r.uri,
@@ -180,14 +206,6 @@ const SelectMcpButton = () => {
                     return [...prev, ...newServersWithTools];
                 });
 
-                // Update global tools list
-                const allNewTools = serverToolsData.flatMap(swt => swt.tools);
-                setMcpTools(prev => {
-                    const existingTools = new Set(prev);
-                    const uniqueNewTools = allNewTools.filter(tool => !existingTools.has(tool));
-                    return [...prev, ...uniqueNewTools];
-                });
-
             } catch (error) {
                 console.error('Error in fetchToolsForServers:', error);
                 alert.error(`Something went wrong: ${error}`);
@@ -197,8 +215,8 @@ const SelectMcpButton = () => {
         };
 
         fetchToolsForServers();
+        setSelectedTools(mcpTools)
     }, [selectedServers]); // Consider adding other dependencies if needed
-    console.log(serversWithTools)
 
     //if (!openModal) return null;
 
@@ -213,7 +231,7 @@ const SelectMcpButton = () => {
                     return (
                         <div key={index + server.created_on} className="mcp-server-group">
                             {/* Server Selection */}
-                            <div className="mcp-checkbox server-checkbox">
+                            {!showTools && <div className="mcp-checkbox server-checkbox">
                                 <div className="mcp-content">
                                     <div className="mcp-name">{server.label}</div>
                                     {server.tools.length > 0 && (
@@ -231,39 +249,39 @@ const SelectMcpButton = () => {
                                         <div className="mcp-check">
                                             <ToggleSwitch
                                                 checked={isSelected}
-                                                onChange={() => toggleServerSelection(server)}
+                                                onChange={() => { toggleServerSelection(server); toggleAllTools(server) }}
                                                 id={`toggle-${server.sid}`}
                                             />
                                         </div>
                                     )}
-                                    {isSelected && serverWithTools && server.tools.length > 0 && (
-                                        <button
-                                            className="expand-btn"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleServerExpansion(server.sid);
-                                            }}
-                                        >
-                                            {serverWithTools.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                                        </button>
-                                    )}
+
+                                    <button
+                                        className="expand-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setShowFunctions(!showFunctions)
+                                        }}
+                                    >
+                                        {showFunctions ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                                    </button>
+
                                 </div>
-                            </div>
+                            </div>}
 
                             {/* Tools Dropdown */}
-                            {isSelected && serverWithTools && serverWithTools.expanded && (
+                            {showFunctions && !showTools && (
                                 <div className="tools-dropdown">
-                                    {serverWithTools.tools.map((toolName, toolIndex) => (
+                                    {server.tools.map((toolName, toolIndex) => (
                                         <div
                                             key={toolIndex + toolName}
                                             className="mcp-checkbox mcptool-checkbox"
-                                            onClick={() => toggleToolSelection(toolName)}
+                                            onClick={() => toggleToolSelection(toolName, server)}
                                         >
                                             <div className="mcptool-name">{toolName}</div>
                                             <div className="mcp-check">
                                                 <ToggleSwitch
                                                     checked={selectedTools.includes(toolName)}
-                                                    onChange={() => toggleToolSelection(toolName)}
+                                                    onChange={(e) => { e.stopPropagation(); toggleToolSelection(toolName, server) }}
                                                     id={`toggle-tool-${toolName}`}
                                                 />
                                             </div>
@@ -275,10 +293,11 @@ const SelectMcpButton = () => {
                     );
                 })}
             </div>
+            {selectedTools.length > 0 && <button className="add-mcp-btn" onClick={() => setShowTools(!showTools)}>{showTools ? 'Hide Mcp Functions' : 'Show Mcp Functions'}</button>}
             <button className="add-mcp-btn" onClick={() => location.hash = '#server/add'}>+ Add Mcp</button>
 
             {/* Selected Tools Summary */}
-            {selectedTools.length > 0 && (
+            {showTools && selectedTools.length > 0 && (
                 <div className="selected-tools-summary">
                     <div className="summary-label">Selected Tools ({selectedTools.length})</div>
                     <div className="selected-tools-list">

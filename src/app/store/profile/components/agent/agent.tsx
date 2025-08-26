@@ -45,6 +45,7 @@ const ProfileAgentsPage = ({ uid }: { uid: any }) => {
             const params: any = {
                 page: pageNum,
                 limit,
+                uid
             };
 
 

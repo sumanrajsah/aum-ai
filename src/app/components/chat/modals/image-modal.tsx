@@ -16,7 +16,7 @@ const ImageModal = () => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [image, setImage] = useState(true);
     const [imageError, setImageError] = useState(false);
-    const modalRef = useRef(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
     if (!expandImage) {
         return null;
@@ -76,7 +76,7 @@ const ImageModal = () => {
         };
     }, []);
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString: any) => {
         if (!dateString) return 'N/A';
         try {
             return new Date(dateString).toLocaleString(undefined, {
@@ -91,7 +91,7 @@ const ImageModal = () => {
         }
     };
 
-    const renderInfoItem = (label, value) => {
+    const renderInfoItem = (label: any, value: any) => {
         if (!value || (typeof value === 'string' && value.trim() === '')) {
             return null;
         }

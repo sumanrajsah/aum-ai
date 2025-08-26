@@ -148,6 +148,19 @@ export default function PublishAgent() {
         }
     }, [mcpServers, selectedMcpIndex]);
 
+    function calculateCharges() {
+        const plan = user?.plan || 'free'; // default to 'free' if plan is undefined
+        if (plan === 'pro-plus') {
+            return 0.2 * Number(price); // 50% charge for free plan
+        } else if (plan === 'plus') {
+            return 0.3 * Number(price); // 30% charge for pro plan
+        } else if (plan === 'pro') {
+            return 0.25 * Number(price); // 25% charge for free plan
+        } else {
+            return 0.5 * Number(price); // default to 50%
+        }
+    }
+
     // Don't render if userAgents is empty or still loading
     if (!mcpServers || mcpServers.length === 0) {
         return (
@@ -178,7 +191,7 @@ export default function PublishAgent() {
                     ))}
                 </select>
                 {mcpServers[selectedMcpIndex].status === "published" && (
-                    <p style={{ width: '100%', textAlign: 'center', color: 'yellow' }}>This Mcp is already published. Continue to republish it.</p>
+                    <p style={{ width: '100%', textAlign: 'center', color: 'grey' }}>This Mcp is already published. Continue to republish it.</p>
                 )}
                 <br />
                 <div className="form-grid">
@@ -235,9 +248,10 @@ export default function PublishAgent() {
                                 step="0.01"
                                 className="modern-input"
                             />
-                            <div className="price-display">
-                                {price || '0'} AUM Credits
-                            </div>
+                        </div>
+                        <p style={{ color: 'grey', fontSize: '12px', fontStyle: 'italic' }}>*Platform fees {calculateCharges()} AUM*</p>
+                        <div className="price-display">
+                            {price || '0'} AUM Credits
                         </div>
                     </div>
                 </div>

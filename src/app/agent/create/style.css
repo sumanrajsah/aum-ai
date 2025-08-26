@@ -257,7 +257,7 @@ html.dark .cagent-container {
 .tool-checkbox {
     position: relative;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     flex-direction: column;
     justify-content: space-between;
     padding: 10px 15px;

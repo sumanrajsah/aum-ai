@@ -16,8 +16,27 @@
 }
 
 .send {
-    background: whitesmoke;
+    border-radius: 50%;
+}
 
+html.dark .send {
+    background: var(--prop-white-bg);
+
+    svg {
+        height: 24px;
+        width: 24px;
+        color: var(--prop-dark-bg);
+    }
+}
+
+html.light .send {
+    background: var(--prop-dark-bg);
+
+    svg {
+        height: 24px;
+        width: 24px;
+        color: var(--prop-white-bg);
+    }
 }
 
 .button-send svg {
@@ -26,11 +45,7 @@
     color: white;
 }
 
-.send svg {
-    height: 24px;
-    width: 24px;
-    color: var(--prop-dark-bg);
-}
+
 
 .button-send::after {
     box-shadow: none;

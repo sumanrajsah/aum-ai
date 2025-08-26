@@ -233,7 +233,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, aid
                                             // Render multiple images in a row
                                             return (
                                                 <div key={`${msg.msg_id}-image-group-${groupIdx}`} className="chat-image-container">
-                                                    {group.items.map(({ item, idx }) => {
+                                                    {group.items.map((item: any, idx: any) => {
                                                         const contentKey = `${msg.msg_id}-${item.type}-${idx}`;
 
                                                         if (msg.role === 'assistant') {

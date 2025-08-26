@@ -273,12 +273,13 @@ html.dark .count-label {
     display: flex;
     align-items: center;
     gap: 12px;
+    cursor: pointer;
 }
 
 .owner-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 10px;
     background: rgba(var(--bg-color1), 1);
     display: flex;
     align-items: center;
@@ -286,6 +287,8 @@ html.dark .count-label {
     color: white;
     font-weight: 600;
     font-size: 1.1rem;
+    object-fit: cover;
+    border: 1px solid rgba(var(--bg-color1), 1);
 }
 
 .owner-name {
@@ -299,12 +302,9 @@ html.dark .owner-name {
 }
 
 .owner-handle {
-    color: #6B7280;
+    color: rgba(var(--bg-color1), 1);
     font-size: 0.85rem;
-}
-
-html.dark .owner-handle {
-    color: #9CA3AF;
+    cursor: pointer;
 }
 
 .tools-grid {
