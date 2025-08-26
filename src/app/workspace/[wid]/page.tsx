@@ -4,6 +4,7 @@ import axios from 'axios';
 import ChatMessage from '../../components/chatMessage';
 import ChatInput from '../../components/chatInput';
 import '../../style.css';
+import './style.css'
 import '../../globals.css'
 import Image from 'next/image';
 import { SyncLoader } from 'react-spinners';
@@ -60,6 +61,7 @@ export default function Workspace({ params }: { params: Promise<{ wid: string }>
     const { theme } = useTheme();
     const alertMessage = useAlert()
     const { wid } = use(params);
+    const [showInstructions, setShowInstructions] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -122,7 +124,54 @@ export default function Workspace({ params }: { params: Promise<{ wid: string }>
                     <div className="delete-btn" onClick={deleteChat}>Delete</div>
                 </div>
             </div>}
-            <Modal />
+            {showInstructions && (
+                <div
+                    className="modal-overlay"
+                    onClick={(e) => e.target === e.currentTarget && setShowInstructions(false)}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="instruction-modal-title"
+                >
+                    <div className="modal">
+                        <div className="modal-header">
+                            <button
+                                className="close-btn"
+                                onClick={() => setShowInstructions(false)}
+                                aria-label="Close modal"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="modal-content">
+                            <label htmlFor="instruction-email" className="sr-only">
+                                Instruction
+                            </label>
+                            <textarea
+                                id="instruction-email"
+                                placeholder="Enter instruction"
+
+                                className="instruction-textarea"
+                                autoFocus
+
+                            />
+                        </div>
+                        <div className="modal-actions">
+                            <button
+                                className="cancel-btn"
+
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="confirm-btn"
+
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
 
             <
@@ -132,8 +181,10 @@ export default function Workspace({ params }: { params: Promise<{ wid: string }>
                     onClick={async () => { setOpenDisconnectModel(false) }}
                 >
                     {(messages.length == 0) && <div className="quote" >
-                        <Image src={'/sitraone.png'} height={80} width={80} alt="sitraone" />
                         <p>You're now in {workspaces.find(ws => ws.wid === wid)?.name}</p>
+                        <div className="workspace-btn-cont">
+                            <button className="workspace-btn" onClick={() => setShowInstructions(true)}>Add Instructions</button>
+                        </div>
                     </div>}
 
                     {messages.map((msg, index) => (

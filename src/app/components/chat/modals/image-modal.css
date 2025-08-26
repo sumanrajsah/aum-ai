@@ -28,6 +28,7 @@
     margin: 20px auto;
     display: flex;
     flex-direction: column;
+    text-align: left;
     gap: 16px;
     background: rgba(var(--bg-color1), 0.08);
     backdrop-filter: blur(20px);

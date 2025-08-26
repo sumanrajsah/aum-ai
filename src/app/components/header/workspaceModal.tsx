@@ -28,8 +28,8 @@ const WorkspaceCont = () => {
 
     return (
         <div className="workspace-body">
-            <button className="workspace-btn" onClick={() => { router.push(`/?model=${Model}&mode=${chatMode}`); setCurrentWorkspace(''); setMessages([]); setChatId('') }}>
-                <User2 size={14} />AUM AI
+            <button className="workspace-btn" onClick={() => { router.push(`/workspace`); setCurrentWorkspace(''); setMessages([]); setChatId('') }}>
+                <User2 size={14} />Home
             </button>
             {workspaces.map((workspace: Workspace) => (
                 <button className="workspace-btn" key={workspace.wid} onClick={() => { router.push(`/workspace/${workspace.wid}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(''); setCurrentWorkspace(workspace.wid) }}>
@@ -37,9 +37,9 @@ const WorkspaceCont = () => {
                 </button>
             ))}
 
-            <hr />
-            <button className="workspace-btn" onClick={() => { location.href = '#workspace/create' }}><Settings size={14} />Settings</button>
-            <button className="workspace-btn" onClick={() => { location.href = '#workspace/create' }}><PlusCircle size={14} />Create</button>
+
+            {/* <button className="workspace-btn" onClick={() => { location.href = '#workspace/create' }}><Settings size={14} />Settings</button> */}
+            {/* <button className="workspace-btn" onClick={() => { location.href = '#workspace/create' }}><PlusCircle size={14} />Create</button> */}
 
         </div>
     );

@@ -17,6 +17,7 @@ const WorkspaceCreateModal = () => {
     const { user } = useAuth()
     const alertMessage = useAlert()
     const [workspaceName, setWorkspaceName] = useState("");
+    const [workspaceDescription, setWorkspaceDescription] = useState("");
 
 
     const handleCreateWorkspace = async () => {
@@ -31,7 +32,7 @@ const WorkspaceCreateModal = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name: workspaceName, uid: user?.uid }),
+                body: JSON.stringify({ name: workspaceName, description: workspaceDescription, uid: user?.uid }),
                 credentials: 'include'
             });
 
@@ -58,6 +59,10 @@ const WorkspaceCreateModal = () => {
             <div className="wcreate-input-group">
                 <label className="wcreate-label">Workspace Name</label>
                 <input type="text" id="workspace-name" className="wcreate-input" placeholder="Name..." onChange={(e) => { setWorkspaceName(e.target.value) }} />
+            </div>
+            <div className="wcreate-input-group">
+                <label className="wcreate-label">Description</label>
+                <input type="text" id="workspace-description" className="wcreate-input" placeholder="Description..." onChange={(e) => { setWorkspaceDescription(e.target.value) }} />
             </div>
             <button className="wcreate-btn" onClick={handleCreateWorkspace}>Create</button>
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import './profile.css'
-import { BrainCircuit, LogOut, Pickaxe, Server, Settings, Telescope, User2, Wrench, Mail, UserCircle } from "lucide-react";
+import { BrainCircuit, LogOut, Pickaxe, Server, Settings, Telescope, User2, Wrench, Mail, UserCircle, ScrollText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "../ThemeToggle";
@@ -103,16 +103,15 @@ const ProfileCont = () => {
                 <User2 size={20} />Upgrade Plan
             </button>
             <hr />
-
-            {/* Menu Items */}
-            <button className="profile-btn" onClick={() => { router.push('?profile=true') }}>
-                <User2 size={20} />Profile
-            </button>
             <button className="profile-btn" onClick={() => { router.push('?settings=true') }}>
                 <Settings size={20} />Settings
             </button>
             <ThemeToggle />
 
+            <hr />
+            <button className="profile-btn" onClick={() => { router.push('?settings=true') }}>
+                <ScrollText size={20} />Terms & Policies
+            </button>
             <hr />
 
             <button className="logout-btn" onClick={handleLogout}>

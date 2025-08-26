@@ -61,7 +61,7 @@ const Header = () => {
                         <AlignLeft size={20} />
                     </button>}
                     {(pathname.includes('/workspace')) && user && <button className="select-workspace-btn" onClick={() => { setOpenWorkspaceModel(!openWorkspaceModel); setOpenDisconnectModel(false) }}>
-                        <Layers size={20} /> {currentWorkspace === '' ? 'Aum Ai' : `${workspaceName}`}
+                        <Layers size={20} /> {currentWorkspace === '' ? 'Home' : `${workspaceName}`}
                     </button>}
                     {user && <button className="ham-btn" onClick={() => { router.push(currentWorkspace === '' ? `/?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>
                         <SquarePen size={20} />

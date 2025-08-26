@@ -1,0 +1,300 @@
+/* Invite Token Page Styles */
+.invite-action {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.card {
+    width: 100%;
+    max-width: 500px;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(var(--bg-color1), 0.15);
+}
+
+.card h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: rgb(var(--bg-color1));
+}
+
+.card .sub {
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+    font-size: 1rem;
+}
+
+.row {
+    margin-bottom: 1.5rem;
+}
+
+.row label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.025em;
+}
+
+.row input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid rgba(var(--bg-color1), 0.2);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.row input:focus {
+    border-color: rgb(var(--bg-color1));
+    box-shadow: 0 0 0 3px rgba(var(--bg-color1), 0.1);
+}
+
+.row input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.row input::placeholder {
+    opacity: 0.6;
+}
+
+.mono {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 1px solid rgba(var(--bg-color1), 0.15);
+    word-break: break-all;
+}
+
+.token-display {
+    background: rgba(var(--bg-color1), 0.05);
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0 1.5rem 0;
+}
+
+.actions button {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.actions button:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.actions button:not(:disabled):active {
+    transform: translateY(-1px);
+}
+
+.actions button.primary {
+    background: rgb(var(--bg-color1));
+    color: white;
+    border: 2px solid rgb(var(--bg-color1));
+}
+
+.actions button.primary:not(:disabled):hover {
+    background: rgba(var(--bg-color1), 0.9);
+    box-shadow: 0 4px 12px rgba(var(--bg-color1), 0.3);
+}
+
+.actions button.danger {
+    background: transparent;
+    color: #dc2626;
+    border: 2px solid #dc2626;
+}
+
+.actions button.danger:not(:disabled):hover {
+    background: #dc2626;
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.result {
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 1rem;
+    border: 1px solid transparent;
+}
+
+.result.ok {
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.result.bad {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* Light mode specific styles */
+html.light .card {
+    background: var(--prop-white-bg);
+}
+
+html.light .row input {
+    background: white;
+    color: #0E1111;
+}
+
+html.light .mono {
+    background: rgba(var(--bg-color1), 0.03);
+    color: #0E1111;
+}
+
+html.light .token-display {
+    background: rgba(var(--bg-color1), 0.08);
+}
+
+/* Dark mode specific styles */
+html.dark .card {
+    background: var(--prop-dark-bg);
+    border-color: rgba(var(--bg-color1), 0.25);
+}
+
+html.dark .row input {
+    background: rgba(255, 255, 255, 0.05);
+    color: whitesmoke;
+    border-color: rgba(var(--bg-color1), 0.3);
+}
+
+html.dark .row input:focus {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .mono {
+    background: rgba(var(--bg-color1), 0.08);
+    color: whitesmoke;
+    border-color: rgba(var(--bg-color1), 0.25);
+}
+
+html.dark .token-display {
+    background: rgba(var(--bg-color1), 0.12);
+}
+
+html.dark .result.ok {
+    background: rgba(34, 197, 94, 0.08);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.15);
+}
+
+html.dark .result.bad {
+    background: rgba(239, 68, 68, 0.08);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.15);
+}
+
+html.dark .actions button.danger {
+    color: #f87171;
+    border-color: #f87171;
+}
+
+html.dark .actions button.danger:not(:disabled):hover {
+    background: #f87171;
+    color: #1f2937;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .invite-action {
+        padding: 1rem 0.5rem;
+    }
+
+    .card {
+        padding: 2rem 1.5rem;
+    }
+
+    .card h1 {
+        font-size: 1.5rem;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .actions button {
+        padding: 0.875rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 1.5rem 1rem;
+        margin: 0.5rem;
+    }
+
+    .card h1 {
+        font-size: 1.25rem;
+    }
+
+    .mono {
+        font-size: 0.75rem;
+        padding: 0.625rem 0.75rem;
+    }
+}
+
+/* Animation for loading states */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.actions button:disabled {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Focus styles for accessibility */
+.actions button:focus-visible {
+    outline: 2px solid rgb(var(--bg-color1));
+    outline-offset: 2px;
+}
+
+.row input:focus-visible {
+    outline: 2px solid rgb(var(--bg-color1));
+    outline-offset: 1px;
+}

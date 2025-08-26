@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "../../../hooks/useAuth"
 import { useTheme } from "next-themes"
 import Image from "next/image"
-import { Archive, BrainCircuit, ChevronDown, ChevronRight, ImagePlay, Images, Layers, MessagesSquare, Moon, PanelLeft, Play, Plus, PlusCircle, ScrollText, Search, Image as Limage, EllipsisVertical, MessageSquare, PenLine, Rocket, SquarePen, User } from "lucide-react"
+import { Archive, BrainCircuit, ChevronDown, ChevronRight, ImagePlay, Images, Layers, MessagesSquare, Moon, PanelLeft, Play, Plus, PlusCircle, ScrollText, Search, Image as Limage, EllipsisVertical, MessageSquare, PenLine, Rocket, SquarePen, User, UserPlus } from "lucide-react"
 import { useChat, useWorkspace } from "../../../context/ChatContext"
 import axios from "axios"
 import SidebarButton from "./sidebarbutton"
@@ -154,11 +154,14 @@ const Sidebar = () => {
                         <Layers size={20} /> Workspaces <span className="expand-sidebar-icon">{isWorkspaceExpannd ? <ChevronDown size={16} /> : <ChevronRight size={16} />}</span>
                     </SidebarButton>
                     {isWorkspaceExpannd && <div className="sidebar-dropdown-cont">
-                        <button className="dropdown-list" onClick={() => { location.href = '#workspace/create' }}><PlusCircle size={14} />Create</button>
-                        <hr />
+                        <button className="dropdown-list" onClick={() => { location.href = '#workspace/create' }}><Plus size={14} />Create</button>
+                        <button className="dropdown-list" onClick={() => { router.push(`/workspace/invite`) }}>
+                            <UserPlus size={14} />Invites
+                        </button>
                         <button className="dropdown-list" onClick={() => { router.push(`/workspace`); setCurrentWorkspace(''); setMessages([]); setChatId('') }}>
                             <Layers size={14} />Workspace Home
                         </button>
+                        <hr />
                         {workspaces.map((workspace: Workspace) => (
                             <button className="dropdown-list" key={workspace.wid} onClick={() => { router.push(`/workspace/${workspace.wid}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(''); setCurrentWorkspace(workspace.wid) }}>
                                 <Layers size={14} />{workspace.name}
