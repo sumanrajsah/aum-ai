@@ -6,25 +6,19 @@ import rehypeRaw from "rehype-raw";
 import rehypeExternalLinks from "rehype-external-links";
 import remarkMath from 'remark-math';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { ChevronRight, ChevronUp, ClipboardCopy, Copy, Download, Pencil, RefreshCcw, ThumbsDown, ThumbsUp } from 'lucide-react'; // Import a copy icon
 import Image from 'next/image'; // Next.js optimized image component
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import rehypeKatex from 'rehype-katex';
-import { useAccount } from 'wagmi';
-import { useAppKit } from '@reown/appkit/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setVerified } from '../store';
 import './style.css'
 import { useChat } from '../../context/ChatContext';
-import AdComponent from './ads';
+
 import './messageStyle.css';
 import { dark, nightOwl, vs, vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Circles, Discuss, Oval } from 'react-loader-spinner';
+
 import { useTheme } from 'next-themes';
-import { SyncLoader } from 'react-spinners';
+
 import { useAlert } from '../../context/alertContext';
 
 
