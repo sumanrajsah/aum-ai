@@ -14,8 +14,10 @@ RUN --mount=type=cache,target=/root/.npm npm ci
 FROM node:22-alpine AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
-COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci
+COPY package.json yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn \
+    yarn install --frozen-lockfile
+
 COPY . .
 RUN npm run build
 
