@@ -12,16 +12,12 @@ import Image from 'next/image'; // Next.js optimized image component
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import rehypeKatex from 'rehype-katex';
-import { useAccount } from 'wagmi';
-import { useAppKit } from '@reown/appkit/react';
-import { useDispatch, useSelector } from 'react-redux';
+
 import './style.css'
 import { useChat } from '@/context/ChatContext';
 import { dark, nightOwl, vs, vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Circles, Discuss, Oval } from 'react-loader-spinner';
 import { useTheme } from 'next-themes';
-import { SyncLoader } from 'react-spinners';
+
 import { useAlert } from '@/context/alertContext';
 import FilePreview from '@/app/components/filepreview';
 
