@@ -42,4 +42,4 @@ HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
   CMD node -e "require('http').get('http://127.0.0.1:3000/',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
 ENTRYPOINT ["dumb-init","--"]
-CMD ["node","server.js"]
+CMD ["yarn","start"]
