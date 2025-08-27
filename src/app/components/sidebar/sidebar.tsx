@@ -150,9 +150,9 @@ const Sidebar = () => {
                         <button className="dropdown-list" onClick={() => { router.push(currentWorkspace === '' ? `/image-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/image-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}> <Limage size={16} /> Image</button>
                         <button className="dropdown-list" onClick={() => { router.push(currentWorkspace === '' ? `/video-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/video-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>  <Play size={16} /> Video</button>
                     </div>
-                    <SidebarButton className="sidebar-button" data-tooltip={'history'} onClick={() => toggleDropdown('workspace')}>
+                    {user?.plan !== 'free' && <SidebarButton className="sidebar-button" data-tooltip={'history'} onClick={() => toggleDropdown('workspace')}>
                         <Layers size={20} /> Workspaces <span className="expand-sidebar-icon">{isWorkspaceExpannd ? <ChevronDown size={16} /> : <ChevronRight size={16} />}</span>
-                    </SidebarButton>
+                    </SidebarButton>}
                     {isWorkspaceExpannd && <div className="sidebar-dropdown-cont">
                         <button className="dropdown-list" onClick={() => { location.href = '#workspace/create' }}><Plus size={14} />Create</button>
                         <button className="dropdown-list" onClick={() => { router.push(`/workspace/invite`) }}>
