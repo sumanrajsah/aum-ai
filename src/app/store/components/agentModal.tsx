@@ -233,7 +233,7 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
                         </div>
                     </div>}
                     {/* Ratings Section */}
-                    <div className="section">
+                    {/* <div className="section">
                         <h3 className="section-title">Ratings</h3>
                         <div className="ratings-chart">
                             {[5, 4, 3, 2, 1].map((rating) => {
@@ -257,7 +257,7 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
                                 );
                             })}
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
 

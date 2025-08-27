@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Oval } from "react-loader-spinner";
 import GoogleSignInButton from "../components/GSB";
 import { useAuth } from "../../hooks/useAuth";
+import { useAlert } from "@/context/alertContext";
 
 type SignUpForm = {
     email: string;
@@ -24,6 +25,7 @@ export default function CollabSignUp() {
         confirmPassword: ""
     });
     const router = useRouter();
+    const alert = useAlert();
 
     const bufferToHex = (buffer: ArrayBuffer) => {
         return Array.from(new Uint8Array(buffer))
@@ -49,11 +51,11 @@ export default function CollabSignUp() {
 
     async function handleSubmit(e: React.FormEvent) {
         if (!formData.email || !formData.password || !formData.name) {
-            toast.warning("Please fill all the fields")
+            alert.warn("Please fill all the fields")
             return
         }
         if (formData.password !== formData.confirmPassword) {
-            toast.warning("Passwords do not match")
+            alert.warn("Passwords do not match")
             return;
         }
         e.preventDefault();
@@ -73,7 +75,7 @@ export default function CollabSignUp() {
 
         }
         else {
-            toast.warning("User already exists")
+            alert.warn("User already exists")
         }
     }
 

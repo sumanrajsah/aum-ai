@@ -22,7 +22,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (auth.user && auth.user.plan === 'free' && pathname.includes('/workspace')) {
             location.href = '/plan';
         }
-    }, [auth.status])
+        console.log('a')
+    }, [])
     return (
         <AuthContext.Provider value={auth}>
             {children}

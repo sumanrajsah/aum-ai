@@ -90,10 +90,10 @@ export default function MCPServerCard({ mcp }: { mcp: MCPServerInfo }) {
                         <Edit size={20} />
                         Edit
                     </button>
-                    <button className="action-btn configure-btn" onClick={() => router.push('/store/publish/mcp')}>
+                    {/* <button className="action-btn configure-btn" onClick={() => router.push('/store/publish/mcp')}>
                         <Rocket size={20} />
                         {mcp.status === 'published' ? 'republish' : 'publish'}
-                    </button>
+                    </button> */}
                     <button className="action-btn configure-btn" onClick={() => deleteServer(mcp.sid)}>
                         <Trash2 size={16} />
                         Remove

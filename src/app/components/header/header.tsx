@@ -1,7 +1,7 @@
 'use client'
 import React, { use, useEffect, useRef, useState } from "react"
 import './header.css'
-import { AlignLeft, CircleFadingPlus, Layers, PanelRightClose, PenLine, Plus, SquarePen, User2 } from "lucide-react"
+import { AlignLeft, CircleFadingPlus, Coins, Layers, PanelRightClose, PenLine, Plus, SquarePen, User2 } from "lucide-react"
 import ProfileCont from "./profile"
 import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "../../../hooks/useAuth"
@@ -17,7 +17,7 @@ import { useSidebarStore } from "@/store/useSidebarStore"
 const Header = () => {
     const { isSidebarOpen, toggleSidebar, closeSidebar } = useSidebarStore();
     const router = useRouter()
-    const { messages, aiTyping, setIsChatRoom, memoizedHistory, setMessages, selectModel, Model, setChatId, chatId, setHistory, chatMode } = useChat();
+    const { messages, aiTyping, setIsChatRoom, memoizedHistory, setMessages, selectModel, Model, setChatId, chatId, setHistory, chatMode, credits } = useChat();
     const [openDisconnecModel, setOpenDisconnectModel] = useState<boolean>(false)
     const [openWorkspaceModel, setOpenWorkspaceModel] = useState<boolean>(false)
     const [workspaceName, setWorkspaceName] = useState<string>('');
@@ -67,6 +67,7 @@ const Header = () => {
                         <SquarePen size={20} />
                     </button>}
                 </div>
+                {user && <button className="credit-btn" onClick={() => router.push('/credits')}><Coins size={20} />{credits}</button>}
                 {openWorkspaceModel && user && <div className="workspace-cont" ref={modalRef}>
                     <WorkspaceCont />
                 </div>}

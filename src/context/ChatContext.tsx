@@ -43,6 +43,9 @@ interface ChatContextType {
 
     setTools: React.Dispatch<React.SetStateAction<any[]>>;
     tools: any[];
+
+    setCredits: React.Dispatch<React.SetStateAction<number>>;
+    credits: number;
 }
 interface MCPServerContextType {
     setMcpServers: React.Dispatch<React.SetStateAction<MCPServerInfo[]>>;
@@ -145,11 +148,11 @@ const AgentProvider = ({ children }: { children: React.ReactNode }) => {
                     setUserAgents(result.agents);
 
                 } else {
-                    alert.warn('Something went wrong')
+                    //alert.warn('Something went wrong')
                     setUserAgents([]);
                 }
             } catch (err) {
-                alert.warn('Something went wrong')
+                //alert.warn('Something went wrong')
                 setUserAgents([]);
             } finally {
                 setAgentLoading(false)
@@ -451,6 +454,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const [workspaceData, setWorkspaceData] = useState<any>(null);
     const [chatMode, setChatMode] = useState<ChatMode>('text'); // Replace 'default' with an actual ChatMode value
     const { temperature, top_p, frequency_penalty, presence_penalty } = useLLMStyleStore();
+    const [credits, setCredits] = useState<number>(0)
 
     //agents 
     const [agentId, setAgentId] = useState('')
@@ -486,7 +490,43 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
             }
         }
     }, [])
+    useEffect(() => {
+        if (!user) return;
 
+        const fetchCredits = async () => {
+
+
+            try {
+                const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URI}/v1/user/credits`,
+                    {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                setCredits(
+                    (result.planCredits?.remaining) +
+                    (result.freeCredits?.remaining) +
+                    (result.referralCredits?.remaining)
+                );
+            } catch (error: any) {
+
+            } finally {
+
+            }
+        };
+
+        fetchCredits();
+    }, [user]);
     useEffect(() => {
         async function getData() {
             if (status === 'unauthenticated') {
@@ -773,7 +813,8 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 setChatMode,
                 aiWriting,
                 setAgentId,
-                agentId, userAgents, setUserAgents, tools, setTools
+                agentId, userAgents, setUserAgents, tools, setTools,
+                credits, setCredits
 
             }}
         >

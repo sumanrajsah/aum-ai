@@ -14,7 +14,7 @@ import axios from "axios";
 import Header from "@/app/components/header/header";
 import Sidebar from "@/app/components/sidebar/sidebar";
 import PageStruct1 from "@/app/components/pagestruct/struct1";
-import { useMcpServer } from "@/context/ChatContext";
+import { useChat, useMcpServer } from "@/context/ChatContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/context/alertContext";
 import { getTools, llmModels } from "@/app/utils/models-list";
@@ -56,6 +56,7 @@ interface McpServerTool {
 export default function CreateAgents() {
     const { mcpServers } = useMcpServer();
     const { user, isAuthLoading } = useAuth();
+    const { userAgents, setUserAgents } = useChat();
     const router = useRouter();
     const alertMessage = useAlert();
     const modalRef = useRef<HTMLDivElement | null>(null);
@@ -321,7 +322,7 @@ export default function CreateAgents() {
                 alertMessage.warn(response.data.message);
             }
         } catch (error) {
-            console.error('Error creating agent:', error);
+            //console.error('Error creating agent:', error);
             alertMessage.warn('Failed to create agent. Please try again.');
         } finally {
             setIsLoading(false);
@@ -382,6 +383,13 @@ export default function CreateAgents() {
                 />
             </div>
         );
+    }
+
+    if (user?.plan === 'free' && userAgents.length >= 1) {
+        return <div className="agent-image-container">
+            <h2>You can only create one agent on the free plan.</h2>
+            <button className="create-agent-btn" onClick={() => { router.push('/plan') }}>Upgrade Your Plan</button>
+        </div>
     }
 
     return (

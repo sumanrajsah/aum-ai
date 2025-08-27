@@ -59,21 +59,25 @@ export function getTools(value: string) {
 }
 
 export const imageModels = [
-    { value: 'bria-2-3-fast', label: "Bria-2-3 Fast", credits: 1 },
-    { value: "dalle-3", label: "DALL-E 3", credits: 4 },
-    { value: "imagen-3-fast", label: "Imagen 3 Fast", credits: 2 },
-    { value: "imagen-3", label: "Imagen 3", credits: 3 },
-    { value: "imagen-4", label: "Imagen 4", credits: 4 },
-    { value: "imagen-4-ultra", label: "Imagen 4 Ultra", credits: 5 },
-    { value: "stable-image-core", label: "Stable Image Core", credits: 2 },
-    { value: "stable-image-ultra", label: "Stable Image Ultra", credits: 3 },
-    { value: "stable-diffusion-3-5-large", label: "Stable Diffusion 3.5 Large", credits: 3 },
+    { value: 'bria-2-3-fast', label: "Bria-2-3 Fast", credits: 275 + 50 },
+    { value: "dalle-3", label: "DALL-E 3", credits: 0 },
+    { value: "imagen-3-fast", label: "Imagen 3 Fast", credits: 200 + 50 },
+    { value: "imagen-3", label: "Imagen 3", credits: 400 + 50 },
+    { value: "imagen-4", label: "Imagen 4", credits: 400 + 50 },
+    { value: "imagen-4-fast", label: "Imagen 4 Fast", credits: 200 + 50 },
+    { value: "imagen-4-ultra", label: "Imagen 4 Ultra", credits: 600 + 50 },
+    { value: "stable-image-core", label: "Stable Image Core", credits: 1400 + 50 },
+    { value: "stable-image-ultra", label: "Stable Image Ultra", credits: 400 + 50 },
+    { value: "stable-diffusion-3-5-large", label: "Stable Diffusion 3.5 Large", credits: 800 + 50 },
 ];
 
 export const vidoeModels = [
     { value: "sora", label: "Sora", credits: 10 },
-    { value: "veo-2", label: "Veo 2", credits: 12 },
-    { value: "veo-3", label: "Veo 3", credits: 12 },
+    { value: "veo-3-fast", label: "Veo 3 Fast", credits: 2500 },
+    { value: "veo-3-fast-audio", label: "Veo 3 Fast Audio", credits: 4000 },
+    { value: "veo-3-audio", label: "Veo 3 Audio", credits: 7500 },
+    { value: "veo-3", label: "Veo 3", credits: 5000 },
+    { value: "veo-2", label: "Veo 2", credits: 5000 },
 ];
 interface LLMStyleParams {
     temperature: number;

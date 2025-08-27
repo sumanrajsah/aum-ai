@@ -201,6 +201,12 @@ const PricingPage = () => {
                                     ))}
                                 </div>
 
+                                {user?.plan === plan.link && <button
+                                    className={`plan-button secondary`}
+                                    disabled={loading}
+                                >
+                                    Current Plan
+                                </button>}
                                 {user?.plan !== plan.link && <button
                                     className={`plan-button ${plan.buttonStyle}`}
                                     onClick={() => handlePlanSelection(key)}

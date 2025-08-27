@@ -52,6 +52,19 @@
     animation: slideOutWindow 0.2s ease-in-out;
 }
 
+.credit-btn {
+    width: 100px;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border: 2px solid rgba(var(--bg-color1), 0.6);
+    cursor: pointer;
+    border-radius: 20px;
+}
+
 @keyframes slideOutWindow {
     from {
         width: calc(100% - 60px);
