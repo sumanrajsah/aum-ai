@@ -87,7 +87,7 @@ const ProfileCont = () => {
                     </div>
 
                 </div>
-                <span className="plan" style={{ textTransform: 'uppercase', fontWeight: '600' }}>{user?.plan}</span>
+                <span className="plan" style={{ textTransform: 'uppercase', fontWeight: '600' }}>{user?.plan === 'pro-plus' ? 'pro+' : `${user?.plan}`}</span>
                 <div className="user-info">
                     <div className="user-name">
                         {user?.name || 'User'}

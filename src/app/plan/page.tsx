@@ -149,9 +149,13 @@ const PricingPage = () => {
                     {Object.entries(pricingData.plans)
                         .filter(([key]) => {
                             if (!user) return true; // show all if not logged in
-                            if (user.plan === 'pro' || user.plan === 'pro-plus') {
-                                return key !== 'plus'; // hide "Plus" for premium users
+                            if (user.plan === "pro-plus") {
+                                return key !== "plus" && key !== "pro";
                             }
+                            if (user.plan === "pro") {
+                                return key !== "plus" && key !== 'pro-plus';
+                            }
+
                             return true;
                         })
                         .map(([key, plan]) => (

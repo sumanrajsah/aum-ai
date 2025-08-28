@@ -204,7 +204,7 @@ const Sidebar = () => {
                             >
                                 {getUserInitials(user?.name)}
                             </div>
-                        </div><span>{user?.name}<br /><span className="plan" style={{ textTransform: 'uppercase', fontWeight: '600' }}>{user?.plan}</span></span>
+                        </div><span>{user?.name}<br /><span className="plan" style={{ textTransform: 'uppercase', fontWeight: '600' }}>{user?.plan === 'pro-plus' ? 'pro+' : `${user?.plan}`}</span></span>
                     </SidebarButton>}
                     {openProfileModal && <div className="profile-sidebar-cont" ref={modalRef} >
                         <ProfileCont />
