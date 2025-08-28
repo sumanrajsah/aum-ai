@@ -1,52 +1,43 @@
-name: Deploy via Azure RunCommand
-on: { push: { branches: [ main ] } }
+- name: Deploy on VM (as user)
+  uses: azure/cli@v2
+  with:
+    inlineScript: |
+      az vm run-command invoke \
+        --resource-group "${{ secrets.AZ_RG }}" \
+        --name "${{ secrets.AZ_VM }}" \
+        --command-id RunShellScript \
+        --scripts '
+          set -euo pipefail
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+          # root: ensure system deps
+          command -v node >/dev/null || (curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt -y install nodejs build-essential)
+          sudo npm i -g yarn pm2
 
-      - name: Azure login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          # run the rest as the login user
+          sudo -u aum-sitrai bash -lc "
+            set -euo pipefail
+            APP_DIR=\$HOME/aum-ai
+            REPO=https://github.com/sumanrajsah/aum-ai.git
 
-      - name: Build on VM via RunCommand
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az vm run-command invoke \
-              --resource-group "${{ secrets.AZ_RG }}" \
-              --name "${{ secrets.AZ_VM }}" \
-              --command-id RunShellScript \
-              --scripts '
-                set -euo pipefail
-                APP_DIR="/home/aum-sitrai/aum-ai"
-                REPO="https://github.com/sumanrajsah/aum-ai.git"
+            mkdir -p \$APP_DIR
+            cd \$APP_DIR
 
-                sudo mkdir -p "$APP_DIR"
-                sudo chown -R aum-sitrai "$APP_DIR"
-                cd "$APP_DIR"
+            if [ ! -d .git ]; then
+              git clone \$REPO .
+            fi
 
-                if [ ! -d .git ]; then
-                  git clone "$REPO" .
-                fi
+            git fetch --all
+            git reset --hard origin/main
 
-                git fetch --all
-                git reset --hard origin/main
+            cat > .env.production <<EOF
+            NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            EOF
 
-                cat > .env.production <<EOF
-                NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
-                NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-                EOF
+            yarn install --frozen-lockfile
+            yarn build
 
-                command -v node >/dev/null || curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt -y install nodejs build-essential
-                sudo npm i -g yarn pm2
-
-                yarn install --frozen-lockfile
-                yarn build
-
-                pm2 describe aum-ai >/dev/null && pm2 reload aum-ai || pm2 start node_modules/next/dist/bin/next --name aum-ai -- start
-                pm2 save
-              '
+            pm2 describe aum-ai >/dev/null && pm2 reload aum-ai || pm2 start node_modules/next/dist/bin/next --name aum-ai -- start
+            pm2 save
+          "
+        '
