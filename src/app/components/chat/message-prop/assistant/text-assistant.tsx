@@ -38,8 +38,6 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
     const alertMessage = useAlert()
     if (content === '') return null;
     const [copyText, setCopyText] = useState<String>('Copy')
-    // console.log(bytecode, abi)
-    console.log(content, type)
     const { aiTyping, setAiTyping, setEditInput } = useChat();
     const [isImageLoaded, setImageLoaded] = useState(false);
     const [openImageModal, setOpenImageModal] = useState(false);

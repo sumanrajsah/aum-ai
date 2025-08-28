@@ -246,8 +246,8 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                                                             return (
                                                                 <TextUserMessage
                                                                     key={contentKey}
-                                                                    content={item.image_url}
-                                                                    type={item.type}
+                                                                    content={item.item.image_url}
+                                                                    type={item.item.type}
                                                                     role={msg.role ?? ''}
                                                                     filename=""
                                                                 />
@@ -269,6 +269,9 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                                                 case "file":
                                                     messageContent = `${item.file.file_url}`;
                                                     filename = `${item.file.filename}`;
+                                                    break;
+                                                case "image_url":
+                                                    messageContent = item.image_url;
                                                     break;
                                                 default:
                                                     messageContent = "Unsupported message type";

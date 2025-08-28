@@ -36,6 +36,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, role, type, file
 
     const [copyText, setCopyText] = useState<String>('Copy')
     // console.log(bytecode, abi)
+    console.log(content, type)
     const { aiTyping, setAiTyping, setEditInput } = useChat();
     const [isImageLoaded, setImageLoaded] = useState(false);
     const [openImageModal, setOpenImageModal] = useState(false);

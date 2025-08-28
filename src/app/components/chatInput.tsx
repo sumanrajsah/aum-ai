@@ -129,6 +129,7 @@ const ChatInput = () => {
         if (isImage) {
           fileData.image_url = uploadResponse?.url; // assuming server returns uploaded image URL
         }
+        console.log(fileData)
 
         newFiles.push(fileData);
       }
