@@ -13,48 +13,55 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy on VM (as user)
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az vm run-command invoke \
-              --resource-group "${{ secrets.AZ_RG }}" \
-              --name "${{ secrets.AZ_VM }}" \
-              --command-id RunShellScript \
-              --scripts '
-                set -euo pipefail
+  uses: azure/cli@v2
+  with:
+    inlineScript: |
+      az vm run-command invoke \
+        --resource-group "${{ secrets.AZ_RG }}" \
+        --name "${{ secrets.AZ_VM }}" \
+        --command-id RunShellScript \
+        --scripts '
+          #!/bin/sh
+          set -eu
 
-                # root: ensure system deps
-                command -v node >/dev/null || (curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt -y install nodejs build-essential)
-                sudo npm i -g yarn pm2
+          # system deps (root)
+          if ! command -v node >/dev/null 2>&1; then
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt -y install nodejs build-essential git
+          fi
+          sudo npm i -g pm2 corepack
 
-                # run as the login user
-                sudo -u aum-sitrai bash -lc "
-                  set -euo pipefail
-                  APP_DIR=\$HOME/aum-ai
-                  REPO_URL=https://github.com/sumanrajsah/aum-ai.git
-                  TOKEN=${{ secrets.GH_PAT }}
+          # app deploy as login user
+          sudo -u aum-sitrai sh -lc "
+            set -eu
+            APP_DIR=\$HOME/aum-ai
+            REPO_URL=https://github.com/sumanrajsah/aum-ai.git
+            # private repo via PAT in URL (read-only token)
+            REPO_AUTH=https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git
 
-                  mkdir -p \$APP_DIR
-                  cd \$APP_DIR
+            mkdir -p \$APP_DIR
+            cd \$APP_DIR
 
-                  # first-time clone with PAT header
-                  if [ ! -d .git ]; then
-                    git -c http.extraHeader=\"Authorization: Bearer \$TOKEN\" clone \$REPO_URL .
-                  fi
+            if [ ! -d .git ]; then
+              git clone \$REPO_AUTH .
+            else
+              git remote set-url origin \$REPO_AUTH
+              git fetch --all
+              git reset --hard origin/main
+            fi
 
-                  # fetch/reset with PAT header
-                  git -c http.extraHeader=\"Authorization: Bearer \$TOKEN\" fetch --all
-                  git -c http.extraHeader=\"Authorization: Bearer \$TOKEN\" reset --hard origin/main
+            # env file
+            {
+              echo \"NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}\"
+              echo \"NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}\"
+            } > .env.production
 
-                  cat > .env.production <<EOF
-                  NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
-                  NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-                  EOF
+            corepack enable
+            corepack prepare yarn@stable --activate
+            yarn install --frozen-lockfile
+            yarn build
 
-                  yarn install --frozen-lockfile
-                  yarn build
-
-                  pm2 describe aum-ai >/dev/null && pm2 reload aum-ai || pm2 start node_modules/next/dist/bin/next --name aum-ai -- start
-                  pm2 save
-                "
-              '
+            pm2 describe aum-ai >/dev/null 2>&1 && pm2 reload aum-ai || pm2 start node_modules/next/dist/bin/next --name aum-ai -- start
+            pm2 save
+          "
+        '
