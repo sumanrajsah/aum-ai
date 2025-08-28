@@ -50,7 +50,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, role, type, file
     useEffect(() => {
         if (type === 'image_url' && role !== 'user') {
             const img = document.createElement('img');
-            const imageUrl = JSON.parse(content).image_url;
+            const imageUrl = content;
             // console.log(imageUrl)
 
             img.src = imageUrl;

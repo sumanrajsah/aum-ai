@@ -18,7 +18,7 @@ export const uploadFileToServer = async (
         const result = response.data;
 
         return {
-            url: result?.url || '',
+            url: result?.azureUrl || '',
             data: result?.message || '',
         };
     } catch (error: any) {
