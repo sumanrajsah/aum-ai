@@ -534,7 +534,7 @@ export default function CreateAgents() {
                 </div>
 
                 {/* Prebuilt Tools */}
-                {getTools(primaryModel) && <div className="cagent-box">
+                {/* {getTools(primaryModel) && <div className="cagent-box">
                     <label>Select Prebuilt Tools: {selectedPrebuiltTools.length}</label>
                     <div className="tool-checkbox-group">
                         <div className="tool-checkbox" onClick={() => togglePrebuiltTool("search")}>
@@ -560,9 +560,14 @@ export default function CreateAgents() {
                             </label>
                         </div>
                     </div>
-                </div>}
+                </div>} */}
 
                 {/* MCP Tools */}
+                {mcpServers.length === 0 && <div className="cgent-box">
+                    <label>Add Mcp Tools</label>
+                    <button onClick={() => { router.push('/create/mcp') }} className="add-demo-btn">
+                        Add MCP
+                    </button></div>}
                 {mcpServers.length >= 1 && getTools(primaryModel) && (
                     <div className="cagent-box">
                         <label>Select Your MCP Tools: {selectedMcpTools.length}</label>

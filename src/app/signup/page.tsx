@@ -1,5 +1,5 @@
 "use client"
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import Image from 'next/image'
 import './style.css'
 import Link from "next/link";
@@ -24,6 +24,7 @@ export default function CollabSignUp() {
         name: "",
         confirmPassword: ""
     });
+    const [loading, setLoading] = useState(false)
     const router = useRouter();
     const alert = useAlert();
 
@@ -50,6 +51,8 @@ export default function CollabSignUp() {
     };
 
     async function handleSubmit(e: React.FormEvent) {
+        setLoading(true)
+
         if (!formData.email || !formData.password || !formData.name) {
             alert.warn("Please fill all the fields")
             return
@@ -67,15 +70,16 @@ export default function CollabSignUp() {
             body: JSON.stringify(formData),
         });
         const data = await res.json();
-        console.log(data)
+        // console.log(data)
         if (data.message === "success") {
-
+            setLoading(false)
 
             router.push("/login");
 
         }
         else {
             alert.warn("User already exists")
+            setLoading(false)
         }
     }
 
@@ -99,7 +103,7 @@ export default function CollabSignUp() {
                 secondaryColor="gray"
             /><p>Loading...</p></div> : (status === "authenticated" ? <div className="collab-sbody">
                 <h1>✅</h1>
-                <h1>Authentocated</h1>
+                <h1>Authenticated</h1>
                 <p>Redirecting to dashboard...</p>
             </div> : <div className="collab-sbody">
                 <button className="collab-sbutton" onClick={() => { router.push('/login') }} style={{ width: "auto" }}>Login</button>
@@ -130,11 +134,19 @@ export default function CollabSignUp() {
                         <label>Confirm Password</label>
                         <input placeholder="..." type="password" onChange={(e) => handlePasswordChange(e, "confirmPassword")} />
                     </div>
-                    <button className="collab-button" onClick={handleSubmit} type="submit">Submit</button>
-                    <p>or</p>
-                    <GoogleSignInButton className={'google-btn'} islogin={false} />
+                    {loading ? <><Oval
+                        visible={true}
+                        height="20"
+                        width="20"
+                        color="gray"
+                        ariaLabel="oval-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        secondaryColor="gray"
+                    /><p>Creating Account...</p></> : <button className="collab-button" onClick={handleSubmit} type="submit">Submit</button>}
+                    {!loading && <p>or</p>}
+                    {!loading && <GoogleSignInButton className={'google-btn'} islogin={false} />}
                 </div>
-                <ToastContainer theme="dark" />
             </div>)}
         </>
     );

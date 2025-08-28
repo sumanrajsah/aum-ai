@@ -39,7 +39,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
     if (content === '') return null;
     const [copyText, setCopyText] = useState<String>('Copy')
     // console.log(bytecode, abi)
-    console.log(content)
+    console.log(content, type)
     const { aiTyping, setAiTyping, setEditInput } = useChat();
     const [isImageLoaded, setImageLoaded] = useState(false);
     const [openImageModal, setOpenImageModal] = useState(false);
@@ -51,9 +51,16 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
     const [showToolsData, setShowToolsData] = useState<boolean>(false);
     const [showThought, setShowThought] = useState<boolean>(false);
     const [thoughtData, setThoughtData] = useState('');
-    const { visibleText, thoughtText, hasThought } = useMemo(() => extractThoughts(content), [content]);
+    const { visibleText, thoughtText, hasThought } = useMemo(() => {
+        if (type === "text") {
+            return extractThoughts(content);
+        }
+        return { visibleText: content, thoughtText: "", hasThought: false };
+    }, [content, type]);
+
 
     useEffect(() => {
+        if (type !== 'text') return;
         if (hasThought) {
             setThoughtData(thoughtText);
             setShowThought(true)
@@ -67,7 +74,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
     useEffect(() => {
         if (type === 'image_url' && role === 'assistant') {
             const img = document.createElement('img');
-            const imageUrl = JSON.parse(content).image_url;
+            const imageUrl = content;
             // console.log(imageUrl)
 
             img.src = imageUrl;
@@ -356,15 +363,10 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
                  />
                </div>} */}
 
-                        {(type === 'image_url' && role !== 'assistant') && <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}> <div className='image-box' onClick={(e) => { e.stopPropagation(), setSelectImage(JSON.parse(content).image_url), setOpenImageModal(true) }}>
-                            {isImageLoaded && <img className='ai-image' src={JSON.parse(content).image_url} alt={'image'} width={1024} height={1024} />}
-                            {!isImageLoaded && !aiTyping && <img className='ai-image-blur' src={JSON.parse(content).image_url} alt={'image'} width={1024} height={1024} />}
+                        {(type === 'image_url') && <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}> <div className='image-box' onClick={(e) => { e.stopPropagation(), setSelectImage(content), setOpenImageModal(true) }}>
+                            {isImageLoaded && <img className='ai-image' src={content} alt={'image'} width={1024} height={1024} />}
+                            {!isImageLoaded && !aiTyping && <img className='ai-image-blur' src={content} alt={'image'} width={1024} height={1024} />}
                         </div>
-                            {isImageLoaded && <div className='image-download' onClick={() => {
-                                handleDownload(JSON.parse(content).image_url)
-                            }} >
-                                <Download />
-                            </div>}
                         </div>}
                         {(type === 'error' && role !== 'assistant') && <div className='error-message'>
                             {content}
@@ -560,8 +562,9 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
                                     <Copy size={16} />
 
                                 </button>
-                                {!(pathname.includes('/agent')) && < button className='copy-button' title='Good Response' onClick={() => { alertMessage.success('Thank you') }} ><ThumbsUp size={16} /> </button>}
-                                {!(pathname.includes('/agent')) && <button className='copy-button' title='Bad Response' onClick={() => { alertMessage.success('Thank you') }}><ThumbsDown size={16} /></button>}
+                                {!(pathname.includes('/agent')) && (type === 'image_url') && < button className='copy-button' title='Download' onClick={() => { handleDownload((content)); alertMessage.success('Downloading...') }} ><Download size={16} /> </button>}
+                                {/* {!(pathname.includes('/agent')) && < button className='copy-button' title='Good Response' onClick={() => { alertMessage.success('Thank you') }} ><ThumbsUp size={16} /> </button>}
+                                {!(pathname.includes('/agent')) && <button className='copy-button' title='Bad Response' onClick={() => { alertMessage.success('Thank you') }}><ThumbsDown size={16} /></button>} */}
                                 {!(pathname.includes('/agent')) && <label className='model-label'>{llmModels.find(m => m.value === model.name)?.label}</label>}
                             </div>
                         )}

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image'
 import '../signup/style.css'
 import Link from "next/link";
@@ -13,7 +13,7 @@ export default function CollabLogin() {
     const [credentials, setCredentials] = React.useState({ email: "", password: "" });
     const router = useRouter();
     const alertMessage = useAlert();
-
+    const [loading, setLoading] = useState(false)
     const bufferToHex = (buffer: ArrayBuffer) => {
         return Array.from(new Uint8Array(buffer))
             .map((b) => b.toString(16).padStart(2, "0"))
@@ -29,6 +29,7 @@ export default function CollabLogin() {
     };
 
     async function handleLogin() {
+        setLoading(true)
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/auth/login`, {
             method: "POST",
             credentials: "include", // VERY IMPORTANT: enables sending/receiving cookies
@@ -42,8 +43,10 @@ export default function CollabLogin() {
 
         if (res?.ok) {
             alertMessage.success("Login successful");
+            setLoading(false)
             router.push("/");
         } else {
+            setLoading(false)
             alertMessage.warn("Invalid credentials")
         }
     }
@@ -88,11 +91,19 @@ export default function CollabLogin() {
                         <label>Password</label>
                         <input placeholder="..." onChange={(e) => { handlePasswordChange(e) }} type="password" />
                     </div>
-                    <button className="collab-button" onClick={() => { handleLogin() }}>Submit</button>
-                    <p>or</p>
-                    <GoogleSignInButton className={'google-btn'} islogin={true} />
+                    {loading ? <><Oval
+                        visible={true}
+                        height="20"
+                        width="20"
+                        color="gray"
+                        ariaLabel="oval-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        secondaryColor="gray"
+                    /><p>Wait...</p></> : <button className="collab-button" onClick={handleLogin} type="submit">Submit</button>}
+                    {!loading && <p>or</p>}
+                    {!loading && <GoogleSignInButton className={'google-btn'} islogin={false} />}
                 </div>
-                <ToastContainer theme="dark" />
             </div>)}
         </>
     );

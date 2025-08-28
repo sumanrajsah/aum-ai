@@ -53,7 +53,7 @@ const SelectToolButton = () => {
                 <p className="modal-subtitle">Choose the tools you want to enable for this session</p>
             </div>
 
-            <div className="selecttool-btn-cont">
+            {/* <div className="selecttool-btn-cont">
                 {tools.map((tool) => {
                     const IconComponent = tool.icon;
                     const isSelected = prevTools.includes(tool.id);
@@ -82,13 +82,13 @@ const SelectToolButton = () => {
                         </div>
                     );
                 })}
-            </div>
+            </div> */}
 
-            <div className="tool-modal-footer">
+            {/* <div className="tool-modal-footer">
                 <div className="selected-count">
                     {prevTools.length} tool{prevTools.length !== 1 ? 's' : ''} selected
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

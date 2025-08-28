@@ -63,13 +63,17 @@ export default function Home() {
 
   useEffect(() => {
 
+    if (status === 'unauthenticated') {
+      router.push('/login')
+    }
+
     setCurrentWorkspace('')
     setChatPage(true)
     setIsChatRoom(false)
     if (!user?.uid) {
       setAlertModel(false)
     }
-  }, [user])
+  }, [user, status])
 
   async function deleteChat() {
     try {

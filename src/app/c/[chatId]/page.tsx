@@ -231,13 +231,14 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                                                 <div key={`${msg.msg_id}-image-group-${groupIdx}`} className="chat-image-container">
                                                     {group.items.map((item: any, idx: any) => {
                                                         const contentKey = `${msg.msg_id}-${item.type}-${idx}`;
+                                                        console.log(item, msg.content[0])
 
                                                         if (msg.role === 'assistant') {
                                                             return (
                                                                 <TextAssistantMessage
                                                                     key={contentKey}
-                                                                    content={item.image_url}
-                                                                    type={item.type}
+                                                                    content={typeof msg.content[0] === 'object' && msg.content[0].type === "image_url" ? msg.content[0].image_url : ""}
+                                                                    type={typeof msg.content[0] === 'object' ? msg.content[0].type : ""}
                                                                     role={msg.role}
                                                                     model={msg.model ?? { name: '', provider: '' }}
                                                                 />

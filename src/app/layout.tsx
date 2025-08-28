@@ -126,9 +126,8 @@ export default async function RootLayout({
           <AlertProvider>
             <AppContextProvider>
               <Script
-                async
-                strategy="afterInteractive"
                 src="https://accounts.google.com/gsi/client"
+                strategy="afterInteractive"
               />
               <ThemeP>
                 <PageStruct1>
