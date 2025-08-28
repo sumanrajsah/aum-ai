@@ -72,7 +72,7 @@ export const imageModels = [
 ];
 
 export const vidoeModels = [
-    { value: "sora", label: "Sora", credits: 10 },
+    { value: "sora", label: "Sora", credits: 5000 },
     { value: "veo-3-fast", label: "Veo 3 Fast", credits: 2500 },
     { value: "veo-3-fast-audio", label: "Veo 3 Fast Audio", credits: 4000 },
     { value: "veo-3-audio", label: "Veo 3 Audio", credits: 7500 },

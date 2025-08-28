@@ -102,12 +102,12 @@ const SelectModelButton = () => {
                                     <span className="model-name">{model.label}</span>
                                     {hasIOCredits(model) ? (
                                         <div className="model-credits">
-                                            <span className="credit-item">Input: {model.inputCredits}</span>
-                                            <span className="credit-item">Output: {model.outputCredits}</span>
+                                            <span className="credit-item">Input: {model.inputCredits} </span>
+                                            <span className="credit-item">Output: {model.outputCredits} </span>
                                         </div>
                                     ) : hasFlatCredit(model) ? (
                                         <div className="model-credits">
-                                            <span className="credit-item">Credits: {model.credits}</span>
+                                            <span className="credit-item">Credits: {model.credits} </span>
                                         </div>
                                     ) : null}
 
