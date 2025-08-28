@@ -120,7 +120,7 @@ export default function CollabSignUp() {
                     </div>
                     <div className="cs-signup-box">
                         <label>Email Address</label>
-                        <input placeholder="name@example.com" onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))} type="email" />
+                        <input placeholder="name@example.com" onChange={(e) => setFormData(prev => ({ ...prev, email: (e.target.value).trim().toLowerCase() }))} type="email" />
                     </div>
                     <div className="cs-signup-box">
                         <label>Password</label>
