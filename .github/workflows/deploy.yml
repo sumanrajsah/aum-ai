@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { persist-credentials: false }
+        with:
+          persist-credentials: false
 
       - name: Azure login
         uses: azure/login@v2
@@ -24,17 +25,16 @@ jobs:
               --name "${{ secrets.AZ_VM }}" \
               --command-id RunShellScript \
               --scripts '
-                # run everything under bash via heredoc
+                # Everything below runs ON THE VM under bash
                 bash <<'"'"'BASH'"'"'
                 set -Eeuo pipefail
                 trap '"'"'rc=$?; echo "[ERR] line:$LINENO cmd:${BASH_COMMAND} status:$rc" >&2; exit $rc'"'"' ERR
 
-                # tracing
-                PS4="+ [TRACE] "
+                # Trace to stdout and /home/aum-sitrai/deploy.log
                 exec > >(tee -a /home/aum-sitrai/deploy.log) 2>&1
                 set -x
 
-                # sys deps
+                # System deps
                 sudo apt-get update -y
                 sudo apt-get install -y curl ca-certificates gnupg git build-essential python3
                 if ! command -v node >/dev/null 2>&1; then
@@ -43,14 +43,13 @@ jobs:
                 fi
                 sudo npm i -g pm2 corepack
 
-                # ensure user
+                # Ensure app user
                 id aum-sitrai >/dev/null 2>&1 || sudo useradd -m -s /bin/bash aum-sitrai
 
-                # app as user
+                # App deploy as user
                 sudo -iu aum-sitrai bash -lc "
                   set -Eeuo pipefail
                   trap 'rc=\$?; echo \"[USER ERR] line:\$LINENO cmd:\$BASH_COMMAND status:\$rc\" >&2; exit \$rc' ERR
-                  PS4='+ [USER TRACE] '
                   set -x
 
                   APP_DIR=\$HOME/aum-ai
@@ -67,7 +66,7 @@ jobs:
                   fi
                   cd \"\$APP_DIR\"
 
-                  # secrets: disable xtrace while writing
+                  # Write env without xtrace to avoid leaking secrets
                   { set +x; } 2>/dev/null
                   umask 077
                   cat > .env.production <<EOF
@@ -77,16 +76,17 @@ jobs:
                   EOF
                   set -x
 
+                  # Yarn via Corepack
                   corepack enable
                   corepack prepare yarn@stable --activate
                   yarn -v
 
+                  # Clean + install with retries (Berry uses --immutable)
                   yarn cache clean --all || true
                   rm -rf node_modules/.cache || true
-
                   for i in 1 2 3; do
                     echo \"[STEP] yarn install attempt \$i/3\"
-                    if yarn install; then
+                    if yarn install --immutable --network-timeout 300000; then
                       echo \"[OK] deps installed\"
                       break
                     fi
@@ -100,6 +100,7 @@ jobs:
                   echo \"[STEP] yarn build\"
                   yarn build
 
+                  # PM2
                   export PM2_HOME=\$HOME/.pm2
                   if pm2 describe aum-ai >/dev/null 2>&1; then
                     pm2 reload aum-ai --update-env
