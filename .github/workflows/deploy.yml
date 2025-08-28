@@ -15,100 +15,99 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy on VM (as user)
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az vm run-command invoke \
-              --resource-group "${{ secrets.AZ_RG }}" \
-              --name "${{ secrets.AZ_VM }}" \
-              --command-id RunShellScript \
-              --scripts '
-                #!/usr/bin/env bash
-                set -Eeuo pipefail
-                trap '"'"'rc=$?; echo "[ERR] line:$LINENO cmd:${BASH_COMMAND} status:$rc" >&2; exit $rc'"'"' ERR
-                export PS4="+ [TRACE] \D{%F %T} [$$] "
-                exec > >(tee -a /home/aum-sitrai/deploy.log) 2>&1
-                set -x
+- name: Deploy on VM (as user)
+  uses: azure/cli@v2
+  with:
+    inlineScript: |
+      az vm run-command invoke \
+        --resource-group "${{ secrets.AZ_RG }}" \
+        --name "${{ secrets.AZ_VM }}" \
+        --command-id RunShellScript \
+        --scripts '
+          # run everything under bash via heredoc
+          bash <<'"'"'BASH'"'"'
+          set -Eeuo pipefail
+          trap '"'"'rc=$?; echo "[ERR] line:$LINENO cmd:${BASH_COMMAND} status:$rc" >&2; exit $rc'"'"' ERR
 
-                # sys deps
-                apt-get update -y
-                apt-get install -y curl ca-certificates gnupg git build-essential python3
-                if ! command -v node >/dev/null 2>&1; then
-                  curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
-                  apt-get install -y nodejs
-                fi
-                npm i -g pm2 corepack
+          # tracing
+          PS4="+ [TRACE] "
+          exec > >(tee -a /home/aum-sitrai/deploy.log) 2>&1
+          set -x
 
-                id aum-sitrai >/dev/null 2>&1 || useradd -m -s /bin/bash aum-sitrai
+          # sys deps
+          sudo apt-get update -y
+          sudo apt-get install -y curl ca-certificates gnupg git build-essential python3
+          if ! command -v node >/dev/null 2>&1; then
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          sudo npm i -g pm2 corepack
 
-                # run as app user with login shell (gets PATH)
-                sudo -iu aum-sitrai bash -lc "
-                  set -Eeuo pipefail
-                  trap 'rc=\$?; echo \"[USER ERR] line:\$LINENO cmd:\$BASH_COMMAND status:\$rc\" >&2; exit \$rc' ERR
-                  export PS4='+ [USER TRACE] %D{%F %T} [$$] '
-                  set -x
+          # ensure user
+          id aum-sitrai >/dev/null 2>&1 || sudo useradd -m -s /bin/bash aum-sitrai
 
-                  APP_DIR=\$HOME/aum-ai
-                  REPO_URL=https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git
+          # app as user
+          sudo -iu aum-sitrai bash -lc "
+            set -Eeuo pipefail
+            trap 'rc=\$?; echo \"[USER ERR] line:\$LINENO cmd:\$BASH_COMMAND status:\$rc\" >&2; exit \$rc' ERR
+            PS4='+ [USER TRACE] '
+            set -x
 
-                  mkdir -p \"\$APP_DIR\"
-                  if [ -d \"\$APP_DIR/.git\" ]; then
-                    git -C \"\$APP_DIR\" remote set-url origin \"\$REPO_URL\"
-                    git -C \"\$APP_DIR\" fetch --prune origin
-                    git -C \"\$APP_DIR\" reset --hard origin/main
-                    git -C \"\$APP_DIR\" clean -fd
-                  else
-                    git clone --depth=1 \"\$REPO_URL\" \"\$APP_DIR\"
-                  fi
-                  cd \"\$APP_DIR\"
+            APP_DIR=\$HOME/aum-ai
+            REPO_URL=https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git
 
-                  # write env safely (disable xtrace to avoid leaking)
-                  { set +x; } 2>/dev/null
-                  umask 077
-                  cat > .env.production <<EOF
-                  NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
-                  NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-                  NODE_ENV=production
-                  EOF
-                  set -x
+            mkdir -p \"\$APP_DIR\"
+            if [ -d \"\$APP_DIR/.git\" ]; then
+              git -C \"\$APP_DIR\" remote set-url origin \"\$REPO_URL\"
+              git -C \"\$APP_DIR\" fetch --prune origin
+              git -C \"\$APP_DIR\" reset --hard origin/main
+              git -C \"\$APP_DIR\" clean -fd
+            else
+              git clone --depth=1 \"\$REPO_URL\" \"\$APP_DIR\"
+            fi
+            cd \"\$APP_DIR\"
 
-                  # Yarn via Corepack
-                  corepack enable
-                  corepack prepare yarn@stable --activate
-                  yarn -v
+            # secrets: disable xtrace while writing
+            { set +x; } 2>/dev/null
+            umask 077
+            cat > .env.production <<EOF
+            NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            NODE_ENV=production
+            EOF
+            set -x
 
-                  # clean + install with retries
-                  yarn cache clean --all || true
-                  rm -rf node_modules/.cache || true
+            corepack enable
+            corepack prepare yarn@stable --activate
+            yarn -v
 
-                  for i in 1 2 3; do
-                    echo \"[STEP] yarn install attempt \$i/3\"
-                    if yarn install --immutable --network-timeout 300000; then
-                      echo \"[OK] deps installed\"
-                      break
-                    fi
-                    echo \"[WARN] install failed, retrying...\"
-                    rm -rf node_modules || true
-                    sleep 10
-                    if [ \$i -eq 3 ]; then
-                      echo \"[FATAL] dependencies failed after 3 attempts\" >&2
-                      exit 1
-                    fi
-                  done
+            yarn cache clean --all || true
+            rm -rf node_modules/.cache || true
 
-                  export NODE_OPTIONS=--max-old-space-size=2048
-                  echo \"[STEP] yarn build\"
-                  yarn build
+            for i in 1 2 3; do
+              echo \"[STEP] yarn install attempt \$i/3\"
+              if yarn install; then
+                echo \"[OK] deps installed\"
+                break
+              fi
+              echo \"[WARN] install failed, retrying...\"
+              rm -rf node_modules || true
+              sleep 10
+              [ \$i -eq 3 ] && { echo \"[FATAL] install failed\" >&2; exit 1; }
+            done
 
-                  # PM2
-                  export PM2_HOME=\$HOME/.pm2
-                  if pm2 describe aum-ai >/dev/null 2>&1; then
-                    pm2 reload aum-ai --update-env
-                  else
-                    pm2 start \"yarn start\" --name aum-ai
-                  fi
-                  pm2 save
-                  pm2 status
-                "
-              '
+            export NODE_OPTIONS=--max-old-space-size=2048
+            echo \"[STEP] yarn build\"
+            yarn build
+
+            export PM2_HOME=\$HOME/.pm2
+            if pm2 describe aum-ai >/dev/null 2>&1; then
+              pm2 reload aum-ai --update-env
+            else
+              pm2 start \"yarn start\" --name aum-ai
+            fi
+            pm2 save
+            pm2 status
+          "
+          BASH
+        '
