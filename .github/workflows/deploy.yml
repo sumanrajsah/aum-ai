@@ -24,21 +24,22 @@ jobs:
                 #!/bin/sh
                 set -eu
 
-                # system deps (root)
+                # system deps
                 if ! command -v node >/dev/null 2>&1; then
                   curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
                   sudo apt -y install nodejs build-essential git
                 fi
                 sudo npm i -g pm2 corepack
 
-                # app deploy as login user
-                sudo -u aum-sitrai sh -lc "
-                  set -eu
-                  APP_DIR=\$HOME/aum-ai
-                  REPO_URL=https://github.com/sumanrajsah/aum-ai.git
-                  # private repo via PAT in URL (read-only token)
-                  REPO_AUTH=https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git
+                # run as login shell for user so PATH includes /usr/local/bin
+                sudo -iu aum-sitrai bash -lc "
+                  set -eux
+                  echo :: whoami && whoami
+                  echo :: PATH && echo \$PATH
+                  echo :: versions && node -v || true; npm -v || true
 
+                  APP_DIR=\$HOME/aum-ai
+                  REPO_AUTH=https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git
                   mkdir -p \$APP_DIR
                   cd \$APP_DIR
 
@@ -50,18 +51,20 @@ jobs:
                     git reset --hard origin/main
                   fi
 
-                  # env file
                   {
                     echo \"NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}\"
                     echo \"NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}\"
                   } > .env.production
 
+                  # ensure yarn available for this user
                   corepack enable
                   corepack prepare yarn@stable --activate
+                  yarn -v
+
                   yarn install --frozen-lockfile
                   yarn build
 
                   pm2 describe aum-ai >/dev/null 2>&1 && pm2 reload aum-ai || pm2 start node_modules/next/dist/bin/next --name aum-ai -- start
                   pm2 save
-                "
+                " 2>&1 | tee -a /home/aum-sitrai/deploy.log
               '
