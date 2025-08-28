@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import './profile.css'
-import { BrainCircuit, LogOut, Pickaxe, Server, Settings, Telescope, User2, Wrench, Mail, UserCircle, ScrollText } from "lucide-react";
+import { BrainCircuit, LogOut, Pickaxe, Server, Settings, Telescope, User2, Wrench, Mail, UserCircle, ScrollText, Headset } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "../ThemeToggle";
@@ -113,7 +113,7 @@ const ProfileCont = () => {
                 <ScrollText size={20} />Terms & Policies
             </button>
             <button className="profile-btn" onClick={() => { window.open('https://t.me/aumai_customer_support', '_blank') }}>
-                <ScrollText size={20} />Support
+                <Headset size={20} />Support
             </button>
             <hr />
 
