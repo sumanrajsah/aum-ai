@@ -1,0 +1,52 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            APP_DIR="${{ secrets.VM_PATH }}"
+            REPO_SSH="git@github.com:sumanrajsah/aum-ai.git"
+
+            if [ ! -d "$APP_DIR/.git" ]; then
+              mkdir -p "$APP_DIR"
+              git clone "$REPO_SSH" "$APP_DIR"
+            fi
+
+            cd "$APP_DIR"
+            git remote set-url origin "$REPO_SSH"
+            git fetch --all
+            git reset --hard origin/main
+
+            # write .env.production from GitHub Secrets
+            cat > .env.production <<EOF
+            NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            # add more here as needed
+            EOF
+
+            corepack enable || true
+            yarn install --frozen-lockfile
+            yarn build
+
+            if pm2 describe aum-ai > /dev/null; then
+              pm2 reload aum-ai
+            else
+              pm2 start ecosystem.config.js --env production || pm2 start node_modules/next/dist/bin/next --name aum-ai -- start
+            fi
+
+            pm2 save
