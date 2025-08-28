@@ -78,7 +78,7 @@ html.dark .region-info {
 
 /* Card Styles */
 .pricing-card {
-    width: 500px;
+    width: 400px;
     position: relative;
     padding: 2rem;
     border-radius: 16px;
@@ -339,6 +339,12 @@ html.dark .pricing-footer {
     .discounted-price,
     .current-price {
         font-size: 2rem;
+    }
+}
+
+@media (max-width: 540px) {
+    .pricing-card {
+        max-width: 90vw;
     }
 }
 

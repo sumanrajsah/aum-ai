@@ -18,7 +18,7 @@ interface DevProfile {
     website: string;
     followers: number;
     following: number;
-    joined_date: string; // ISO date string, can change to Date if you parse
+    joined_date: string;
     location: string;
     social_links: {
         github: string;

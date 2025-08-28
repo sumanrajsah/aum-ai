@@ -1,0 +1,399 @@
+.credits-container {
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    box-sizing: border-box;
+}
+
+.credits-header {
+    text-align: center;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.credits-title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, rgb(var(--bg-color1)), rgba(var(--bg-color1), 0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    word-wrap: break-word;
+}
+
+.credits-subtitle {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    opacity: 0.7;
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.credits-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.credit-card {
+    padding: 2rem;
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(var(--bg-color1), 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+html.light .credit-card {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 32px rgba(var(--bg-color1), 0.1);
+}
+
+html.dark .credit-card {
+    background: rgba(21, 24, 29, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.credit-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(var(--bg-color1), 0.4);
+}
+
+.credit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, rgb(var(--bg-color1)), rgba(var(--bg-color1), 0.5));
+}
+
+.card-title {
+    font-size: clamp(1.1rem, 4vw, 1.3rem);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: rgb(var(--bg-color1));
+    line-height: 1.3;
+    word-wrap: break-word;
+}
+
+.credit-value {
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, rgb(var(--bg-color1)), rgba(var(--bg-color1), 0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    word-wrap: break-word;
+}
+
+.credit-label {
+    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.progress-container {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(var(--bg-color1), 0.1);
+    box-sizing: border-box;
+}
+
+html.light .progress-container {
+    background: rgba(var(--bg-color1), 0.05);
+}
+
+html.dark .progress-container {
+    background: rgba(var(--bg-color1), 0.1);
+}
+
+.progress-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+    opacity: 0.7;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.progress-bar {
+    height: 8px;
+    background: rgba(var(--bg-color1), 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, rgb(var(--bg-color1)), rgba(var(--bg-color1), 0.8));
+    border-radius: 4px;
+    transition: width 0.8s ease;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: clamp(30px, 8vw, 40px);
+    height: clamp(30px, 8vw, 40px);
+    border: 3px solid rgba(var(--bg-color1), 0.2);
+    border-top: 3px solid rgb(var(--bg-color1));
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-state {
+    padding: 2rem;
+    text-align: center;
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 71, 87, 0.05);
+    box-sizing: border-box;
+    word-wrap: break-word;
+}
+
+/* Extra Small Devices (Portrait Phones) */
+@media (max-width: 480px) {
+    .credits-container {
+        padding: 1rem 0.75rem;
+        gap: 1.5rem;
+    }
+
+    .credits-cards {
+        gap: 1rem;
+        grid-template-columns: 1fr;
+    }
+
+    .credit-card {
+        padding: 1.5rem 1rem;
+        min-height: 180px;
+    }
+
+
+
+    .progress-container {
+        padding: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .progress-stats {
+        font-size: 0.75rem;
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: center;
+    }
+
+    .loading-state {
+        padding: 2rem 1rem;
+    }
+}
+
+/* Small Devices (Landscape Phones) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .credits-container {
+        padding: 1.5rem;
+        gap: 1.75rem;
+    }
+
+    .credits-cards {
+        padding: 1em;
+        gap: 1.2rem;
+        grid-template-columns: 1fr;
+    }
+
+    .credit-card {
+        padding: 1.75rem 1.25rem;
+        min-height: 190px;
+    }
+
+    .credit-value {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+    }
+
+    .card-title {
+        margin-bottom: 1rem;
+    }
+
+    .progress-container {
+        padding: 0.875rem;
+    }
+}
+
+/* Medium Devices (Tablets) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .credits-container {
+        padding: 2rem 1.5rem;
+    }
+
+    .credits-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.75rem;
+        max-width: 800px;
+    }
+
+    .credit-card {
+        padding: 1.875rem 1.5rem;
+    }
+}
+
+/* Large Devices (Desktops) */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .credits-cards {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1000px;
+    }
+}
+
+/* Extra Large Devices */
+@media (min-width: 1201px) {
+    .credits-container {
+        padding: 2.5rem;
+    }
+
+    .credits-cards {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1200px;
+        gap: 2.5rem;
+    }
+
+    .credit-card {
+        padding: 2.5rem 2rem;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .credit-card:hover {
+        transform: none;
+    }
+
+    .credit-card:active {
+        transform: scale(0.98);
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .progress-bar {
+        height: 10px;
+    }
+}
+
+/* Landscape Orientation for Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .credits-container {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .loading-state {
+        padding: 2rem 1rem;
+    }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .credit-card {
+        transition: none;
+    }
+
+    .progress-fill {
+        transition: none;
+    }
+
+    .progress-fill::after {
+        animation: none;
+    }
+
+    .loading-spinner {
+        animation: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .credits-container {
+        background: none !important;
+        color: black !important;
+    }
+
+    .credit-card {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+
+    .loading-spinner,
+    .progress-fill::after {
+        display: none !important;
+    }
+}

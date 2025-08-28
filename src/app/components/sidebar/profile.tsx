@@ -103,14 +103,17 @@ const ProfileCont = () => {
                 <User2 size={20} />Upgrade Plan
             </button>
             <hr />
-            <button className="profile-btn" onClick={() => { router.push('?settings=true') }}>
+            {/* <button className="profile-btn" onClick={() => { router.push('?settings=true') }}>
                 <Settings size={20} />Settings
-            </button>
+            </button> */}
             <ThemeToggle />
 
             <hr />
-            <button className="profile-btn" onClick={() => { router.push('?settings=true') }}>
+            <button className="profile-btn" onClick={() => { router.push('term-and-condition') }}>
                 <ScrollText size={20} />Terms & Policies
+            </button>
+            <button className="profile-btn" onClick={() => { window.open('https://t.me/aumai_customer_support', '_blank') }}>
+                <ScrollText size={20} />Support
             </button>
             <hr />
 

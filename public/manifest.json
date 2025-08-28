@@ -1,7 +1,7 @@
 {
-    "name": "0xXplorer AI",
-    "short_name": "0xXplorer AI",
-    "description": "Your AI-powered assistant for seamless blockchain exploration and insights",
+    "name": "AUM AI",
+    "short_name": "AUM AI",
+    "description": "AUM AI is an AI platform that enables users to create, customize, and deploy AI agents for various applications.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#0E1111",
@@ -9,12 +9,12 @@
     "theme_color": "#0E1111",
     "icons": [
         {
-            "src": "/android-chrome-192x192.png",
+            "src": "/aum.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "/android-chrome-512x512.png",
+            "src": "/aum.png",
             "sizes": "512x512",
             "type": "image/png"
         }

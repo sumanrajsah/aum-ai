@@ -70,7 +70,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
             }, 1000);
             return () => clearTimeout(timer);
         } else if (step === 'success' && countdown === 0) {
-            window.location.href = '/dashboard';
+            window.location.href = '/';
         }
     }, [step, countdown]);
 
@@ -94,14 +94,14 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                 const status = data?.status || "unknown";
                 // ✅ always return current status to caller
                 if (status === 'verified') {
-                    setStep('activating');
+                    setStep('success');
                 }
                 if (status === 'created') {
                     setStep('verifying');
                 }
-                if (status === 'active') {
-                    setStep('success');
-                }
+                // if (status === 'active') {
+                //     setStep('success');
+                // }
 
                 if (status === "active") return; // stop once active
             } catch (err) {

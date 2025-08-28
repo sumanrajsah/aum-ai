@@ -317,7 +317,7 @@ export default function CreateAgents() {
 
             if (response.status === 201) {
                 alertMessage.success("Agent Created Successfully");
-                router.push('/agents');
+                router.push('/store/agents/mine');
             } else {
                 alertMessage.warn(response.data.message);
             }

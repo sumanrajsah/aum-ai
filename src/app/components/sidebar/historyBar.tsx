@@ -173,7 +173,7 @@ const HistoryBar = () => {
                                                         }}
                                                         style={{ background: theme === 'dark' ? 'var(--prop-dark-bg)' : 'var(--prop-white-bg)' }}
                                                     >
-                                                        <div
+                                                        {/* <div
                                                             className="chath-menu-list"
                                                             onClick={() =>
                                                                 (location.href = `#movechat`)
@@ -181,7 +181,7 @@ const HistoryBar = () => {
                                                         >
                                                             <Layers size={16} />
                                                             Move
-                                                        </div>
+                                                        </div> */}
                                                         <div
                                                             className="chath-menu-list"
                                                             onClick={() =>
@@ -192,10 +192,10 @@ const HistoryBar = () => {
                                                             Rename
                                                         </div>
                                                         <hr />
-                                                        <div className="chath-menu-list">
+                                                        {/* <div className="chath-menu-list">
                                                             <Archive size={16} />
                                                             Archive
-                                                        </div>
+                                                        </div> */}
                                                         <div
                                                             className="chath-menu-list delete"
                                                             onClick={() => {

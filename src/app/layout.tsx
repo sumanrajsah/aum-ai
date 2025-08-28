@@ -18,20 +18,20 @@ import { AuthProvider } from "@/context/AuthContext";
 import SpaceBackground from "./components/bgspace";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://0xxplorer.com"),
-  title: "0xXplorer AI is an AI-Powered Web3 Chatbot Assistant",
+  metadataBase: new URL("https://aum.sitrai.com"),
+  title: "AUM AI - ASK.CREATE.EARN",
   description: "0xXplorer is an AI-powered blockchain explorer & Chatbot Assitant for seamless transaction analysis, smart contract insights, and real-time data.",
-  keywords: "0xxplorer,0xai,0x,explorer,xplorer,0xxai,0ai,xai,qubicsquare,chatgpt,openai,dobby,polygon,english,connect,wallet,metamask,etherscan,polygonscan,monad,testnet,mainnet,web3,chatbot,blockchain,decentralized,ethereum,bsc,avalanche,arbitrum,optimism,sepolia,base,amoy,chain,transaction,smart contract,insights,real-time,data,analysis,assistant,ai,artificial intelligence,web3",
+  keywords: ",aum,claude,openai,sitrai,0xxplorer,0xai,0x,explorer,xplorer,0xxai,0ai,xai,qubicsquare,chatgpt,openai,dobby,polygon,english,connect,wallet,metamask,etherscan,polygonscan,monad,testnet,mainnet,web3,chatbot,blockchain,decentralized,ethereum,bsc,avalanche,arbitrum,optimism,sepolia,base,amoy,chain,transaction,smart contract,insights,real-time,data,analysis,assistant,ai,artificial intelligence,web3",
   openGraph: {
-    title: "0xXplorer AI is an AI-Powered Web3 Chatbot Assistant",
+    title: "AUM AI - ASK.CREATE.EARN",
     description: "0xXplorer is an AI-powered blockchain explorer & Chatbot Assitant  for seamless transaction analysis, smart contract insights, and real-time data.",
-    images: ['/0xai512.png'],
+    images: ['/aum.png'],
     type: 'website',
-    url: 'https://0xxplorer.com/'
+    url: 'https://aum.sitrai.com/'
   }, twitter: {
-    title: "0xXplorer AI is an AI-Powered Web3 Chatbot Assistant",
+    title: "AUM AI - ASK.CREATE.EARN",
     description: "0xXplorer is an AI-powered blockchain explorer & Chatbot Assitant  for seamless transaction analysis, smart contract insights, and real-time data.",
-    images: ['/0xai512.png'],
+    images: ['/aum.png'],
     card: 'summary_large_image',
     site: '@0xxplorerAi'
 
@@ -46,10 +46,10 @@ export default async function RootLayout({
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "0xXplorer AI is an AI-Powered Blockchain Explorer & Chatbot Assistant",
-    "url": "https://0xxplorer.com/",
-    "description": "0xXplorer is an AI-powered blockchain explorer & chatbot assistant for seamless transaction analysis, smart contract insights, and real-time data.",
-    "image": "https://0xxplorer.com/0xai512.png",
+    "name": "AUM AI- ASK. CREATE. EARN.",
+    "url": "https://aum.sitrai.com/",
+    "description": "AUM AI is an AI platform that enables users to create, customize, and deploy AI agents for various applications.",
+    "image": "https://aum.sitrai.com/0xai512.png",
     "author": {
       "@type": "Organization",
       "name": "Qubicsquare Technologies Private Limited",
@@ -72,10 +72,10 @@ export default async function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebApplication",
-              "name": "0xXplorer Ai",
-              "description": "AI-powered blockchain explorer with chatbot for transaction analysis and smart contract insights.",
-              "url": "https://0xxplorer.com",
-              "image": "https://0xxplorer.com/0xai512.png",
+              "name": "AUM AI- ASK. CREATE. EARN.",
+              "description": "AUM AI is an AI platform that enables users to create, customize, and deploy AI agents for various applications.",
+              "url": "https://aum.sitrai.com",
+              "image": "https://aum.sitrai.com/0xai512.png",
               "applicationCategory": "Blockchain Explorer,Ai,chatbot",
               "operatingSystem": "All",
               "author": {
@@ -105,7 +105,7 @@ export default async function RootLayout({
         >
           {JSON.stringify(schemaData)}
         </script>
-        <link rel="canonical" href="https://0xxplorer.com" />
+        <link rel="canonical" href="https://aum.sitrai.com" />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HNRJ1B7WCF"></Script>
         <Script
           dangerouslySetInnerHTML={{
@@ -128,8 +128,7 @@ export default async function RootLayout({
               <Script
                 async
                 strategy="afterInteractive"
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8547142025822525"
-                crossOrigin="anonymous"
+                src="https://accounts.google.com/gsi/client"
               />
               <ThemeP>
                 <PageStruct1>
