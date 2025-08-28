@@ -12,7 +12,7 @@ import SelectModelButton from './selectModel';
 import { useTheme } from 'next-themes';
 import { MCP } from './mcpComp/function';
 import { useAlert } from '../../context/alertContext';
-import { uploadFileToServer } from '../utils/upload-file';
+import { deleteFile, uploadFileToServer } from '../utils/upload-file';
 import FilePreview from './filepreview';
 import SettingsButton from './settings-button';
 import SelectMcpButton from './mcpComp/selectmcp';
@@ -38,6 +38,7 @@ const ChatInput = () => {
   const { selectedServers, mcpResources, mcpTools } = useMcpServer();
   const { createImage, creatingImage, allImages } = useImagePlaygound();
   const { createVideo, creatingVideo, allVideos } = useVideoPlayground();
+  const alert = useAlert();
   const [input, setInput] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<FileData[]>([]); // Changed to array
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -54,6 +55,7 @@ const ChatInput = () => {
   const [openSelectMcpModal, setSelectMcpModal] = useState(false);
   const [openSelectToolModal, setSelectToolModal] = useState(false);
   const [showToolsBtn, setShowToolsBtn] = useState(false);
+  const [fileName, setFileName] = useState<any[]>([])
 
 
   useEffect(() => {
@@ -106,6 +108,10 @@ const ChatInput = () => {
   // Handle multiple file selection
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    if (files.length > 2 || selectedFiles.length > 2) {
+      alert.warn('files not mre than 2');
+      return
+    };
     if (files.length === 0) return;
 
     setFileLoading(true);
@@ -125,6 +131,11 @@ const ChatInput = () => {
           file_url: uploadResponse?.url || '', // You can use response message or URL
           type: isImage ? 'image' : 'file',
         };
+        const d = {
+          id: fileData.id,
+          storedName: uploadResponse.storedName
+        }
+        setFileName(prev => [...prev, d])
 
         if (isImage) {
           fileData.image_url = uploadResponse?.url; // assuming server returns uploaded image URL
@@ -150,13 +161,33 @@ const ChatInput = () => {
 
   // Remove specific file by ID
   const removeSelectedFile = (fileId: string) => {
+    console.log(fileId)
+    const file = fileName.find(f => f.id === fileId);
+    console.log(file, fileName)
+    if (file) {
+      console.log(file, fileName);
+      deleteFile(file.storedName);
+    } else {
+      console.warn("File not found for id:", fileId);
+    }
+
     setSelectedFiles(prevFiles => prevFiles.filter(file => file.id !== fileId));
+    setFileName(prev => prev.filter(file => file.id !== fileId))
   };
 
   // Clear all selected files
+  // Clear all selected files
   const clearAllFiles = () => {
+    // delete all on backend first
+    fileName.forEach(f => {
+      deleteFile(f.storedName);
+    });
+
+    // then clear local state
     setSelectedFiles([]);
+    setFileName([]);
   };
+
 
   const handleMcpResources = async (r: any) => {
     const newFiles: FileData[] = [];
