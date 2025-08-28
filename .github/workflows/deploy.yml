@@ -1,114 +1,153 @@
 name: Deploy via Azure RunCommand
-on:
-  push:
-    branches: [main]
+on: { push: { branches: [ main ] } }
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: Azure login
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy on VM (as user)
         uses: azure/cli@v2
         with:
+          azcliversion: 2.30.0
           inlineScript: |
             az vm run-command invoke \
               --resource-group "${{ secrets.AZ_RG }}" \
               --name "${{ secrets.AZ_VM }}" \
               --command-id RunShellScript \
-              --scripts '
-                # Everything below runs ON THE VM under bash
-                bash <<'"'"'BASH'"'"'
-                set -Eeuo pipefail
-                trap '"'"'rc=$?; echo "[ERR] line:$LINENO cmd:${BASH_COMMAND} status:$rc" >&2; exit $rc'"'"' ERR
+              --scripts "$(cat << 'DEPLOY_SCRIPT'
+            #!/bin/bash
+            
+            # Simple error handling without complex trapping
+            set -e
+            
+            echo "=== Deployment started at $(date) ==="
+            
+            # System dependencies
+            echo "=== Installing system dependencies ==="
+            if ! command -v node >/dev/null 2>&1; then
+              echo "Installing Node.js..."
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt-get update
+              sudo apt-get install -y nodejs build-essential git python3
+            else
+              echo "Node.js already installed: $(node -v)"
+            fi
+            
+            # Install global packages
+            echo "=== Installing global packages ==="
+            sudo npm install -g pm2@latest corepack
+            
+            # Create user if not exists
+            if ! id aum-sitrai >/dev/null 2>&1; then
+              sudo useradd -m -s /bin/bash aum-sitrai
+              echo "Created user aum-sitrai"
+            fi
+            
+            # Run as user
+            echo "=== Starting deployment as user ==="
+            sudo -H -u aum-sitrai bash << 'USER_SCRIPT'
+            set -e
+            export HOME=/home/aum-sitrai
+            export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin:$PATH"
+            cd $HOME
+            
+            echo "User: $(whoami)"
+            echo "Home: $HOME"
+            echo "Node version: $(node -v)"
+            echo "npm version: $(npm -v)"
+            
+            # Setup app directory
+            APP_DIR="$HOME/aum-ai"
+            REPO_URL="https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git"
+            
+            echo "=== Repository setup ==="
+            if [ -d "$APP_DIR" ]; then
+              echo "Updating existing repository..."
+              cd "$APP_DIR"
+              git remote set-url origin "$REPO_URL"
+              git fetch --all
+              git reset --hard origin/main
+              git clean -fd
+            else
+              echo "Cloning repository..."
+              git clone "$REPO_URL" "$APP_DIR"
+              cd "$APP_DIR"
+            fi
+            
+            # Create environment file
+            echo "=== Creating environment file ==="
+            cat > .env.local << ENV_FILE
+            NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            NODE_ENV=production
+            ENV_FILE
+            
+            # Setup Yarn
+            echo "=== Setting up Yarn ==="
+            corepack enable
+            corepack prepare yarn@stable --activate
+            
+            if ! command -v yarn >/dev/null 2>&1; then
+              echo "ERROR: Yarn not available"
+              exit 1
+            fi
+            echo "Yarn version: $(yarn -v)"
+            
+            # Install dependencies
+            echo "=== Installing dependencies ==="
+            yarn cache clean || true
+            rm -rf node_modules || true
+            yarn install --frozen-lockfile --network-timeout 300000
+            
+            # Build application
+            echo "=== Building application ==="
+            export NODE_OPTIONS="--max-old-space-size=2048"
+            yarn build
+            
+            # PM2 setup
+            echo "=== PM2 setup ==="
+            export PM2_HOME="$HOME/.pm2"
+            
+            if pm2 describe aum-ai >/dev/null 2>&1; then
+              echo "Reloading existing PM2 process..."
+              pm2 reload aum-ai
+            else
+              echo "Starting new PM2 process..."
+              pm2 start npm --name aum-ai -- start
+            fi
+            
+            pm2 save
+            
+            echo "=== Deployment completed at $(date) ==="
+            pm2 status
+            USER_SCRIPT
+            
+            echo "=== Overall deployment completed successfully ==="
+            DEPLOY_SCRIPT
+            )"
 
-                # Trace to stdout and /home/aum-sitrai/deploy.log
-                exec > >(tee -a /home/aum-sitrai/deploy.log) 2>&1
-                set -x
-
-                # System deps
-                sudo apt-get update -y
-                sudo apt-get install -y curl ca-certificates gnupg git build-essential python3
-                if ! command -v node >/dev/null 2>&1; then
-                  curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-                  sudo apt-get install -y nodejs
-                fi
-                sudo npm i -g pm2 corepack
-
-                # Ensure app user
-                id aum-sitrai >/dev/null 2>&1 || sudo useradd -m -s /bin/bash aum-sitrai
-
-                # App deploy as user
-                sudo -iu aum-sitrai bash -lc "
-                  set -Eeuo pipefail
-                  trap 'rc=\$?; echo \"[USER ERR] line:\$LINENO cmd:\$BASH_COMMAND status:\$rc\" >&2; exit \$rc' ERR
-                  set -x
-
-                  APP_DIR=\$HOME/aum-ai
-                  REPO_URL=https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git
-
-                  mkdir -p \"\$APP_DIR\"
-                  if [ -d \"\$APP_DIR/.git\" ]; then
-                    git -C \"\$APP_DIR\" remote set-url origin \"\$REPO_URL\"
-                    git -C \"\$APP_DIR\" fetch --prune origin
-                    git -C \"\$APP_DIR\" reset --hard origin/main
-                    git -C \"\$APP_DIR\" clean -fd
-                  else
-                    git clone --depth=1 \"\$REPO_URL\" \"\$APP_DIR\"
-                  fi
-                  cd \"\$APP_DIR\"
-
-                  # Write env without xtrace to avoid leaking secrets
-                  { set +x; } 2>/dev/null
-                  umask 077
-                  cat > .env.production <<EOF
-                  NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
-                  NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-                  NODE_ENV=production
-                  EOF
-                  set -x
-
-                  # Yarn via Corepack
-                  corepack enable
-                  corepack prepare yarn@stable --activate
-                  yarn -v
-
-                  # Clean + install with retries (Berry uses --immutable)
-                  yarn cache clean --all || true
-                  rm -rf node_modules/.cache || true
-                  for i in 1 2 3; do
-                    echo \"[STEP] yarn install attempt \$i/3\"
-                    if yarn install --immutable --network-timeout 300000; then
-                      echo \"[OK] deps installed\"
-                      break
-                    fi
-                    echo \"[WARN] install failed, retrying...\"
-                    rm -rf node_modules || true
-                    sleep 10
-                    [ \$i -eq 3 ] && { echo \"[FATAL] install failed\" >&2; exit 1; }
-                  done
-
-                  export NODE_OPTIONS=--max-old-space-size=2048
-                  echo \"[STEP] yarn build\"
-                  yarn build
-
-                  # PM2
-                  export PM2_HOME=\$HOME/.pm2
-                  if pm2 describe aum-ai >/dev/null 2>&1; then
-                    pm2 reload aum-ai --update-env
-                  else
-                    pm2 start \"yarn start\" --name aum-ai
-                  fi
-                  pm2 save
-                  pm2 status
-                "
-                BASH
-              '
+      - name: Verify deployment
+        uses: azure/cli@v2
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            echo "=== Checking deployment status ==="
+            az vm run-command invoke \
+              --resource-group "${{ secrets.AZ_RG }}" \
+              --name "${{ secrets.AZ_VM }}" \
+              --command-id RunShellScript \
+              --scripts "
+                echo '=== PM2 Status ==='
+                sudo -u aum-sitrai pm2 status || echo 'PM2 status check failed'
+                echo '=== PM2 Logs (last 10 lines) ==='
+                sudo -u aum-sitrai pm2 logs aum-ai --lines 10 --nostream || echo 'PM2 logs not available'
+                echo '=== Process Check ==='
+                ps aux | grep node || echo 'No node processes found'
+              "
