@@ -1,14 +1,18 @@
 name: Deploy via Azure RunCommand
-on: { push: { branches: [ main ] } }
+on:
+  push:
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Azure login
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -21,22 +25,22 @@ jobs:
               --name "${{ secrets.AZ_VM }}" \
               --command-id RunShellScript \
               --scripts '
-                #!/bin/sh
                 set -eu
 
-                # system deps
+                # base deps
+                sudo apt-get update -y
+                sudo apt-get install -y curl ca-certificates gnupg git build-essential
+
+                # Node + npm + pm2 + corepack
                 if ! command -v node >/dev/null 2>&1; then
                   curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-                  sudo apt -y install nodejs build-essential git
+                  sudo apt-get install -y nodejs
                 fi
                 sudo npm i -g pm2 corepack
 
-                # run as login shell for user so PATH includes /usr/local/bin
+                # run as app user
                 sudo -iu aum-sitrai bash -lc "
                   set -eux
-                  echo :: whoami && whoami
-                  echo :: PATH && echo \$PATH
-                  echo :: versions && node -v || true; npm -v || true
 
                   APP_DIR=\$HOME/aum-ai
                   REPO_AUTH=https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git
@@ -44,27 +48,33 @@ jobs:
                   cd \$APP_DIR
 
                   if [ ! -d .git ]; then
-                    git clone \$REPO_AUTH .
+                    git clone --depth=1 \$REPO_AUTH .
                   else
                     git remote set-url origin \$REPO_AUTH
-                    git fetch --all
+                    git fetch --prune origin
                     git reset --hard origin/main
                   fi
 
-                  {
-                    echo \"NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}\"
-                    echo \"NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}\"
-                  } > .env.production
+                  # write env without echoing secrets to stdout
+                  umask 077
+                  cat > .env.production <<EOF
+                  NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
+                  NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+                  EOF
 
-                  # ensure yarn available for this user
+                  # Yarn (Berry) and install
                   corepack enable
                   corepack prepare yarn@stable --activate
                   yarn -v
-
-                  yarn install --frozen-lockfile
+                  yarn install --immutable
                   yarn build
 
-                  pm2 describe aum-ai >/dev/null 2>&1 && pm2 reload aum-ai || pm2 start node_modules/next/dist/bin/next --name aum-ai -- start
+                  # run with PM2
+                  if pm2 describe aum-ai >/dev/null 2>&1; then
+                    pm2 reload aum-ai
+                  else
+                    pm2 start \"yarn start\" --name aum-ai
+                  fi
                   pm2 save
-                " 2>&1 | tee -a /home/aum-sitrai/deploy.log
+                "
               '
