@@ -322,7 +322,7 @@ export default function CreateAgents() {
                 alertMessage.warn(response.data.message);
             }
         } catch (error) {
-            //console.error('Error creating agent:', error);
+            console.error('Error creating agent:', error);
             alertMessage.warn('Failed to create agent. Please try again.');
         } finally {
             setIsLoading(false);
