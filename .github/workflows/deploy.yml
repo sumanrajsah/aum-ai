@@ -27,21 +27,24 @@ jobs:
                 command -v node >/dev/null || (curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt -y install nodejs build-essential)
                 sudo npm i -g yarn pm2
 
-                # run the rest as the login user
+                # run as the login user
                 sudo -u aum-sitrai bash -lc "
                   set -euo pipefail
                   APP_DIR=\$HOME/aum-ai
-                  REPO=https://github.com/sumanrajsah/aum-ai.git
+                  REPO_URL=https://github.com/sumanrajsah/aum-ai.git
+                  TOKEN=${{ secrets.GH_PAT }}
 
                   mkdir -p \$APP_DIR
                   cd \$APP_DIR
 
+                  # first-time clone with PAT header
                   if [ ! -d .git ]; then
-                    git clone \$REPO .
+                    git -c http.extraHeader=\"Authorization: Bearer \$TOKEN\" clone \$REPO_URL .
                   fi
 
-                  git fetch --all
-                  git reset --hard origin/main
+                  # fetch/reset with PAT header
+                  git -c http.extraHeader=\"Authorization: Bearer \$TOKEN\" fetch --all
+                  git -c http.extraHeader=\"Authorization: Bearer \$TOKEN\" reset --hard origin/main
 
                   cat > .env.production <<EOF
                   NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
