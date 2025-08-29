@@ -1,128 +1,99 @@
 name: Deploy via Azure RunCommand
-on:
-  push:
-    branches: [main]
+on: { push: { branches: [ main ] } }
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: Azure login
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy on VM (as user)
         uses: azure/cli@v2
         with:
+          azcliversion: 2.30.0
           inlineScript: |
             az vm run-command invoke \
               --resource-group "${{ secrets.AZ_RG }}" \
               --name "${{ secrets.AZ_VM }}" \
               --command-id RunShellScript \
-              --scripts '
-                bash <<'"'"'BASH'"'"'
-                set -Eeuo pipefail
-                trap '"'"'rc=$?; echo "[ERR] line:$LINENO status:$rc"; exit $rc'"'"' ERR
-
-                # Log to file and to RunCommand output
-                exec > >(tee -a /home/aum-sitrai/deploy.log) 2>&1
-                echo "=== Deployment started at $(date) ==="
-
-                echo "[STEP] system setup"
-                sudo apt-get update -y
-                sudo apt-get install -y curl ca-certificates gnupg git build-essential python3
-
-                if ! command -v node >/dev/null 2>&1; then
-                  echo "[STEP] install Node.js 22"
-                  curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-                  sudo apt-get install -y nodejs
-                else
-                  echo "[INFO] Node: $(node -v); npm: $(npm -v)"
-                fi
-
-                echo "[STEP] install pm2 and corepack"
-                sudo npm i -g pm2 corepack
-
-                echo "[STEP] ensure app user"
-                id aum-sitrai >/dev/null 2>&1 || sudo useradd -m -s /bin/bash aum-sitrai
-
-                echo "[STEP] deploy as user"
-                sudo -iu aum-sitrai bash -lc "
-                  set -Eeuo pipefail
-                  trap 'rc=\$?; echo \"[USER ERR] line:\$LINENO status:\$rc\"; exit \$rc' ERR
-
-                  APP_DIR=\$HOME/aum-ai
-                  REPO_URL=https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git
-
-                  echo '[STEP] clone or update repo'
-                  mkdir -p \"\$APP_DIR\"
-                  if [ -d \"\$APP_DIR/.git\" ]; then
-                    git -C \"\$APP_DIR\" remote set-url origin \"\$REPO_URL\"
-                    git -C \"\$APP_DIR\" fetch --prune origin
-                    git -C \"\$APP_DIR\" reset --hard origin/main
-                    git -C \"\$APP_DIR\" clean -fd
-                  else
-                    git clone --depth=1 \"\$REPO_URL\" \"\$APP_DIR\"
-                  fi
-                  cd \"\$APP_DIR\"
-
-                  echo '[STEP] write env file'
-                  umask 077
-                  {
-                    echo NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
-                    echo NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-                    echo NODE_ENV=production
-                  } > .env.production
-
-                  echo '[STEP] setup yarn'
-                  corepack enable
-                  corepack prepare yarn@stable --activate
-                  yarn -v
-
-                  echo '[STEP] install deps (lockfile writes allowed to unblock)'
-                  yarn cache clean --all || true
-                  rm -rf node_modules/.cache || true
-                  for i in 1 2 3; do
-                    echo \"  - attempt \$i/3\"
-                    if yarn install --network-timeout 300000; then
-                      echo '  ok'
-                      break
-                    fi
-                    rm -rf node_modules || true
-                    sleep 10
-                    [ \$i -eq 3 ] && { echo '[FATAL] install failed'; exit 1; }
-                  done
-
-                  echo '[STEP] build'
-                  export NODE_OPTIONS=--max-old-space-size=2048
-                  yarn build
-
-                  echo '[STEP] pm2 start/reload'
-                  export PM2_HOME=\$HOME/.pm2
-                  if pm2 describe aum-ai >/dev/null 2>&1; then
-                    pm2 reload aum-ai --update-env
-                  else
-                    pm2 start \"yarn start\" --name aum-ai
-                  fi
-                  pm2 save
-                  pm2 status
-                "
-
-                echo "[DONE] deploy complete"
-                BASH
-              '
-
-      - name: Show last 200 lines of deploy log
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az vm run-command invoke \
-              --resource-group "${{ secrets.AZ_RG }}" \
-              --name "${{ secrets.AZ_VM }}" \
-              --command-id RunShellScript \
-              --scripts 'tail -n 200 /home/aum-sitrai/deploy.log'
+              --scripts "$(cat << 'DEPLOY_SCRIPT'
+            #!/bin/bash
+            set -e
+            
+            echo "=== Deployment started at $(date) ==="
+            
+            # System dependencies
+            if ! command -v node >/dev/null 2>&1; then
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt-get install -y nodejs build-essential git python3
+            fi
+            
+            sudo npm install -g pm2@latest corepack
+            
+            if ! id aum-sitrai >/dev/null 2>&1; then
+              sudo useradd -m -s /bin/bash aum-sitrai
+            fi
+            
+            # Deploy as user
+            sudo -H -u aum-sitrai bash << 'USER_SCRIPT'
+            set -e
+            export HOME=/home/aum-sitrai
+            export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin:$PATH"
+            cd $HOME
+            
+            echo "User: $(whoami), Node: $(node -v)"
+            
+            # Repository setup
+            APP_DIR="$HOME/aum-ai"
+            REPO_URL="https://token:${{ secrets.GH_PAT }}@github.com/sumanrajsah/aum-ai.git"
+            
+            if [ -d "$APP_DIR" ]; then
+              cd "$APP_DIR"
+              git remote set-url origin "$REPO_URL"
+              git fetch --all
+              git reset --hard origin/main
+              git clean -fd
+            else
+              git clone "$REPO_URL" "$APP_DIR"
+              cd "$APP_DIR"
+            fi
+            
+            # Environment file
+            cat > .env.local << ENV_FILE
+            NEXT_PUBLIC_API_URI=${{ secrets.NEXT_PUBLIC_API_URI }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            NODE_ENV=production
+            ENV_FILE
+            
+            # Yarn setup
+            corepack enable
+            corepack prepare yarn@stable --activate
+            echo "Yarn version: $(yarn -v)"
+            
+            # Clean install with dependency resolution
+            yarn install
+            
+            # Build with increased memory
+            echo "=== Building application ==="
+            export NODE_OPTIONS="--max-old-space-size=4096"
+            yarn build
+            
+            # PM2 management
+            export PM2_HOME="$HOME/.pm2"
+            if pm2 describe aum-ai >/dev/null 2>&1; then
+              pm2 reload aum-ai
+            else
+              pm2 start npm --name aum-ai -- start
+            fi
+            pm2 save
+            
+            echo "=== Deployment completed ==="
+            pm2 status
+            USER_SCRIPT
+            DEPLOY_SCRIPT
+            )"
