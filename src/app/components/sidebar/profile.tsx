@@ -99,8 +99,8 @@ const ProfileCont = () => {
             </div>
 
             <hr />
-            <button className="profile-btn" onClick={() => { router.push('/plan') }}>
-                <User2 size={20} />Upgrade Plan
+            <button className="profile-btn" onClick={() => { location.href = '#settings' }}>
+                <User2 size={20} />Settings
             </button>
             <hr />
             {/* <button className="profile-btn" onClick={() => { router.push('?settings=true') }}>

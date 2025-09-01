@@ -17,13 +17,12 @@ const FilePreview: React.FC<FilePreviewProps> = ({ fileUrl, fileName }) => {
 
     // Card for non-image
     return (
-        <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="file-card">
+        <div className="file-card">
             <div className="file-icon">📄</div>
             <div className="file-info">
                 <p className="file-name">{fileName}</p>
-                <p className="file-subtext">Click to download</p>
             </div>
-        </a>
+        </div>
     );
 };
 

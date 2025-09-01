@@ -6,7 +6,7 @@ const SpaceBackground = () => {
         <div className="space-container">
             {/* Stars */}
             <div className="stars">
-                {Array.from({ length: 50 }, (_, i) => (
+                {Array.from({ length: 5 }, (_, i) => (
                     <div key={i} className="star"></div>
                 ))}
             </div>
@@ -17,7 +17,7 @@ const SpaceBackground = () => {
             ))}
 
             {/* Floating Particles - Increased from 5 to 12 */}
-            {Array.from({ length: 25 }, (_, i) => (
+            {Array.from({ length: 10 }, (_, i) => (
                 <div key={i} className="particle"></div>
             ))}
             {/* Moving White Particles */}

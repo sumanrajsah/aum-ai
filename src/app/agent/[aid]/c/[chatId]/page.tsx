@@ -188,7 +188,6 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, aid
                 </div>
             </div>}
 
-            <Modal />
 
             <
                 >

@@ -1,4 +1,4 @@
-.modal-overlay {
+.agent-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -14,15 +14,15 @@
     animation: fadeIn 0.3s ease-out;
 }
 
-html.light .modal-overlay {
+html.light .agent-modal-overlay {
     color: #0E1111;
 }
 
-html.dark .modal-overlay {
+html.dark .agent-modal-overlay {
     color: whitesmoke;
 }
 
-.modal-container {
+.agent-modal-container {
     background: var(--prop-white-bg);
     border-radius: 20px;
     width: 90%;
@@ -43,11 +43,11 @@ html.dark .modal-overlay {
     align-items: center;
 }
 
-html.dark .modal-container {
+html.dark .agent-modal-container {
     background: var(--prop-dark-bg);
 }
 
-.modal-header {
+.agent-modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -56,7 +56,7 @@ html.dark .modal-container {
     background: var(--prop-white-bg);
 }
 
-html.dark .modal-header {
+html.dark .agent-modal-header {
     background: var(--prop-dark-bg);
 }
 
@@ -156,17 +156,17 @@ html.dark .close-btn {
     font-weight: 300;
 }
 
-.modal-content {
+.agent-modal-content {
     padding: 20px 24px;
     max-height: 60vh;
     overflow-y: auto;
 }
 
-.modal-content::-webkit-scrollbar {
+.agent-modal-content::-webkit-scrollbar {
     width: 5px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
+.agent-modal-content::-webkit-scrollbar-thumb {
     background-color: rgba(100, 100, 100, 0.3);
     border-radius: 4px;
 }
@@ -474,7 +474,7 @@ html.dark .stat-label {
     color: #9CA3AF;
 }
 
-.modal-footer {
+.agent-modal-footer {
     padding: 20px 24px;
     border-top: 1px solid rgba(var(--bg-color1), 0.15);
     display: flex;
@@ -482,7 +482,7 @@ html.dark .stat-label {
     background: rgba(var(--bg-color1), 0.05);
 }
 
-html.dark .modal-footer {
+html.dark .agent-modal-footer {
     background: rgba(var(--bg-color1), 0.03);
 }
 
@@ -549,20 +549,20 @@ html.dark .btn-secondary {
 }
 
 @media (max-width: 480px) {
-    .modal-container {
+    .agent-modal-container {
         width: 95%;
         max-height: 95vh;
     }
 
-    .modal-header {
+    .agent-modal-header {
         padding: 20px 16px 16px;
     }
 
-    .modal-content {
+    .agent-modal-content {
         padding: 16px;
     }
 
-    .modal-footer {
+    .agent-modal-footer {
         padding: 16px;
         flex-direction: column;
     }

@@ -12,6 +12,7 @@ import RenameChatModal from "./chat/modals/rename";
 import ImageModal from "./chat/modals/image-modal";
 import { useImagePlaygound, useVideoPlayground } from "@/context/ChatContext";
 import VideoModal from "./chat/modals/video-modal";
+import ModalSetting from "./modal/settingModal";
 
 const Modal = () => {
     const router = useRouter();
@@ -29,6 +30,7 @@ const Modal = () => {
     const [openChatReanmeModal, setOpenChatRenameModal] = useState<boolean>(false);
     const [openImageModal, setImageModal] = useState<boolean>(false)
     const [openVideoModal, setOpenVideoModal] = useState<boolean>(false);
+    const [openSettingsModal, setOpenSettingsModal] = useState<boolean>(false);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -44,6 +46,7 @@ const Modal = () => {
             setOpenChatRenameModal(hash.includes('#renamechat'))
             setImageModal(hash.includes('#image'))
             setOpenVideoModal(hash === '#video');
+            setOpenSettingsModal(hash === '#settings');
         };
 
         // Run on mount
@@ -66,6 +69,7 @@ const Modal = () => {
             {openChatReanmeModal && user?.uid && <RenameChatModal />}
             {openImageModal && expandImage && user?.uid && <ImageModal />}
             {openVideoModal && expandVideo && user?.uid && <VideoModal />}
+            {openSettingsModal && user?.uid && <ModalSetting />}
         </>
     );
 };

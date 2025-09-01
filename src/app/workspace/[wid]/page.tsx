@@ -174,7 +174,7 @@ export default function Workspace({ params }: { params: Promise<{ wid: string }>
             )}
 
 
-            <
+            {workspaces.find(ws => ws.wid === wid) ? <
                 >
                 <div
                     className="chat-cont"
@@ -279,7 +279,7 @@ export default function Workspace({ params }: { params: Promise<{ wid: string }>
                 </div>
                 <ChatInput />
 
-            </>
+            </> : <p>Workspace Not Found</p>}
 
         </>
     );

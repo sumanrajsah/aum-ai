@@ -1,0 +1,589 @@
+/* Billing Dashboard Styles */
+.billing-container {
+    position: relative;
+    max-width: 100dvw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0 auto;
+    padding: 2rem;
+    background: transparent;
+    min-height: 100dvh;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Section Styles */
+.section {
+    background: white;
+    gap: 5px;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(var(--bg-color1), 0.1);
+    transition: all 0.3s ease;
+    width: 90%;
+}
+
+html.dark .section {
+    background: var(--prop-dark-bg);
+    border: 1px solid rgba(var(--bg-color1), 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+html.dark .section:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(var(--bg-color1), 0.7);
+    margin: 0 0 1.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+    border-bottom: 2px solid rgba(var(--bg-color1), 0.1);
+    padding-bottom: 0.8rem;
+}
+
+html.dark .section-title {
+    color: rgba(var(--bg-color1), 0.8);
+    border-bottom-color: rgba(var(--bg-color1), 0.15);
+}
+
+/* Subscription Box */
+.subscription-box {
+    position: relative;
+}
+
+.plan-header {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.cancel-badge {
+    position: absolute;
+    top: -0.5rem;
+    right: 0;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid #fbbf24;
+}
+
+html.dark .cancel-badge {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fcd34d;
+    border-color: rgba(251, 191, 36, 0.3);
+}
+
+.plan-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: rgba(var(--bg-color1), 1);
+}
+
+.plan-price {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    color: rgba(var(--bg-color1), 0.8);
+}
+
+.next-billing {
+    color: rgba(var(--bg-color1), 0.7);
+    font-size: 0.95rem;
+    margin: 0;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(var(--bg-color1), 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+html.dark .next-billing {
+    color: rgba(var(--bg-color1), 0.8);
+    border-top-color: rgba(var(--bg-color1), 0.15);
+}
+
+.next-billing::before {
+    content: '📅';
+    font-size: 1rem;
+}
+
+/* Payment Box */
+.payment-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(var(--bg-color1), 0.05), rgba(var(--bg-color1), 0.02));
+    border-radius: 8px;
+    border: 1px solid rgba(var(--bg-color1), 0.1);
+}
+
+html.dark .payment-box {
+    background: linear-gradient(135deg, rgba(var(--bg-color1), 0.1), rgba(var(--bg-color1), 0.05));
+    border-color: rgba(var(--bg-color1), 0.15);
+}
+
+.payment-box::before {
+    content: '📱';
+    font-size: 1.5rem;
+    padding: 0.8rem;
+    background: rgba(var(--bg-color1), 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+html.dark .payment-box::before {
+    background: rgba(var(--bg-color1), 0.15);
+}
+
+.payment-method {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(var(--bg-color1), 1);
+}
+
+/* Billing Info */
+.billing-info {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.billing-info p {
+    margin: 0;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(var(--bg-color1), 0.1);
+    line-height: 1.6;
+}
+
+html.dark .billing-info p {
+    border-bottom-color: rgba(var(--bg-color1), 0.15);
+}
+
+.billing-info p:last-child {
+    border-bottom: none;
+}
+
+.billing-info strong {
+    display: block;
+    color: rgba(var(--bg-color1), 0.7);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+html.dark .billing-info strong {
+    color: rgba(var(--bg-color1), 0.8);
+}
+
+/* Invoice Table */
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.invoice-table th,
+.invoice-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(var(--bg-color1), 0.1);
+}
+
+html.dark .invoice-table th,
+html.dark .invoice-table td {
+    border-bottom-color: rgba(var(--bg-color1), 0.15);
+}
+
+.invoice-table th {
+    background: linear-gradient(135deg, rgba(var(--bg-color1), 0.05), rgba(var(--bg-color1), 0.02));
+    font-weight: 600;
+    color: rgba(var(--bg-color1), 0.8);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+html.dark .invoice-table th {
+    background: linear-gradient(135deg, rgba(var(--bg-color1), 0.1), rgba(var(--bg-color1), 0.05));
+    color: rgba(var(--bg-color1), 0.9);
+}
+
+.invoice-table td {
+    color: rgba(var(--bg-color1), 0.9);
+    font-weight: 500;
+}
+
+.invoice-table tbody tr:hover {
+    background: rgba(var(--bg-color1), 0.03);
+}
+
+html.dark .invoice-table tbody tr:hover {
+    background: rgba(var(--bg-color1), 0.08);
+}
+
+/* Status Badges for Table */
+.invoice-table .status {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.invoice-table .status.paid {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+html.dark .invoice-table .status.paid {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+}
+
+.invoice-table .status.pending {
+    background: #ddd6fe;
+    color: #5b21b6;
+}
+
+html.dark .invoice-table .status.pending {
+    background: rgba(139, 92, 246, 0.2);
+    color: #c4b5fd;
+}
+
+.invoice-table .status.failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+html.dark .invoice-table .status.failed {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+/* Status Classes for General Use */
+.status-active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+html.dark .status-active {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+}
+
+.status-cancelled,
+.status-canceled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+html.dark .status-cancelled,
+html.dark .status-canceled {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+.status-expired {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+html.dark .status-expired {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fcd34d;
+}
+
+.status-pending {
+    background: #ddd6fe;
+    color: #5b21b6;
+}
+
+html.dark .status-pending {
+    background: rgba(139, 92, 246, 0.2);
+    color: #c4b5fd;
+}
+
+.status-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+html.dark .status-success {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+}
+
+.status-failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+html.dark .status-failed {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+.status-default {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+html.dark .status-default {
+    background: rgba(var(--bg-color1), 0.15);
+    color: rgba(var(--bg-color1), 0.8);
+}
+
+/* Action Buttons */
+.billing-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(var(--bg-color1), 0.1);
+}
+
+html.dark .billing-actions {
+    border-top-color: rgba(var(--bg-color1), 0.15);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, rgba(var(--bg-color1), 1), rgba(var(--bg-color1), 0.8));
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, rgba(var(--bg-color1), 0.9), rgba(var(--bg-color1), 0.7));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(var(--bg-color1), 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(var(--bg-color1), 0.3);
+    color: rgba(var(--bg-color1), 1);
+}
+
+html.dark .btn-secondary {
+    color: rgba(var(--bg-color1), 0.9);
+}
+
+.btn-secondary:hover {
+    background: rgba(var(--bg-color1), 0.1);
+    border-color: rgba(var(--bg-color1), 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+/* Add Update Information Button */
+.update-info-btn {
+    color: rgba(var(--bg-color1), 0.6);
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.5rem 0;
+    transition: color 0.3s ease;
+}
+
+.update-info-btn:hover {
+    color: rgba(var(--bg-color1), 1);
+}
+
+.update-info-btn::before {
+    content: '✏️';
+    font-size: 0.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .billing-container {
+        padding-top: 5vh;
+    }
+
+    .section {
+        padding: 1.5rem;
+    }
+
+    .plan-name {
+        font-size: 1.5rem;
+    }
+
+    .cancel-badge {
+        position: static;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+
+    .payment-box {
+        padding: 1rem;
+    }
+
+    .invoice-table {
+        font-size: 0.85rem;
+    }
+
+    .invoice-table th,
+    .invoice-table td {
+        padding: 0.8rem 0.5rem;
+    }
+
+    .billing-actions {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+
+
+    .section {
+        padding: 1rem;
+    }
+
+    .section-title {
+        font-size: 0.85rem;
+    }
+
+    .plan-name {
+        font-size: 1.3rem;
+    }
+
+    .plan-price {
+        font-size: 1rem;
+    }
+
+    .invoice-table {
+        font-size: 0.8rem;
+    }
+
+    .invoice-table th,
+    .invoice-table td {
+        padding: 0.6rem 0.3rem;
+    }
+}
+
+/* ===== Status Badge for Subscription ===== */
+.subscription-status-b {
+    position: absolute;
+    right: 0%;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.subscription-status-b.active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.subscription-status-b.paused,
+.subscription-status-b.inactive {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.subscription-status-b.cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* ===== Subscription Action Buttons ===== */
+.subscription-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.2rem;
+}
+
+.subscription-btn {
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.subscription-btn.cancel {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+}
+
+.subscription-btn.cancel:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
+}
+
+.subscription-btn.renew {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+}
+
+.subscription-btn.renew:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(5, 150, 105, 0.3);
+}

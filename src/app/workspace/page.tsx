@@ -27,8 +27,10 @@ export default function WorkspacePage() {
     const alert = useAlert();
     const { setMessages, setChatId, Model, chatMode } = useChat();
     const { workspaces, setCurrentWorkspace } = useWorkspace();
+    const [loading, setLoading] = useState(false)
 
     const inviteUser = async (workspaceId: string, email: string) => {
+        setLoading(true)
         try {
             console.log(`Inviting ${email} to workspace ${workspaceId}`);
 
@@ -44,16 +46,20 @@ export default function WorkspacePage() {
                 alert.success(`Invitation sent to ${email}`);
                 setInviteEmail("");
                 setShowInviteModal(false);
+                setLoading(false)
+                router.push('/workspace')
             } else {
                 alert.error("Failed to send invitation");
             }
         } catch (error) {
             console.error("Error inviting user:", error);
             alert.error("Error sending invitation");
+            setLoading(false)
         }
     };
 
     const deleteWorkspace = async (workspaceId: string) => {
+        setLoading(true)
         try {
             console.log(`Deleting workspace ${workspaceId}`);
 
@@ -68,12 +74,16 @@ export default function WorkspacePage() {
             if (response.status === 200) {
                 alert.success("Workspace deleted successfully");
                 setShowDeleteModal(false);
+                setLoading(false)
+                router.push('/workspace')
             } else {
                 alert.error("Failed to delete workspace");
+                setLoading(false)
             }
         } catch (error) {
             console.error("Error deleting workspace:", error);
             alert.error("Error deleting workspace");
+            setLoading(false)
         }
     };
 
@@ -226,7 +236,9 @@ export default function WorkspacePage() {
                     aria-modal="true"
                     aria-labelledby="invite-modal-title"
                 >
-                    <div className="modal-w">
+                    {loading ? <div className="modal-w">
+                        Deleting...
+                    </div> : <div className="modal-w">
                         <div className="modal-header">
                             <h3 id="invite-modal-title">
                                 Invite User to {selectedWorkspace?.name}
@@ -276,7 +288,7 @@ export default function WorkspacePage() {
                                 Send Invitation
                             </button>
                         </div>
-                    </div>
+                    </div>}
                 </div>
             )}
 
@@ -289,7 +301,9 @@ export default function WorkspacePage() {
                     aria-modal="true"
                     aria-labelledby="delete-modal-title"
                 >
-                    <div className="modal-w">
+                    {loading ? <div className="modal-w">
+                        Deleting...
+                    </div> : <div className="modal-w">
                         <div className="modal-header">
                             <h3 id="delete-modal-title">Delete Workspace</h3>
                             <button
@@ -304,7 +318,11 @@ export default function WorkspacePage() {
                             <p>
                                 Are you sure you want to delete "{selectedWorkspace?.name}"?
                             </p>
-                            <p className="warning-text">This action cannot be undone.</p>
+                            <p className="warning-text">
+                                This will permanently delete the workspace and all related data including chats,
+                                messages, images, and videos created in this workspace.
+                            </p>
+
                         </div>
                         <div className="modal-actions">
                             <button
@@ -322,7 +340,7 @@ export default function WorkspacePage() {
                                 Delete Workspace
                             </button>
                         </div>
-                    </div>
+                    </div>}
                 </div>
             )}
         </div>

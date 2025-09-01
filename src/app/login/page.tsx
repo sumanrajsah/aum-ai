@@ -20,11 +20,8 @@ export default function CollabLogin() {
             .join("");
     };
     const handlePasswordChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const encodedPassword = new TextEncoder().encode(e.target.value);
-        const hashBuffer = await window.crypto.subtle.digest("SHA-512", encodedPassword);
-        const hashedPassword = bufferToHex(hashBuffer);
         // console.log(hashedPassword);
-        setCredentials(prev => ({ ...prev, password: hashedPassword }));
+        setCredentials(prev => ({ ...prev, password: e.target.value }));
 
     };
 
@@ -77,7 +74,7 @@ export default function CollabLogin() {
             </div> : <div className="collab-sbody">
                 <button className="collab-sbutton" onClick={() => { router.push('/signup') }} style={{ width: "auto" }}>Create an account</button>
                 <div className="cs-heading">
-                    <Image src={'/sitraone.png'} height={80} width={80} alt="sitraone" />
+                    <Image src={'/sitraone.png'} height={50} width={50} alt="sitraone" />
                     <br />
                     <h1>Login</h1>
                     <p>Enter your details</p>

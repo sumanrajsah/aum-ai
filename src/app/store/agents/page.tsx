@@ -244,6 +244,7 @@ export default function AgentStore() {
 
         if (node) observer.current.observe(node);
     }, [loading, hasMore, getAgents]);
+    console.log(agentId)
 
     return (
         <>

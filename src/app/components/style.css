@@ -135,7 +135,7 @@ html.light .send {
             rgba(var(--bg-color1), 0.05));
     backdrop-filter: blur(50px);
     border-radius: 20px;
-    width: 250px;
+    width: 200px;
     height: auto;
     z-index: 10000;
     left: 0px;
@@ -233,6 +233,10 @@ html.light .send {
     width: 98%;
     box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
     border-color: rgba(128, 128, 128, 0.144);
+}
+
+.files-preview-cont {
+    width: 100%;
 }
 
 .file-view {

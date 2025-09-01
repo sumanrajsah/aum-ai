@@ -4,7 +4,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5px;
+    gap: 2px;
     padding: 10px;
     border-radius: 20px;
     width: min(250px, 90vw);
@@ -13,6 +13,8 @@
     height: auto;
     z-index: 1;
     bottom: 30px;
+    border: 1px solid rgba(var(--bg-color1), 0.3);
+    backdrop-filter: blur(50px);
 
 
     hr {
@@ -51,7 +53,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 2px;
     padding: 8px 10px;
 }
 
@@ -148,13 +150,13 @@
 
 /* Dark theme */
 html.dark {
-    .profile-sidebar-body {
+    /* .profile-sidebar-body {
         background: linear-gradient(to right, #1C273B, #191E2B);
         box-shadow:
             0 8px 20px rgba(0, 0, 0, 0.25),
             0 4px 10px rgba(0, 0, 0, 0.1),
             inset 0 1px 1px rgba(255, 255, 255, 0.05);
-    }
+    } */
 
     .user-avatar {
         background: rgba(255, 255, 255, 0.05);
@@ -181,13 +183,13 @@ html.dark {
 
 /* Light theme */
 html.light {
-    .profile-sidebar-body {
+    /* .profile-sidebar-body {
         background: linear-gradient(to right, #D6E2FB, #E3EBFD);
         box-shadow:
             0 8px 20px rgba(0, 0, 0, 0.1),
             0 4px 12px rgba(0, 0, 0, 0.06),
             inset 0 2px 4px rgba(255, 255, 255, 0.6);
-    }
+    } */
 
     .user-avatar {
         background: rgba(94, 129, 173, 0.08);

@@ -456,10 +456,8 @@ const ChatInput = () => {
         >
           {/* Multiple files preview */}
           {selectedFiles.length > 0 && (
-            <div className="files-preview-container" style={{
-              marginBottom: '8px',
-              left: '1%'
-            }}>
+            <div className="files-preview-cont">
+              {!fileLoading && <div className='file-view' >Loading</div>}
               {/* Header with file count and clear all button */}
               <div style={{
                 display: 'flex',
@@ -622,7 +620,7 @@ const ChatInput = () => {
               className="attach-child-btn"
               onClick={() => fileInputRef.current?.click()}
             >
-              upload file
+              upload file & photos
               <input
                 ref={fileInputRef}
                 type="file"

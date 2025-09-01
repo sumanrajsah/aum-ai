@@ -291,7 +291,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, role, type, file
                 >
                     {/* Message Bubble */}
                     {(type === 'image_url' && role === 'user') && <div className='chat-image_url-cont' >
-                        <Image src={content} alt={'user-image'} width={1024} height={1024} className='chat-image_url-cont' />
+                        <img src={content} alt={'user-image'} width={1024} height={1024} className='chat-image_url-cont' />
                     </div>
                     }
                     <div

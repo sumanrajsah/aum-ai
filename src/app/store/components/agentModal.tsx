@@ -5,6 +5,7 @@ import { MessageCircle, X } from 'lucide-react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useChat } from '@/context/ChatContext';
+import { llmModels } from '@/app/utils/models-list';
 
 
 interface AgentPopupModalProps {
@@ -85,7 +86,8 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
         }
     };
     useEffect(() => {
-        getAgents();
+        if (agent_id)
+            getAgents();
     }, []);
     const startConversation = (message: any) => {
         setEditInput(message);
@@ -95,10 +97,10 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
 
 
     return (
-        <div className={`modal-overlay`} role="dialog"
+        <div className={`agent-modal-overlay`} role="dialog"
             aria-modal="true"
             onClick={onClose}>
-            {!agentData && <div className="modal-container error" onClick={(e) => e.stopPropagation()}>
+            {!agentData && <div className="agent-modal-container error" onClick={(e) => e.stopPropagation()}>
                 <div className="header-controls">
                     <button className="close-btn" onClick={onClose}>
                         <X />
@@ -106,19 +108,19 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
                 </div>
                 Not Found
             </div>}
-            {agentData && <div className="modal-container" onClick={(e) => e.stopPropagation()} >
+            {agentData && <div className="agent-modal-container" onClick={(e) => e.stopPropagation()} >
                 {/* Header */}
-                <div className="modal-header">
+                <div className="agent-modal-header">
                     <div className="agent-modal-info">
                         <div className="avatar-container">
                             <img
-                                src={agentData.image}
+                                src={agentData?.image}
                                 alt="DeepWiki Avatar"
                                 className="agent-avatar"
                             />
                             <div className="status-indicator"></div>
                         </div>
-                        <div className="agent-details">
+                        <div className="agent-modal-details">
                             <h2 className="agent-name">{agentData.name}</h2>
                             <p className="agent-handle">@{agentData.handle}</p>
                         </div>
@@ -131,7 +133,7 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
                 </div>
 
                 {/* Content */}
-                <div className="modal-content">
+                <div className="agent-modal-content">
                     {/* Description Section */}
                     <div className="section">
                         <h3 className="section-title">About</h3>
@@ -161,7 +163,7 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
 
 
                     {/* Tools Section */}
-                    {(agentData.tools.length > 0 || agentData.mcp_tools.length > 0) && <div className="section">
+                    <div className="section">
                         <h3 className="section-title">Capabilities</h3>
                         <div className="tools-grid">
                             {(agentData.tools.length > 0) && <div className="tool-category">
@@ -180,18 +182,18 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
                                     ))}
                                 </div>
                             </div>}
-                            {(agentData.model) && <div className="tool-category">
+                            {agentData.model && <div className="tool-category">
                                 <h4 className="tool-category-title">Models</h4>
                                 {agentData.model.primary === agentData.model.secondary ? <div className="tool-store-names">
-                                    <span className="tool-store-name model">{agentData.model.primary}</span>
-                                </div> : <>  <span className="tool-store-name model">{agentData.model.primary}</span>  <span className="tool-store-name model">{agentData.model.secondary}</span></>}
+                                    <span className="tool-store-name model">{llmModels.map((model) => model.value === agentData.model.primary && model.label)}</span>
+                                </div> : <>  <span className="tool-store-name model">{llmModels.map((model) => model.value === agentData.model.primary && model.label)}</span>  <span className="tool-store-name model">{llmModels.map((model) => model.value === agentData.model.secondary && model.label)}</span></>}
                             </div>}
                         </div>
-                    </div>}
+                    </div>
                     {/* Owner Section */}
                     <div className="section">
                         <h3 className="section-title">Created by</h3>
-                        <div className="owner-modal-info" >
+                        <div className="owner-agent-modal-info" >
                             <div className="owner-avatar">
                                 {!agentData.avatar && <span>{agentData.owner_name[0].toUpperCase()}</span>}
                                 {agentData.avatar && <img className='owner-avatar' src={agentData.avatar} alt={`${agentData.owner_name}`} />}
@@ -262,7 +264,7 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
 
 
                 {/* Footer */}
-                <div className="modal-footer">
+                <div className="agent-modal-footer">
                     <button className="btn-secondary">Add to Quick Access</button>
                     <button className="btn-primary" onClick={() => router.push(`/agent/${agent_id}`)}><MessageCircle size={20} /> Start Chat</button>
                 </div>

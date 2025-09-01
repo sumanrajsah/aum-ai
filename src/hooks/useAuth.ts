@@ -6,10 +6,11 @@ interface User {
     name?: string;
     image?: string;
     email: string;
+    username: string;
 }
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null);
-    const [status, setStatus] = useState('')
+    const [status, setStatus] = useState<'authenticated' | 'unauthenticated' | 'pending'>('pending')
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

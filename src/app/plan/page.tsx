@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,7 +7,87 @@ import SubscriptionPopup from './components/subsPop';
 // Import the popup component
 
 declare global { interface Window { Razorpay?: any } }
-
+const pricingData = {
+    currency: 'INR',
+    symbol: '₹',
+    region: 'India',
+    flag: '🇮🇳',
+    gstIncluded: true,
+    plans: {
+        plus: {
+            name: 'Plus',
+            price: 499,
+            original: null,
+            discounted: null,
+            period: '/month',
+            popular: false,
+            earlyAccess: false,
+            features: [
+                { text: '200 credits per day', highlight: false },
+                { text: '+50K credits', highlight: true },
+                { text: 'Unlimited AI agents', highlight: true },
+                { text: '3 Workspaces', highlight: false },
+                { text: 'All models unlocked', highlight: true },
+                { text: '30% platform fees', highlight: false },
+                { text: '5% Discount on Top up', highlight: true }
+            ],
+            buttonText: 'Get Plus Plan',
+            buttonStyle: 'primary',
+            link: 'plus',
+            plan_id: 'plan_R9OLfO0iomjpBl'
+        },
+        pro: {
+            name: 'Pro',
+            price: 999,
+            original: 999,
+            discounted: 249,
+            period: '/month',
+            popular: false,
+            earlyAccess: false,
+            earlyAccessText: '🚀 Early Access - Limited Time',
+            discount: '75% OFF',
+            features: [
+                { text: '200 credits per day', highlight: false },
+                { text: '+100K credits', highlight: true },
+                { text: 'Unlimited AI agents', highlight: true },
+                { text: '5 Workspaces', highlight: false },
+                { text: 'All models unlocked', highlight: true },
+                { text: '25% platform fees', highlight: false },
+                { text: '10% Discount on Top up', highlight: true }
+            ],
+            buttonText: 'Get Pro Plan',
+            buttonStyle: 'primary',
+            link: 'pro',
+            plan_id: 'plan_R9OLqUVsvWFqUc',
+            offer_id: "offer_R9OYEZvpUBKXZ9"
+        },
+        proPlus: {
+            name: 'Pro+',
+            price: 1999,
+            original: 1999,
+            discounted: 499,
+            period: '/month',
+            popular: true,
+            earlyAccess: false,
+            earlyAccessText: '🚀 Early Access - Limited Time',
+            discount: '75% OFF',
+            features: [
+                { text: '200 credits per day', highlight: false },
+                { text: '+200K credits', highlight: true },
+                { text: 'Unlimited AI agents', highlight: true },
+                { text: '10+ Workspaces', highlight: true },
+                { text: 'All models unlocked', highlight: true },
+                { text: '20% platform fees', highlight: true },
+                { text: '15% Discount on Top up', highlight: true }
+            ],
+            buttonText: 'Get Pro+ Plan',
+            buttonStyle: 'primary',
+            link: 'pro-plus',
+            plan_id: 'plan_R9OM0QcI4GlZXF',
+            offer_id: "offer_R9OYEZvpUBKXZ9"
+        }
+    }
+};
 // Keep the same loadRazorpay function
 async function loadRazorpay(): Promise<any> {
     if (typeof window === "undefined") throw new Error("SSR");
@@ -28,92 +108,41 @@ const PricingPage = () => {
     const router = useRouter();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [data, setData] = useState<any>(null);
 
     // Add popup state management
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<any | null>(null);
 
-    const pricingData = {
-        currency: 'INR',
-        symbol: '₹',
-        region: 'India',
-        flag: '🇮🇳',
-        gstIncluded: true,
-        plans: {
-            plus: {
-                name: 'Plus',
-                price: 499,
-                original: null,
-                discounted: null,
-                period: '/month',
-                popular: false,
-                earlyAccess: false,
-                features: [
-                    { text: '200 credits per day', highlight: false },
-                    { text: '+50K credits', highlight: true },
-                    { text: 'Unlimited AI agents', highlight: true },
-                    { text: '3 Workspaces', highlight: false },
-                    { text: 'All models unlocked', highlight: true },
-                    { text: '30% platform fees', highlight: false },
-                    { text: '5% Discount on Top up', highlight: true }
-                ],
-                buttonText: 'Get Plus Plan',
-                buttonStyle: 'primary',
-                link: 'plus',
-                plan_id: 'plan_R9OLfO0iomjpBl'
-            },
-            pro: {
-                name: 'Pro',
-                price: 999,
-                original: 999,
-                discounted: 249,
-                period: '/month',
-                popular: false,
-                earlyAccess: false,
-                earlyAccessText: '🚀 Early Access - Limited Time',
-                discount: '75% OFF',
-                features: [
-                    { text: '200 credits per day', highlight: false },
-                    { text: '+100K credits', highlight: true },
-                    { text: 'Unlimited AI agents', highlight: true },
-                    { text: '5 Workspaces', highlight: false },
-                    { text: 'All models unlocked', highlight: true },
-                    { text: '25% platform fees', highlight: false },
-                    { text: '10% Discount on Top up', highlight: true }
-                ],
-                buttonText: 'Get Pro Plan',
-                buttonStyle: 'primary',
-                link: 'pro',
-                plan_id: 'plan_R9OLqUVsvWFqUc',
-                offer_id: "offer_R9OYEZvpUBKXZ9"
-            },
-            proPlus: {
-                name: 'Pro+',
-                price: 1999,
-                original: 1999,
-                discounted: 499,
-                period: '/month',
-                popular: true,
-                earlyAccess: false,
-                earlyAccessText: '🚀 Early Access - Limited Time',
-                discount: '75% OFF',
-                features: [
-                    { text: '200 credits per day', highlight: false },
-                    { text: '+200K credits', highlight: true },
-                    { text: 'Unlimited AI agents', highlight: true },
-                    { text: '10+ Workspaces', highlight: true },
-                    { text: 'All models unlocked', highlight: true },
-                    { text: '20% platform fees', highlight: true },
-                    { text: '15% Discount on Top up', highlight: true }
-                ],
-                buttonText: 'Get Pro+ Plan',
-                buttonStyle: 'primary',
-                link: 'pro-plus',
-                plan_id: 'plan_R9OM0QcI4GlZXF',
-                offer_id: "offer_R9OYEZvpUBKXZ9"
+    useEffect(() => {
+        const fetchBilling = async () => {
+            try {
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URI}/v1/payment/billing/${user?.uid}`,
+                    { credentials: "include" } // if you use cookies for auth
+                );
+                const json = await res.json();
+                console.log(json, json.subscription)
+                setData({
+                    name: pricingData.plans.plus.link,
+                    price: pricingData.plans.plus.price,
+                    plan_id: pricingData.plans.plus.plan_id,
+                    renewalDate: json.subscription.next_due ?? "",
+                    period: json.subscription.current_end,
+                    subscription_id: json.subscription.subscription_id
+                });
+            } catch (err) {
+                console.error("Billing fetch failed", err);
+            } finally {
+                setLoading(false);
             }
+        };
+        if (user) {
+            fetchBilling();
         }
-    };
+    }, [user]);
+
+
 
     const formatPrice = (price: any) => {
         return price === 0 ? 'Free' : `${pricingData.symbol}${price.toLocaleString('en-IN')}`;
@@ -218,6 +247,7 @@ const PricingPage = () => {
                                 >
                                     {loading && selectedPlan?.plan_id === plan.plan_id ? 'Processing...' : plan.buttonText}
                                 </button>}
+
                             </div>
                         ))}
                 </div>
@@ -227,10 +257,13 @@ const PricingPage = () => {
             <SubscriptionPopup
                 plan={selectedPlan}
                 isOpen={isPopupOpen}
+                currentPlan={data}
                 onClose={handlePopupClose}
                 loading={loading}
                 onSetLoading={setLoading}
                 onSetIsPopupOpen={setIsPopupOpen}
+                isUpgrade={data}
+                planInfo={pricingData}
                 pricingData={{
                     currency: pricingData.currency,
                     symbol: pricingData.symbol,

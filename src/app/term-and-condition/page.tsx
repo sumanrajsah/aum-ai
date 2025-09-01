@@ -9,8 +9,11 @@ export default function TermsAndPrivacy() {
   return (
     <>
       <Head>
-        <title>Terms of Service & Privacy Policy - AI Agent Marketplace</title>
-        <meta name="description" content="Terms of Service, Privacy Policy, and legal information for AI Agent Marketplace" />
+        <title>Legal Information - Aum AI</title>
+        <meta
+          name="description"
+          content="Terms of Service, Privacy Policy, Acceptable Use, and Refund Policy for Aum AI (Qubicsquare Technologies Private Limited)"
+        />
       </Head>
 
       <div className="terms-container">
@@ -18,318 +21,227 @@ export default function TermsAndPrivacy() {
         <div className="terms-header">
           <div className="header-content">
             <h1>Legal Information</h1>
-            <p>Please review our terms of service and privacy policy</p>
-            <div className="last-updated">
-              Last Updated: December 28, 2024
-            </div>
+            <p>Review Terms of Service, Privacy Policy, Acceptable Use, and Refund Policy</p>
+            <div className="last-updated">Last Updated: December 28, 2024</div>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
+        {/* Navigation */}
         <div className="tab-navigation">
           <div className="tab-container">
-            <button
-              className={`tab-button ${activeTab === 'terms' ? 'active' : ''}`}
-              onClick={() => setActiveTab('terms')}
-            >
-              Terms of Service
-            </button>
-            <button
-              className={`tab-button ${activeTab === 'privacy' ? 'active' : ''}`}
-              onClick={() => setActiveTab('privacy')}
-            >
-              Privacy Policy
-            </button>
-            <button
-              className={`tab-button ${activeTab === 'acceptable' ? 'active' : ''}`}
-              onClick={() => setActiveTab('acceptable')}
-            >
-              Acceptable Use
-            </button>
-            <button
-              className={`tab-button ${activeTab === 'refund' ? 'active' : ''}`}
-              onClick={() => setActiveTab('refund')}
-            >
-              Refund Policy
-            </button>
+            <button className={`tab-button ${activeTab === "terms" ? "active" : ""}`} onClick={() => setActiveTab("terms")}>Terms of Service</button>
+            <button className={`tab-button ${activeTab === "privacy" ? "active" : ""}`} onClick={() => setActiveTab("privacy")}>Privacy Policy</button>
+            <button className={`tab-button ${activeTab === "acceptable" ? "active" : ""}`} onClick={() => setActiveTab("acceptable")}>Acceptable Use</button>
+            <button className={`tab-button ${activeTab === "refund" ? "active" : ""}`} onClick={() => setActiveTab("refund")}>Refund Policy</button>
           </div>
         </div>
 
         {/* Content Area */}
         <div className="content-area">
           {/* Terms of Service */}
-          {activeTab === 'terms' && (
+          {activeTab === "terms" && (
             <div className="content-section">
-              <div className="section-header">
-                <h2>Terms of Service</h2>
-              </div>
-
+              <div className="section-header"><h2>Terms of Service</h2></div>
               <div className="terms-content">
+
                 <section className="legal-section">
-                  <h3>1. Acceptance of Terms</h3>
+                  <h3>1. Acceptance</h3>
                   <p>
-                    By accessing or using our AI Agent Marketplace ("Platform", "Service", "we", "us", "our"),
-                    you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these
-                    Terms, you may not use our Service.
+                    By using Aum AI (SitrAi), operated by Qubicsquare Technologies Private Limited, you agree to these Terms.
+                    Aum AI is a platform where users can interact with AI models, create and deploy low/no-code AI
+                    agents, list agents, MCPs, and prompts on our marketplace, and use persistent memory features.
                   </p>
                 </section>
 
                 <section className="legal-section">
-                  <h3>2. Description of Service</h3>
-                  <p>
-                    Our Platform is a marketplace where users can buy, sell, and trade AI agents using our
-                    proprietary credit system. Payments are processed through Razorpay's secure payment gateway.
-                  </p>
+                  <h3>2. Services</h3>
+                  <ul>
+                    <li>Live chat with AI models on our platform</li>
+                    <li>Low/No-code tools to build and publish AI agents</li>
+                    <li>Marketplace to list and sell AI agents, MCPs, and prompts</li>
+                    <li>Persistent memory that stores chat history for continuity</li>
+                  </ul>
                 </section>
 
                 <section className="legal-section">
                   <h3>3. Eligibility</h3>
                   <ul>
-                    <li>You must be at least 18 years old to use our Service</li>
-                    <li>You must have the legal capacity to enter into binding agreements</li>
-                    <li>You must not be prohibited from using our Service under applicable laws</li>
-                    <li>Business users must have proper authorization to represent their organization</li>
+                    <li>Minimum age 18</li>
+                    <li>Legal capacity to contract</li>
+                    <li>No restrictions under applicable laws</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>4. User Accounts</h3>
-                  <h4>4.1 Account Creation</h4>
+                  <h3>4. Accounts</h3>
                   <ul>
-                    <li>You must provide accurate, complete, and current information</li>
-                    <li>You are responsible for maintaining the confidentiality of your account credentials</li>
-                    <li>You are responsible for all activities that occur under your account</li>
-                    <li>You must notify us immediately of any unauthorized use of your account</li>
-                  </ul>
-
-                  <h4>4.2 Account Types</h4>
-                  <ul>
-                    <li><strong>Individual Users:</strong> Personal accounts for individual use</li>
-                    <li><strong>Business Users:</strong> Commercial accounts for organizations</li>
-                    <li><strong>Developer/Seller Accounts:</strong> For users who create and sell AI agents</li>
+                    <li>Provide accurate details</li>
+                    <li>Maintain confidentiality of login</li>
+                    <li>Responsible for all account activity</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>5. Platform Credits System</h3>
-                  <h4>5.1 Credit Purchase</h4>
+                  <h3>5. Credits</h3>
                   <ul>
-                    <li>Credits are purchased using real money through Razorpay</li>
-                    <li>Credits have no expiration date unless stated otherwise</li>
-                    <li>Credit purchases are non-refundable except as required by law</li>
-                    <li>Minimum and maximum credit purchase limits may apply</li>
-                  </ul>
-
-                  <h4>5.2 Credit Usage</h4>
-                  <ul>
-                    <li>Credits can be used to purchase AI agents on the Platform</li>
-                    <li>Credits cannot be transferred between accounts without authorization</li>
-                    <li>Credits cannot be redeemed for cash or real money</li>
-                    <li>We reserve the right to adjust credit values with 30 days notice</li>
+                    <li>Purchased via Razorpay only</li>
+                    <li>Non-refundable, non-transferable</li>
+                    <li>No monetary value outside the platform</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>6. Prohibited Activities</h3>
-                  <p>You may not:</p>
+                  <h3>6. User Content & IP</h3>
                   <ul>
-                    <li>Upload malicious, harmful, or illegal AI agents</li>
-                    <li>Attempt to reverse engineer or copy other users' AI agents</li>
-                    <li>Use the Platform for money laundering or fraudulent activities</li>
-                    <li>Create multiple accounts to circumvent restrictions</li>
-                    <li>Manipulate reviews or ratings</li>
-                    <li>Violate intellectual property rights of others</li>
-                    <li>Share account credentials with unauthorized parties</li>
+                    <li>Users retain rights to their AI agents, MCPs, and prompts</li>
+                    <li>By publishing, you grant us license to host, display, and distribute on the Platform</li>
+                    <li>Platform code, design, and trademarks remain the property of Qubicsquare Technologies</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>7. Limitation of Liability</h3>
+                  <h3>7. Restrictions</h3>
+                  <ul>
+                    <li>No illegal, harmful, or deceptive AI agents</li>
+                    <li>No violation of intellectual property laws</li>
+                    <li>No market manipulation, fake accounts, or rating abuse</li>
+                    <li>No attempts to reverse-engineer or exploit persistent memory features</li>
+                  </ul>
+                </section>
+
+                <section className="legal-section">
+                  <h3>8. Disclaimer & Liability</h3>
                   <p>
-                    To the maximum extent permitted by law, our total liability shall not exceed the amount
-                    you paid us in the 12 months preceding the claim. We are not liable for indirect,
-                    incidental, or consequential damages.
+                    Aum AI is provided “as is.” No warranties on accuracy, uptime, or availability. Liability is
+                    capped at amounts paid in the last 12 months. No indirect or consequential liability.
                   </p>
                 </section>
 
                 <section className="legal-section">
-                  <h3>8. Termination</h3>
+                  <h3>9. Termination</h3>
                   <p>
-                    We may terminate accounts for Terms violations or suspend accounts pending investigation.
-                    You may terminate your account at any time, though remaining credits may be forfeited
-                    upon termination.
+                    We may suspend/terminate accounts for violations. Users may request deletion of their accounts,
+                    but credits and stored data may be forfeited.
                   </p>
+                </section>
+
+                <section className="legal-section">
+                  <h3>10. Governing Law</h3>
+                  <p>These Terms are governed by Indian law. Courts of Delhi have exclusive jurisdiction.</p>
                 </section>
               </div>
             </div>
           )}
 
           {/* Privacy Policy */}
-          {activeTab === 'privacy' && (
+          {activeTab === "privacy" && (
             <div className="content-section">
-              <div className="section-header">
-                <h2>Privacy Policy</h2>
-              </div>
-
+              <div className="section-header"><h2>Privacy Policy</h2></div>
               <div className="terms-content">
-                <section className="legal-section">
-                  <h3>1. Information We Collect</h3>
-                  <h4>1.1 Information You Provide</h4>
-                  <ul>
-                    <li>Account registration information (name, email, phone number)</li>
-                    <li>Payment information (processed by Razorpay, not stored by us)</li>
-                    <li>Profile information and preferences</li>
-                    <li>AI agents and content you upload</li>
-                    <li>Communications with our support team</li>
-                  </ul>
 
-                  <h4>1.2 Information Automatically Collected</h4>
+                <section className="legal-section">
+                  <h3>1. Data We Collect</h3>
                   <ul>
-                    <li>Device and browser information</li>
-                    <li>IP address and location data</li>
-                    <li>Usage patterns and analytics</li>
-                    <li>Cookies and similar tracking technologies</li>
-                    <li>Error logs and performance data</li>
+                    <li>User-provided: name, email, uploaded AI agents, prompts, MCPs, chats</li>
+                    <li>Payment info via Razorpay (not stored by us)</li>
+                    <li>Device/browser info, IP, logs, cookies, usage analytics</li>
+                    <li>Stored securely in Redis, MongoDB, and encrypted servers</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>2. How We Use Your Information</h3>
-                  <h4>2.1 Platform Operations</h4>
+                  <h3>2. How We Use Data</h3>
                   <ul>
-                    <li>Providing and maintaining the Service</li>
-                    <li>Processing transactions and payments</li>
-                    <li>Authenticating users and preventing fraud</li>
-                    <li>Providing customer support</li>
-                    <li>Communicating service updates and notifications</li>
-                  </ul>
-
-                  <h4>2.2 Improvement and Analytics</h4>
-                  <ul>
-                    <li>Analyzing usage patterns to improve the Platform</li>
-                    <li>Developing new features and services</li>
-                    <li>Conducting research and analytics</li>
-                    <li>Personalizing your experience</li>
+                    <li>Operate and maintain live AI chat and marketplace</li>
+                    <li>Provide persistent memory across sessions</li>
+                    <li>Authenticate users and prevent fraud</li>
+                    <li>Improve features and analytics</li>
+                    <li>Communicate updates and support responses</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>3. Information Sharing and Disclosure</h3>
-                  <h4>3.1 Service Providers</h4>
+                  <h3>3. Sharing</h3>
                   <ul>
-                    <li>Payment processors (Razorpay)</li>
-                    <li>Cloud hosting providers</li>
-                    <li>Analytics services</li>
-                    <li>Customer support tools</li>
-                    <li>Email service providers</li>
-                  </ul>
-
-                  <h4>3.2 Legal Requirements</h4>
-                  <ul>
-                    <li>Complying with legal obligations</li>
-                    <li>Protecting our rights and property</li>
-                    <li>Investigating fraud or security issues</li>
-                    <li>Responding to government requests</li>
+                    <li>Service providers: Razorpay, hosting, analytics, email</li>
+                    <li>Legal obligations and rights protection</li>
+                    <li>User consent where applicable</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>4. Data Security</h3>
+                  <h3>4. Security</h3>
                   <ul>
-                    <li>Encryption of data in transit and at rest</li>
-                    <li>Regular security audits and assessments</li>
-                    <li>Access controls and authentication</li>
-                    <li>Employee training on data protection</li>
-                    <li>PCI DSS compliant payment processing through Razorpay</li>
+                    <li>Encryption in transit and at rest</li>
+                    <li>PCI DSS compliant Razorpay integration</li>
+                    <li>Role-based access controls and audits</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>5. Your Privacy Rights</h3>
-                  <h4>5.1 Access and Portability</h4>
+                  <h3>5. User Rights</h3>
+                  <h4>5.1 GDPR (EU)</h4>
                   <ul>
-                    <li>Right to access your personal information</li>
-                    <li>Right to obtain copies of your data</li>
-                    <li>Right to data portability in machine-readable format</li>
+                    <li>Access, correction, deletion</li>
+                    <li>Restrict or object to processing</li>
+                    <li>Data portability</li>
+                    <li>Withdraw consent anytime</li>
                   </ul>
-
-                  <h4>5.2 Correction and Deletion</h4>
+                  <h4>5.2 CCPA (California)</h4>
                   <ul>
-                    <li>Right to correct inaccurate information</li>
-                    <li>Right to delete your account and personal data</li>
-                    <li>Right to request restriction of processing</li>
+                    <li>Right to know data collected</li>
+                    <li>Right to request deletion</li>
+                    <li>Opt-out of data sale (we do not sell personal data)</li>
+                  </ul>
+                  <h4>5.3 All Users</h4>
+                  <ul>
+                    <li>Delete chat history directly</li>
+                    <li>Email support@sitrai.com for account deletion</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
-                  <h3>6. Data Retention</h3>
+                  <h3>6. Retention</h3>
                   <ul>
-                    <li>Account information: Retained while your account is active plus 3 years</li>
-                    <li>Transaction records: Retained for 7 years for tax and legal purposes</li>
-                    <li>Usage analytics: Aggregated data retained indefinitely</li>
-                    <li>Marketing data: Deleted upon unsubscribe or account deletion</li>
+                    <li>Account: active + 3 years</li>
+                    <li>Transactions: 7 years</li>
+                    <li>Analytics: indefinite (aggregated)</li>
                   </ul>
                 </section>
               </div>
             </div>
           )}
 
-          {/* Acceptable Use Policy */}
-          {activeTab === 'acceptable' && (
+          {/* Acceptable Use */}
+          {activeTab === "acceptable" && (
             <div className="content-section">
-              <div className="section-header">
-                <h2>Acceptable Use Policy</h2>
-              </div>
-
+              <div className="section-header"><h2>Acceptable Use Policy</h2></div>
               <div className="terms-content">
                 <section className="legal-section">
-                  <h3>1. Permitted Uses</h3>
+                  <h3>1. Allowed Uses</h3>
                   <ul>
-                    <li>Creating and selling legitimate AI agents</li>
-                    <li>Purchasing AI agents for lawful purposes</li>
-                    <li>Providing honest reviews and feedback</li>
-                    <li>Participating in community discussions</li>
-                    <li>Using the Platform for its intended commercial purposes</li>
+                    <li>Chatting with AI models responsibly</li>
+                    <li>Building and publishing lawful AI agents, MCPs, and prompts</li>
+                    <li>Posting fair and honest reviews</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
                   <h3>2. Prohibited Uses</h3>
-                  <h4>2.1 Illegal Activities</h4>
                   <ul>
-                    <li>Money laundering or terrorist financing</li>
-                    <li>Fraud, theft, or identity theft</li>
-                    <li>Violation of export control laws</li>
-                    <li>Infringement of intellectual property rights</li>
-                    <li>Any activity prohibited by applicable law</li>
-                  </ul>
-
-                  <h4>2.2 Harmful Content</h4>
-                  <ul>
-                    <li>AI agents that spread malware or viruses</li>
-                    <li>Agents designed to harm or deceive users</li>
-                    <li>Content promoting violence or hatred</li>
-                    <li>Adult content or pornographic material</li>
-                    <li>Agents that violate privacy or data protection laws</li>
-                  </ul>
-
-                  <h4>2.3 Market Manipulation</h4>
-                  <ul>
-                    <li>Creating fake reviews or ratings</li>
-                    <li>Manipulating search results or rankings</li>
-                    <li>Price fixing or anticompetitive behavior</li>
-                    <li>Using multiple accounts to circumvent limits</li>
-                    <li>Engaging in wash trading or artificial transactions</li>
+                    <li>Illegal or fraudulent activities</li>
+                    <li>Harmful AI (malware, deepfakes, deceptive bots)</li>
+                    <li>Adult content, hate speech, or violence promotion</li>
+                    <li>Exploiting persistent memory to harvest or misuse data</li>
                   </ul>
                 </section>
 
                 <section className="legal-section">
                   <h3>3. Enforcement</h3>
                   <ul>
-                    <li>Violations may result in account suspension or termination</li>
-                    <li>We may remove content that violates this policy</li>
-                    <li>Repeat offenders may be permanently banned</li>
-                    <li>Law enforcement may be notified of illegal activities</li>
+                    <li>Content removal for violations</li>
+                    <li>Suspension or termination</li>
+                    <li>Possible reporting to law enforcement</li>
                   </ul>
                 </section>
               </div>
@@ -337,57 +249,32 @@ export default function TermsAndPrivacy() {
           )}
 
           {/* Refund Policy */}
-          {activeTab === 'refund' && (
+          {activeTab === "refund" && (
             <div className="content-section">
-              <div className="section-header">
-                <h2>Refund and Cancellation Policy</h2>
-              </div>
-
+              <div className="section-header"><h2>Refund and Cancellation Policy</h2></div>
               <div className="terms-content">
                 <section className="legal-section">
                   <h3>1. Credit Purchases</h3>
-                  <h4>1.1 No Refunds Policy</h4>
                   <ul>
-                    <li>Credit purchases are generally non-refundable</li>
-                    <li>Exceptions may be made for technical errors or unauthorized transactions</li>
-                    <li>Refund requests must be made within 48 hours of purchase</li>
-                  </ul>
-
-                  <h4>1.2 Refund Process</h4>
-                  <ul>
-                    <li>Contact customer support with transaction details</li>
-                    <li>Provide reason for refund request</li>
-                    <li>Allow 5-10 business days for processing</li>
-                    <li>Refunds processed through original payment method</li>
+                    <li>All purchases final and non-refundable</li>
+                    <li>No refunds for unused/expired credits</li>
+                    <li>Exceptions: unauthorized payments or technical errors</li>
                   </ul>
                 </section>
-
-                {/* <section className="legal-section">
-                  <h3>2. AI Agent Purchases</h3>
-                  <h4>2.1 Satisfaction Guarantee</h4>
-                  <ul>
-                    <li>7-day satisfaction guarantee for AI agent purchases</li>
-                    <li>Agent must fail to perform as described</li>
-                    <li>Must provide evidence of non-functionality</li>
-                    <li>Refunds issued in Platform credits</li>
-                  </ul>
-
-                  <h4>2.2 Refund Conditions</h4>
-                  <ul>
-                    <li>Agent has not been significantly modified or integrated</li>
-                    <li>No refunds for change of mind or buyer's remorse</li>
-                    <li>No refunds for agents that work but don't meet expectations</li>
-                    <li>Developer may offer updates or fixes instead of refund</li>
-                  </ul>
-                </section> */}
-
                 <section className="legal-section">
-                  <h3>2. Dispute Resolution</h3>
+                  <h3>2. Refund Process</h3>
                   <ul>
-                    <li>Disputes handled through internal mediation first</li>
-                    <li>Unresolved disputes may be escalated to arbitration</li>
+                    <li>Email support@sitrai.com within 48 hours</li>
+                    <li>Provide transaction details</li>
+                    <li>Refunds (if approved) via Razorpay in 5–10 business days</li>
+                  </ul>
+                </section>
+                <section className="legal-section">
+                  <h3>3. Disputes</h3>
+                  <ul>
+                    <li>Resolve with support team first</li>
+                    <li>If unresolved, arbitration in Delhi, India</li>
                     <li>Chargebacks may result in account suspension</li>
-                    <li>Alternative dispute resolution available</li>
                   </ul>
                 </section>
               </div>
@@ -395,25 +282,16 @@ export default function TermsAndPrivacy() {
           )}
         </div>
 
-        {/* Contact Information */}
+        {/* Contact */}
         <div className="contact-section">
-          <div className="contact-header">
-            <h2>Contact Information</h2>
-          </div>
+          <div className="contact-header"><h2>Contact Information</h2></div>
           <div className="contact-grid">
-            <div className="contact-item">
-              <h4>Customer Support</h4>
-              <p>Email: support@sitrai.com</p>
-              {/* <p>Live Chat: Available on the Platform</p>
-              <p>Business Hours: Monday-Friday, 9 AM - 6 PM IST</p> */}
-            </div>
-            <div className="contact-item">
-              <h4>Legal Inquiries</h4>
-              <p>Email: legal@qubicsquare.tech</p>
-            </div>
+            <div className="contact-item"><h4>Customer Support</h4><p>Email: support@sitrai.com</p></div>
+            <div className="contact-item"><h4>Legal Inquiries</h4><p>Email: legal@qubicsquare.tech</p></div>
           </div>
         </div>
       </div>
+
 
       <style jsx>{`
         .terms-container {
