@@ -67,12 +67,12 @@ const Header = () => {
                         <SquarePen size={20} />
                     </button>}
                 </div>
-                {user && <button className="credit-btn" onClick={() => router.push('/credits')}><Coins size={20} />{credits}</button>}
                 {openWorkspaceModel && user && <div className="workspace-cont" ref={modalRef}>
                     <WorkspaceCont />
                 </div>}
                 {/* {pathname !== '/' && !pathname.startsWith('/c/') && <button onClick={() => router.push('/')} className="connect-button">Home</button>} */}
                 <div className="btn-cont">
+                    {user && <button className="credit-btn" onClick={() => router.push('/credits')}><Coins size={20} />{credits}</button>}
                     {pathname === '/store/agents' && user && <button onClick={() => router.push('/store/agents/mine')} className="connect-button">My Agents</button>}
                     {pathname === '/store/mcp' && user && <button onClick={() => router.push('/store/mcp/mine')} className="connect-button">My MCP</button>}
 

@@ -138,7 +138,7 @@ const ModalSetting = () => {
                     credentials: "include"
                 });
                 const data = await res.json();
-                console.log(data)
+                // console.log(data)
                 setMemories(data.memory || []);
             } catch (err) {
                 console.error("Failed to fetch memories", err);
@@ -147,8 +147,8 @@ const ModalSetting = () => {
             }
         };
 
-        if (user) fetchMemories();
-    }, [user]);
+        if (user && activeSection === 'memory') fetchMemories();
+    }, [user, activeSection]);
     useEffect(() => {
         const fetchBilling = async () => {
             try {
@@ -159,13 +159,13 @@ const ModalSetting = () => {
                 const json = await res.json();
                 setData(json);
             } catch (err) {
-                console.error("Billing fetch failed", err);
+                //console.error("Billing fetch failed", err);
             } finally {
                 setLoading(false);
             }
         };
-        if (user) fetchBilling();
-    }, [user]);
+        if (user && activeSection === 'subscription') fetchBilling();
+    }, [user, activeSection]);
     useEffect(() => {
         // Add fade-in animation
         const timer = setTimeout(() => setIsVisible(true), 50);
