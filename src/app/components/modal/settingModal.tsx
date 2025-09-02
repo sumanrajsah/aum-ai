@@ -306,7 +306,7 @@ const ModalSetting = () => {
                                                 : user.plan.charAt(0).toUpperCase() + user.plan.slice(1)
                                             : "Unknown"}
                                     </h4>
-                                    {user?.plan !== 'free' && data.subscription && <span
+                                    {user?.plan !== 'free' && data?.subscription && <span
                                         className={`subscription-status ${data.subscription?.status === "active" ? "active" : "inactive"
                                             }`}
                                     >   {data.subscription.status}
@@ -314,14 +314,14 @@ const ModalSetting = () => {
                                 </div>
                                 <div className="subscription-details">
                                     {user?.plan !== 'free' && <p className="subscription-price">{price}</p>}
-                                    {user?.plan !== 'free' && <> {data.subscription && data.subscription?.charge_at !== null ? <p className="subscription-next">
+                                    {user?.plan !== 'free' && <> {data?.subscription && data.subscription?.charge_at !== null ? <p className="subscription-next">
                                         Next billing on {formatDate(data.subscription?.charge_at)}
                                     </p> : <p className="subscription-next">
-                                        Your Plan Will be canceled on {formatDate(data.subscription?.current_end)}
+                                        Your Plan Will be canceled on {formatDate(data?.subscription?.current_end)}
                                     </p>}</>}
                                 </div>
                             </div>
-                            {user?.plan !== 'free' && data.subscription && (
+                            {user?.plan !== 'free' && data?.subscription && (
                                 <div className="setting-item">
                                     <label className="setting-label">Manage Subscription</label>
                                     <div className="payment-method">
