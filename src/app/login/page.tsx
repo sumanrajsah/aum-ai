@@ -98,8 +98,6 @@ export default function CollabLogin() {
                         wrapperClass=""
                         secondaryColor="gray"
                     /><p>Wait...</p></> : <button className="collab-button" onClick={handleLogin} type="submit">Submit</button>}
-                    {!loading && <p>or</p>}
-                    {!loading && <GoogleSignInButton className={'google-btn'} islogin={false} />}
                 </div>
             </div>)}
         </>
