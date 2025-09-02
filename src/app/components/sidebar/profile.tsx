@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import './profile.css'
-import { BrainCircuit, LogOut, Pickaxe, Server, Settings, Telescope, User2, Wrench, Mail, UserCircle, ScrollText, Headset } from "lucide-react";
+import { BrainCircuit, LogOut, Pickaxe, Server, Settings, Telescope, User2, Wrench, Mail, UserCircle, ScrollText, Headset, Gavel } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "../ThemeToggle";
@@ -100,17 +100,19 @@ const ProfileCont = () => {
 
             <hr />
             <button className="profile-btn" onClick={() => { location.href = '#settings' }}>
-                <User2 size={20} />Settings
+                <Settings size={20} />Settings
             </button>
-            <hr />
             {/* <button className="profile-btn" onClick={() => { router.push('?settings=true') }}>
                 <Settings size={20} />Settings
             </button> */}
             <ThemeToggle />
 
             <hr />
-            <button className="profile-btn" onClick={() => { router.push('term-and-condition') }}>
-                <ScrollText size={20} />Terms & Policies
+            <button className="profile-btn" onClick={() => { router.push('/term-and-condition') }}>
+                <Gavel size={20} />Terms & Policies
+            </button>
+            <button className="profile-btn" onClick={() => { router.push('/faq') }}>
+                <ScrollText size={20} />FAQ
             </button>
             <button className="profile-btn" onClick={() => { window.open('https://t.me/aumai_customer_support', '_blank') }}>
                 <Headset size={20} />Support

@@ -73,11 +73,7 @@ const Header = () => {
                 </div>}
                 {/* {pathname !== '/' && !pathname.startsWith('/c/') && <button onClick={() => router.push('/')} className="connect-button">Home</button>} */}
                 <div className="btn-cont">
-                    {/*agents*/}
-                    {pathname.startsWith('/store/agents') && user && <button onClick={() => router.push('/create/agent')} className="connect-button">Create</button>}
                     {pathname === '/store/agents' && user && <button onClick={() => router.push('/store/agents/mine')} className="connect-button">My Agents</button>}
-                    {/*MCP*/}
-                    {pathname.startsWith('/store/mcp') && user && <button onClick={() => router.push('/create/mcp')} className="connect-button">Create</button>}
                     {pathname === '/store/mcp' && user && <button onClick={() => router.push('/store/mcp/mine')} className="connect-button">My MCP</button>}
 
                     {!(user) ? <button className="connect-button"

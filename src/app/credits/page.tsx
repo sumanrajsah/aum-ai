@@ -22,6 +22,7 @@ type Credits = {
     freeCredits?: Bucket;
     planCredits?: Bucket;
     referralCredits?: Bucket;
+    topUpCredits?: Bucket;
     lastUpdated?: string;
     version?: number;
 };
@@ -98,17 +99,19 @@ export default function CreditsPage() {
     // Compute totals
     const f = data?.freeCredits,
         p = data?.planCredits,
-        r = data?.referralCredits;
-    const remaining = n(f?.remaining) + n(p?.remaining) + n(r?.remaining);
-    const used = n(f?.used) + n(p?.used) + n(r?.used);
-    const totalCapacity = n(p?.total) + n(f?.limit) + n(r?.earned);
+        r = data?.referralCredits,
+        t = data?.topUpCredits;
+    const remaining = n(f?.remaining) + n(p?.remaining) + n(r?.remaining) + n(t?.remaining);
+    const used = n(f?.used) + n(p?.used) + n(r?.used) + n(t?.used);
+    const totalCapacity = n(p?.total) + n(f?.limit) + n(r?.earned) + n(t?.total);
 
     useEffect(() => {
         if (data && user) {
             setCredits(
                 n(data.planCredits?.remaining) +
                 n(data.freeCredits?.remaining) +
-                n(data.referralCredits?.remaining)
+                n(data.referralCredits?.remaining) +
+                n(data.topUpCredits?.remaining)
             );
         } else {
             setCredits(0);
@@ -157,6 +160,13 @@ export default function CreditsPage() {
                                 {n(data.planCredits?.remaining).toLocaleString()}
                             </div>
                             <div className="credit-label">Subscription Credits</div>
+                        </div>
+                        <div className="credit-card">
+                            <h2 className="card-title">Top Up Credits</h2>
+                            <div className="credit-value">
+                                {n(data.topUpCredits?.remaining).toLocaleString()}
+                            </div>
+                            <div className="credit-label">Top up Credits</div>
                         </div>
 
                         <div className="credit-card">

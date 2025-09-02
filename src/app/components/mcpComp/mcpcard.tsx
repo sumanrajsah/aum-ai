@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import "./mcp-card.css";
-import { Bolt, Edit, MessageCircle, Rocket, Trash2 } from "lucide-react";
+import { Bolt, Calendar, Edit, MessageCircle, Rocket, Trash2 } from "lucide-react";
 import axios from "axios";
 import { useAlert } from "@/context/alertContext";
 import { useMcpServer } from "@/context/ChatContext";
@@ -11,6 +11,7 @@ export default function MCPServerCard({ mcp }: { mcp: MCPServerInfo }) {
     const { mcpServers, setMcpServers } = useMcpServer();
     const alert = useAlert();
     const router = useRouter();
+
 
     const formatDate = (timestamp: number) => {
         return new Date(timestamp).toLocaleDateString('en-US', {
@@ -35,73 +36,46 @@ export default function MCPServerCard({ mcp }: { mcp: MCPServerInfo }) {
 
     return (
         <div className="mcp-server-card">
-            <div className="mcp-card-header">
-                <div className="mcp-card-title-section">
-                    <h3 className="mcp-card-title">{mcp.label}</h3>
-                    <p className="mcp-card-description">{mcp.description}</p>
+            {/* Header with status indicator */}
+            <div className="mcp-server-header">
+                <div className="mcp-server-content">
+                    <h3 className="mcp-server-title">{mcp.label}</h3>
+                    <p className="mcp-server-description">{mcp.description}</p>
                 </div>
-                <div className="mcp-status">
-                    <div className={`status-dot ${mcp.status}`}></div>
-                    <span className={`status-text ${mcp.status}`}>{mcp.status}</span>
-                </div>
-            </div>
-
-            <div className="mcp-card-content">
-                {/* <div className="mcp-card-row">
-                    <div className="mcp-card-field">
-                        <span className="mcp-field-label">Connection Type</span>
-                        <span className="type-badge">{mcp.config.type}</span>
-                    </div>
-                    <div className="mcp-card-field">
-                        <span className="mcp-field-label">Auth</span>
-                        {mcp.auth ? (
-                            <span className="auth-yes"> Yes</span>
-                        ) : (
-                            <span className="auth-no"> No</span>
-                        )}
-                    </div>
-                </div>
-
-                <div className="mcp-card-field">
-                    <span className="mcp-field-label">Endpoint</span>
-                    <span className="endpoint-url">{mcp.config.url}</span>
-                </div> */}
-
-                <div className="mcp-card-field">
-                    <span className="mcp-field-label">Tools:{mcp.tools.length}</span>
-                    <div className="tools-section">
-                        {mcp.tools.length > 0 && (
-                            <div className="tools-list">
-                                {mcp.tools.slice(0, 3).map((tool, index) => (
-                                    <span key={index} className="tool-item">{tool}</span>
-                                ))}
-                                {mcp.tools.length > 3 && (
-                                    <span className="tool-item more">+{mcp.tools.length - 3} more</span>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                <div className={`status-indicator ${mcp.status}`}>
+                    <div className="status-dot"></div>
                 </div>
             </div>
 
-            <div className="mcp-card-footer">
-                <div className="card-actions">
-                    <button className="action-btn configure-btn" onClick={() => router.push(`/mcps/${mcp.sid}/edits`)}>
-                        <Edit size={20} />
-                        Edit
+            {/* Tools section */}
+            <div className="tools-section">
+                <div className="tools-header">
+                    <span className="tools-count">{mcp.tools.length} tools</span>
+                </div>
+                <div className="tools-preview">
+                    {mcp.tools.slice(0, 2).map((tool, index) => (
+                        <span key={index} className="tool-tag">{tool}</span>
+                    ))}
+                    {mcp.tools.length > 2 && (
+                        <span className="tool-tag more">+{mcp.tools.length - 2}</span>
+                    )}
+                </div>
+            </div>
+
+            {/* Footer with date and actions */}
+            <div className="mcp-server-footer">
+                <div className="date-info">
+                    <Calendar size={12} className="date-icon" />
+                    <span className="date-text">{formatDate(mcp.created_on)}</span>
+                </div>
+                <div className="action-buttons">
+                    <button className="action-btn edit-btn" title="Edit">
+                        <Edit size={14} />
                     </button>
-                    {/* <button className="action-btn configure-btn" onClick={() => router.push('/store/publish/mcp')}>
-                        <Rocket size={20} />
-                        {mcp.status === 'published' ? 'republish' : 'publish'}
-                    </button> */}
-                    <button className="action-btn configure-btn" onClick={() => deleteServer(mcp.sid)}>
-                        <Trash2 size={16} />
-                        Remove
+                    <button className="action-btn delete-btn" onClick={() => deleteServer(mcp.sid)} title="Delete">
+                        <Trash2 size={14} />
                     </button>
                 </div>
-                <br />
-                <span className="mcp-field-label">Created  {formatDate(mcp.created_on)}</span>
-
             </div>
         </div>
     );

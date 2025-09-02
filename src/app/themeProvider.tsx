@@ -5,7 +5,7 @@ import './globals.css';
 
 function ThemeP({ children }: { children: React.ReactNode }) {
     return (
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={true}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
             {children}
         </ThemeProvider>
     );

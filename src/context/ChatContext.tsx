@@ -455,6 +455,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const [chatMode, setChatMode] = useState<ChatMode>('text'); // Replace 'default' with an actual ChatMode value
     const { temperature, top_p, frequency_penalty, presence_penalty } = useLLMStyleStore();
     const [credits, setCredits] = useState<number>(0)
+    const [event, setEvent] = useState('')
 
     //agents 
     const [agentId, setAgentId] = useState('')
@@ -516,7 +517,8 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 setCredits(
                     (result.planCredits?.remaining) +
                     (result.freeCredits?.remaining) +
-                    (result.referralCredits?.remaining)
+                    (result.referralCredits?.remaining) +
+                    (result.topUpCredits?.remaining)
                 );
             } catch (error: any) {
 
@@ -526,7 +528,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
         };
 
         fetchCredits();
-    }, [user]);
+    }, [user, aiTyping]);
     useEffect(() => {
         async function getData() {
             if (status === 'unauthenticated') {

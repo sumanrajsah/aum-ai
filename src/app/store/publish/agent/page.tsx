@@ -271,6 +271,7 @@ export default function PublishAgent() {
                 <div className="form-grid">
                     <div className="agent-price form-group">
                         <label>💰 Price</label>
+                        <p className="important-info">* 1 AUM = $0.0001 (Rs. 0.0087)</p>
                         <div className="price-container">
                             <input
                                 type="number"

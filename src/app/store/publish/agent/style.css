@@ -1,5 +1,6 @@
 /* Enhanced List Page Styles - Clean & Responsive */
 .list {
+    position: relative;
     max-width: min(700px, 95vw);
     margin: clamp(0.5rem, 1vw, 1rem) auto;
     padding: clamp(2rem, 5vw, 2rem);
@@ -9,6 +10,7 @@
     flex-direction: column;
     box-sizing: border-box;
     width: 100%;
+    top: 7vh;
 }
 
 .publish-title {
@@ -32,6 +34,12 @@
     animation: formAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     box-sizing: border-box;
+}
+
+.important-info {
+    color: grey;
+    font-size: 12px;
+    font-style: italic;
 }
 
 @keyframes formAppear {

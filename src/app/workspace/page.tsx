@@ -135,6 +135,13 @@ export default function WorkspacePage() {
             </div>
         );
     }
+    if (user?.plan === 'free') {
+        return (
+            <div className="workspace-home">
+                <div className="loading">Workspace access not allowed on free plan </div>
+            </div>
+        )
+    }
 
     return (
         <div className="workspace-home">

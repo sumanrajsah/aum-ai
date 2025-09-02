@@ -1,6 +1,6 @@
 import { Children, useEffect, useRef, useState } from "react";
 import './setting.css'
-import { Brain, BrainCircuit, ChevronRight, CreditCard, IndianRupee, Layers, LogOut, Pickaxe, PlusCircle, Server, Settings, Telescope, User2, Wallet, Wrench, X } from "lucide-react";
+import { Brain, BrainCircuit, ChevronRight, CreditCard, IndianRupee, Layers, LogOut, Pickaxe, PlusCircle, Server, Settings, Telescope, Trash2, User2, Wallet, Wrench, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "../ThemeToggle";
@@ -11,6 +11,8 @@ import { useAlert } from "../../../context/alertContext";
 import { ReactNode } from "react";
 import ChangePasswordModal from "./components/changePassword";
 import EditProfileModal from "./components/editProfile";
+import SelectThemeButton from "../themeButton";
+import DeleteMemoryModal from "./components/deleteMemoryModal";
 
 
 const PLAN_PRICES: Record<string, string> = {
@@ -109,12 +111,44 @@ const ModalSetting = () => {
     const { user } = useAuth();
     const router = useRouter();
     const [isVisible, setIsVisible] = useState(false);
-    const [activeSection, setActiveSection] = useState<'account' | 'subscription' | 'profile' | 'memory'>('profile');
+    const [activeSection, setActiveSection] = useState<'account' | 'subscription' | 'system' | 'memory'>('system');
     const [openPasswordModal, setPasswordModal] = useState(false)
     const [openProfileModal, setProfileModal] = useState(false)
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    type Memory = {
+        memory_id: string;
+        createdAt: string;
+        metadata?: {
+            facts?: string[] | "null";
+            [key: string]: any;
+        };
+        [key: string]: any;
+    };
+    const [memories, setMemories] = useState<Memory[]>([]);
+    const [loadingMemories, setLoadingMemories] = useState(true);
+    const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; memoryId: string; text: string }>({ isOpen: false, memoryId: '', text: '' });
+    useEffect(() => {
+        const fetchMemories = async () => {
+            if (!user) return;
 
+            try {
+                setLoadingMemories(true);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/user/memory`, {
+                    credentials: "include"
+                });
+                const data = await res.json();
+                console.log(data)
+                setMemories(data.memory || []);
+            } catch (err) {
+                console.error("Failed to fetch memories", err);
+            } finally {
+                setLoadingMemories(false);
+            }
+        };
+
+        if (user) fetchMemories();
+    }, [user]);
     useEffect(() => {
         const fetchBilling = async () => {
             try {
@@ -151,7 +185,7 @@ const ModalSetting = () => {
         }
     };
     const sections = [
-        { id: 'profile', label: 'Profile', icon: Settings },
+        { id: 'system', label: 'System', icon: Settings },
         { id: 'account', label: 'Account', icon: User2 },
         { id: 'subscription', label: 'Subscription', icon: CreditCard },
         { id: 'memory', label: 'Memory', icon: Brain }
@@ -194,6 +228,29 @@ const ModalSetting = () => {
                         <h3 className="settings-title">Account Settings</h3>
                         <div className="settings-section">
                             <div className="setting-item">
+                                <label className="setting-label">Display Name</label>
+                                <input
+                                    type="text"
+                                    className="setting-input"
+                                    placeholder="Your display name"
+                                    defaultValue={user?.name}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="setting-item">
+                                <label className="setting-label">Username</label>
+                                <input
+                                    type="text"
+                                    className="setting-input"
+                                    placeholder="@username"
+                                    defaultValue={user?.username}
+                                    readOnly
+                                />
+                            </div>
+                            <button className="setting-button-secondary" onClick={() => setProfileModal(!openProfileModal)}>Edit Info</button>
+                        </div>
+                        <div className="settings-section">
+                            <div className="setting-item">
                                 <label className="setting-label">Email Address</label>
                                 <input
                                     readOnly
@@ -207,6 +264,7 @@ const ModalSetting = () => {
                                 <label className="setting-label">Password</label>
                                 <button className="setting-button-secondary" onClick={() => { setPasswordModal(true) }}>Change Password</button>
                             </div>
+
                             {/* <div className="setting-item">
                                 <label className="setting-label">Two-Factor Authentication</label>
                                 <div className="setting-toggle">
@@ -219,6 +277,19 @@ const ModalSetting = () => {
                             <h4 className="settings-subtitle">Danger Zone</h4>
                             <button className="setting-button-danger">Delete Account</button>
                         </div> */}
+                    </div>
+                );
+            case 'system':
+                return (
+                    <div className="settings-content">
+                        <h3 className="settings-title">System Settings</h3>
+                        <div className="settings-section">
+                            <div className="setting-item">
+                                <label className="setting-label">Theme</label>
+                                <SelectThemeButton />
+                            </div>
+                        </div>
+
                     </div>
                 );
             case 'subscription':
@@ -235,7 +306,7 @@ const ModalSetting = () => {
                                                 : user.plan.charAt(0).toUpperCase() + user.plan.slice(1)
                                             : "Unknown"}
                                     </h4>
-                                    {data.subscription && <span
+                                    {user?.plan !== 'free' && data.subscription && <span
                                         className={`subscription-status ${data.subscription?.status === "active" ? "active" : "inactive"
                                             }`}
                                     >   {data.subscription.status}
@@ -243,14 +314,14 @@ const ModalSetting = () => {
                                 </div>
                                 <div className="subscription-details">
                                     {user?.plan !== 'free' && <p className="subscription-price">{price}</p>}
-                                    {data.subscription && data.subscription?.charge_at !== null ? <p className="subscription-next">
+                                    {user?.plan !== 'free' && <> {data.subscription && data.subscription?.charge_at !== null ? <p className="subscription-next">
                                         Next billing on {formatDate(data.subscription?.charge_at)}
                                     </p> : <p className="subscription-next">
                                         Your Plan Will be canceled on {formatDate(data.subscription?.current_end)}
-                                    </p>}
+                                    </p>}</>}
                                 </div>
                             </div>
-                            {data.subscription && (
+                            {user?.plan !== 'free' && data.subscription && (
                                 <div className="setting-item">
                                     <label className="setting-label">Manage Subscription</label>
                                     <div className="payment-method">
@@ -282,76 +353,60 @@ const ModalSetting = () => {
                         </div>}
                     </div>
                 );
-            case 'profile':
-                return (
-                    <div className="settings-content">
-                        <h3 className="settings-title">Profile Settings</h3>
-                        <div className="settings-section">
-                            <div className="setting-item">
-                                <label className="setting-label">Display Name</label>
-                                <input
-                                    type="text"
-                                    className="setting-input"
-                                    placeholder="Your display name"
-                                    defaultValue={user?.name}
-                                    readOnly
-                                />
-                            </div>
-                            <div className="setting-item">
-                                <label className="setting-label">Username</label>
-                                <input
-                                    type="text"
-                                    className="setting-input"
-                                    placeholder="@username"
-                                    defaultValue={user?.username}
-                                    readOnly
-                                />
-                            </div>
-                            <button className="setting-button-secondary" onClick={() => setProfileModal(!openProfileModal)}>Edit Info</button>
-                        </div>
-                    </div>
-                );
             case 'memory':
                 return (
                     <div className="settings-content">
-                        <h3 className="settings-title">Memory Settings</h3>
+                        <h3 className="settings-title">Memory Management</h3>
                         <div className="settings-section">
                             <div className="setting-item">
-                                <label className="setting-label">Conversation Memory</label>
-                                <div className="setting-toggle">
-                                    <input type="checkbox" className="toggle-checkbox" defaultChecked />
-                                    <span className="toggle-slider"></span>
+                                <label className="setting-label">Stored Memories</label>
+                                <p className="setting-description">
+                                    View and manage your stored conversation memories
+                                </p>
+                            </div>
+
+                            {loadingMemories ? (
+                                <div className="memory-loading">
+                                    <p>Loading memories...</p>
                                 </div>
-                                <p className="setting-description">Remember context across conversations</p>
-                            </div>
-                            <div className="setting-item">
-                                <label className="setting-label">Auto-save Conversations</label>
-                                <div className="setting-toggle">
-                                    <input type="checkbox" className="toggle-checkbox" defaultChecked />
-                                    <span className="toggle-slider"></span>
+                            ) : memories.length === 0 ? (
+                                <div className="memory-empty">
+                                    <p>No memories stored yet</p>
                                 </div>
-                            </div>
-                            <div className="setting-item">
-                                <label className="setting-label">Memory Duration</label>
-                                <select className="setting-select">
-                                    <option value="7">7 days</option>
-                                    <option value="30" selected>30 days</option>
-                                    <option value="90">90 days</option>
-                                    <option value="365">1 year</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="settings-section">
-                            <div className="memory-usage">
-                                <h4 className="settings-subtitle">Memory Usage</h4>
-                                <div className="usage-bar">
-                                    <div className="usage-fill" style={{ width: '65%' }}></div>
+                            ) : (
+                                <div className="memory-list">
+                                    {memories.map((memory, index) => (
+                                        <div key={memory.memory_id} className="memory-item">
+                                            <div className="memory-row">
+                                                {/* ✅ Only show the AI-generated description */}
+                                                <div className="memory-text">
+                                                    {memory.text && memory.text !== "" ? (
+                                                        <p>{memory.text}</p>
+                                                    ) : (
+                                                        <p className="no-facts">No description stored in this memory</p>
+                                                    )}
+                                                </div>
+                                                <button
+                                                    className="memory-delete-btn"
+                                                    onClick={() =>
+                                                        setDeleteModal({
+                                                            isOpen: true,
+                                                            memoryId: memory.memory_id,
+                                                            text: memory.text || "No description available"
+                                                        })
+                                                    }
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                                <p className="usage-text">6.5 GB of 10 GB used</p>
-                            </div>
-                            <button className="setting-button-danger">Clear All Memory</button>
+                            )}
                         </div>
                     </div>
+
                 );
             default:
                 return null;
@@ -360,8 +415,6 @@ const ModalSetting = () => {
 
     return (
         <>
-            {user && <ChangePasswordModal isOpen={openPasswordModal} onClose={() => setPasswordModal(!openPasswordModal)} userEmail={user?.email} />}
-            {user && <EditProfileModal isOpen={openProfileModal} onClose={() => setProfileModal(!openProfileModal)} currentName={user?.name ?? ""} currentUsername={user.username} />}
             <div
                 className={`modal-setting-body ${isVisible ? 'modal-setting-visible' : ''}`}
                 onClick={handleBackdropClick}
@@ -378,7 +431,7 @@ const ModalSetting = () => {
                                     <button
                                         key={section.id}
                                         className={`sidebar-item ${activeSection === section.id ? 'active' : ''}`}
-                                        onClick={() => setActiveSection(section.id as 'account' | 'subscription' | 'profile' | 'memory')}
+                                        onClick={() => setActiveSection(section.id as 'account' | 'subscription' | 'system' | 'memory')}
                                     >
                                         <Icon size={18} />
                                         <span>{section.label}</span>
@@ -392,6 +445,18 @@ const ModalSetting = () => {
                     </div>
                 </div>
             </div>
+            {user && <ChangePasswordModal isOpen={openPasswordModal} onClose={() => setPasswordModal(!openPasswordModal)} userEmail={user?.email} />}
+            {user && <EditProfileModal isOpen={openProfileModal} onClose={() => setProfileModal(!openProfileModal)} currentName={user?.name ?? ""} currentUsername={user.username} />}
+            {user && <DeleteMemoryModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ isOpen: false, memoryId: '', text: '' })}
+                memoryTitle={deleteModal.text}
+                memory_id={deleteModal.memoryId}
+                onMemoryDelete={(memoryId) => {
+                    // Handle successful deletion
+                    console.log('Memory deleted:', memoryId);
+                }}
+            />}
 
         </>
     );

@@ -193,7 +193,7 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
                     {/* Owner Section */}
                     <div className="section">
                         <h3 className="section-title">Created by</h3>
-                        <div className="owner-agent-modal-info" >
+                        <div className="owner-modal-info" >
                             <div className="owner-avatar">
                                 {!agentData.avatar && <span>{agentData.owner_name[0].toUpperCase()}</span>}
                                 {agentData.avatar && <img className='owner-avatar' src={agentData.avatar} alt={`${agentData.owner_name}`} />}
