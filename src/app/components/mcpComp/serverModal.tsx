@@ -72,7 +72,7 @@ const McpServerModal = () => {
             </div>
 
             <div className="mcpserver-cont">
-                {mcpServers.length > 0 && <button className="mcp-edit-btn" onClick={() => window.location.hash = '#server/settings'} >
+                {mcpServers.length > 0 && <button className="mcp-edit-btn" onClick={() => router.push('/create/mcp')} >
                     <SquarePen size={20} /> Edit
                 </button>}
                 {mcpServers.map((server, index) => (

@@ -72,12 +72,12 @@ export const imageModels = [
 ];
 
 export const vidoeModels = [
-    { value: "sora", label: "Sora", credits: 5000 },
-    { value: "veo-3-fast", label: "Veo 3 Fast", credits: 2500 },
-    { value: "veo-3-fast-audio", label: "Veo 3 Fast Audio", credits: 4000 },
-    { value: "veo-3-audio", label: "Veo 3 Audio", credits: 7500 },
-    { value: "veo-3", label: "Veo 3", credits: 5000 },
-    { value: "veo-2", label: "Veo 2", credits: 5000 },
+    { value: "sora", label: "Sora", credits: '2000/sec' },
+    { value: "veo-3-fast", label: "Veo 3 Fast", credits: '3000/sec' },
+    { value: "veo-3-fast-audio", label: "Veo 3 Fast Audio", credits: '4500/sec' },
+    { value: "veo-3-audio", label: "Veo 3 Audio", credits: '8000/sec' },
+    { value: "veo-3", label: "Veo 3", credits: '5500/sec' },
+    { value: "veo-2", label: "Veo 2", credits: '5500/sec' },
 ];
 interface LLMStyleParams {
     temperature: number;

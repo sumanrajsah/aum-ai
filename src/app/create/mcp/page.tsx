@@ -89,7 +89,6 @@ const McpServerModalSetting = () => {
                 alertMessage.error('Check your server details');
             }
         } catch (e) {
-            toast.error("Connection failed");
             console.error(e);
         } finally {
             setPending(false);
@@ -103,7 +102,7 @@ const McpServerModalSetting = () => {
         }
 
         if (!user?.uid) {
-            toast.warn("User not authenticated");
+            alertMessage.warn('unauthorized')
             return;
         }
 

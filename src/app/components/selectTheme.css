@@ -186,9 +186,7 @@ html.dark .dropdown-header {
 
 /* Responsive design */
 @media screen and (max-width: 500px) {
-    .custom-theme-selector {
-        width: 80px;
-    }
+
 
     .theme-selector-trigger {
         font-size: 11px;

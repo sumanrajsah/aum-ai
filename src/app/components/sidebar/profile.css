@@ -47,6 +47,33 @@
     background: rgba(94, 129, 173, 0.2);
 }
 
+.upgrade-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg, #4a80ef, #6c9dff);
+    box-shadow: 0 4px 12px rgba(74, 128, 239, 0.4);
+    transition: all 0.25s ease;
+}
+
+.upgrade-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #3d6fd6, #5b8fff);
+    box-shadow: 0 6px 16px rgba(74, 128, 239, 0.5);
+}
+
+.upgrade-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(74, 128, 239, 0.3);
+}
+
 /* User Details Section */
 .user-details {
     width: 98%;

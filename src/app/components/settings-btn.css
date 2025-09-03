@@ -38,6 +38,12 @@
     }
 }
 
+.price-tag {
+    color: rgba(var(--bg-color1));
+    font-size: 12px;
+
+}
+
 .settings-btn-cont {
     position: relative;
     display: flex;

@@ -1,6 +1,6 @@
 'use client'
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { Check, ChevronDown, Layers, PanelRightClose, User2 } from "lucide-react"
+import { Check, ChevronDown, Layers, PanelRightClose, User2, DollarSign } from "lucide-react"
 import './selectModel.css'
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -22,6 +22,7 @@ const SelectModelButton = () => {
             });
         }
     }, []);
+
     // Get the appropriate models based on chat mode
     const getModels = () => {
         switch (chatMode) {
@@ -43,6 +44,12 @@ const SelectModelButton = () => {
         setIsOpen(false);
     };
 
+    // Handle pricing button click
+    const handlePricingClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent dropdown from closing
+        router.push('/pricing')
+    };
+
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: any) => {
@@ -59,14 +66,11 @@ const SelectModelButton = () => {
     useEffect(() => {
         setSelectedModel(Model);
     }, [Model]);
+
     // add near top of file
     type IOCredit = { inputCredits: number; outputCredits: number };
-    type FlatCredit = { credits: number };
     const hasIOCredits = (m: any): m is IOCredit =>
         typeof m?.inputCredits === "number" && typeof m?.outputCredits === "number";
-    const hasFlatCredit = (m: any): m is FlatCredit =>
-        typeof m?.credits === "number";
-
 
     return (
         <div className="custom-model-selector" ref={dropdownRef}>
@@ -87,7 +91,16 @@ const SelectModelButton = () => {
                 <div className="model-dropdown">
                     <div className="dropdown-header">
                         <span className="dropdown-title">Select Model</span>
-                        <span className="mode-badge">{chatMode}</span>
+                        <div className="header-actions">
+                            <span className="mode-badge">{chatMode}</span>
+                            <button
+                                className="pricing-button"
+                                onClick={handlePricingClick}
+                                title="View Pricing"
+                            >
+                                <DollarSign size={10} />Pricing
+                            </button>
+                        </div>
                     </div>
                     <ul className="model-list" role="listbox">
                         {models.map((model) => (
@@ -99,18 +112,17 @@ const SelectModelButton = () => {
                                 aria-selected={selectedModel === model.value}
                             >
                                 <div className="model-info">
-                                    <span className="model-name">{model.label}</span>
+                                    <span className="s-model-name">{model.label}</span>
                                     {hasIOCredits(model) ? (
                                         <div className="model-credits">
                                             <span className="credit-item">Input: {model.inputCredits} </span>
                                             <span className="credit-item">Output: {model.outputCredits} </span>
                                         </div>
-                                    ) : hasFlatCredit(model) ? (
+                                    ) : model.credits ? (
                                         <div className="model-credits">
                                             <span className="credit-item">Credits: {model.credits} </span>
                                         </div>
                                     ) : null}
-
                                 </div>
                                 {selectedModel === model.value && (
                                     <Check className="check-icon" size={16} />
@@ -123,6 +135,5 @@ const SelectModelButton = () => {
         </div>
     );
 };
-
 
 export default SelectModelButton;

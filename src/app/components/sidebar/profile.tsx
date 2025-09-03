@@ -1,13 +1,19 @@
 import { useEffect, useRef } from "react";
 import './profile.css'
-import { BrainCircuit, LogOut, Pickaxe, Server, Settings, Telescope, User2, Wrench, Mail, UserCircle, ScrollText, Headset, Gavel } from "lucide-react";
+import { BrainCircuit, LogOut, Pickaxe, Server, Settings, Telescope, User2, Wrench, Mail, UserCircle, ScrollText, Headset, Gavel, Sparkle, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "../ThemeToggle";
 import { useTheme } from "next-themes";
 import { useAuth } from "../../../hooks/useAuth";
 import { useAlert } from "../../../context/alertContext";
-
+const planOrder = ["free", "plus", "pro", "pro-plus"];
+const planLabels: Record<string, string> = {
+    free: "Free",
+    plus: "Plus",
+    pro: "Pro",
+    "pro-plus": "Pro+",
+};
 const ProfileCont = () => {
     const router = useRouter();
     const { theme } = useTheme();
@@ -48,7 +54,12 @@ const ProfileCont = () => {
             alertMessage.warn("⚠️ Logout failed");
         }
     }
+    if (!user || !user.plan) {
+        return null;
+    }
+    const currentIndex = planOrder.indexOf(user.plan as string);
 
+    const nextPlan = planOrder[currentIndex + 1];
     return (
         <div className="profile-sidebar-body">
             {/* User Details Section */}
@@ -98,6 +109,9 @@ const ProfileCont = () => {
                 </div>
             </div>
 
+            {user?.plan !== 'pro-plus' && <button className="profile-btn upgrade-btn" onClick={() => { router.push('/plan') }}>
+                <Sparkles size={20} />  Upgrade to {planLabels[nextPlan]}
+            </button>}
             <hr />
             <button className="profile-btn" onClick={() => { location.href = '#settings' }}>
                 <Settings size={20} />Settings

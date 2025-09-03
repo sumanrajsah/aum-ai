@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 2px 6px;
     border: 1px solid rgba(var(--bg-color1), 0.2);
     border-radius: 10px;
     text-decoration: none;
@@ -46,11 +46,6 @@ html.dark .file-card {
     border-color: rgba(var(--bg-color1), 0.3);
 }
 
-html.dark .file-card:hover {
-    background-color: rgba(var(--bg-color1), 0.15);
-    box-shadow: 0 4px 12px rgba(var(--bg-color1), 0.3);
-    transform: translateY(-1px);
-}
 
 .file-icon {
     width: 48px;
@@ -66,13 +61,13 @@ html.dark .file-card:hover {
 
 /* Light theme icon */
 html.light .file-icon {
-    background-color: rgba(var(--bg-color1), 0.15);
+    /* background-color: rgba(var(--bg-color1), 0.15); */
     color: rgb(var(--bg-color1));
 }
 
 /* Dark theme icon */
 html.dark .file-icon {
-    background-color: rgba(var(--bg-color1), 0.2);
+    /* background-color: rgba(var(--bg-color1), 0.2); */
     color: rgba(var(--bg-color1), 0.9);
 }
 
@@ -83,7 +78,7 @@ html.dark .file-icon {
 }
 
 .file-name {
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 600;
     margin: 0 0 2px 0;
     overflow: hidden;
@@ -103,7 +98,7 @@ html.dark .file-name {
 }
 
 .file-subtext {
-    font-size: 12px;
+    font-size: 10px;
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;

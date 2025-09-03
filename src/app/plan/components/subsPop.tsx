@@ -872,11 +872,12 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                             <div className="spinner"></div>
                         </div>
                         <h3>Activating Subscription</h3>
+                        <p>Payment verified Successfully</p>
                         <p>We are activating your subscription...</p>
                         <div className="processing-steps">
                             <div className="step completed">
                                 <span className="step-number">✓</span>
-                                <span>Verification</span>
+                                <span>Payment Gateway</span>
                             </div>
                             <div className="step completed">
                                 <span className="step-number">✓</span>

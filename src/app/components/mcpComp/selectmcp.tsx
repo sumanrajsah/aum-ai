@@ -294,7 +294,7 @@ const SelectMcpButton = () => {
                 })}
             </div>
             {selectedTools.length > 0 && <button className="add-mcp-btn" onClick={() => setShowTools(!showTools)}>{showTools ? 'Hide Mcp Functions' : 'Show Mcp Functions'}</button>}
-            <button className="add-mcp-btn" onClick={() => location.hash = '#server/add'}>+ Add Mcp</button>
+            <button className="add-mcp-btn" onClick={() => router.push('/create/mcp')}>+ Add Mcp</button>
 
             {/* Selected Tools Summary */}
             {showTools && selectedTools.length > 0 && (

@@ -18,6 +18,7 @@ import SettingsButton from './settings-button';
 import SelectMcpButton from './mcpComp/selectmcp';
 import { llmModels } from '../utils/models-list';
 import SelectToolButton from './toolComp/toolmodal';
+import { Oval } from 'react-loader-spinner';
 
 interface ChatInputProps {
   pause: boolean;
@@ -104,17 +105,31 @@ const ChatInput = () => {
   const generateFileId = (): string => {
     return Date.now().toString() + Math.random().toString(36);
   };
-
+  const allowedTypes = [
+    "application/pdf",
+    "text/plain",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/rtf",
+  ];
   // Handle multiple file selection
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileLoading(true);
     const files = Array.from(e.target.files || []);
-    if (files.length > 2 || selectedFiles.length > 2) {
+
+    for (const file of files) {
+      if (!(file.type.startsWith("image/") || allowedTypes.includes(file.type))) {
+        alertMessage.warn(`${file.name} is not a supported readable file.`);
+        setFileLoading(false);
+        return;
+      }
+    }
+    if (files.length + selectedFiles.length > 2) {
       alert.warn('files not mre than 2');
       return
     };
     if (files.length === 0) return;
 
-    setFileLoading(true);
     const newFiles: FileData[] = [];
 
     try {
@@ -455,34 +470,19 @@ const ChatInput = () => {
 
         >
           {/* Multiple files preview */}
+          {fileLoading && <div className="files-preview-cont"> <div className='file-view' > <Oval
+            visible={true}
+            height="24"
+            width="24"
+            color="white"
+            ariaLabel="oval-loading"
+            wrapperStyle={{}}
+            strokeWidth={4}
+            wrapperClass=""
+            secondaryColor="white"
+          /></div></div>}
           {selectedFiles.length > 0 && (
             <div className="files-preview-cont">
-              {!fileLoading && <div className='file-view' >Loading</div>}
-              {/* Header with file count and clear all button */}
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '8px',
-                fontSize: '14px',
-
-              }}>
-                <span>{selectedFiles.length} file{selectedFiles.length > 1 ? 's' : ''} selected</span>
-                {selectedFiles.length > 1 && (
-                  <button
-                    onClick={clearAllFiles}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                      textDecoration: 'underline'
-                    }}
-                  >
-                    Clear all
-                  </button>
-                )}
-              </div>
 
               {/* Files grid */}
               <div style={{
@@ -520,7 +520,8 @@ const ChatInput = () => {
                         justifyContent: 'center',
                         borderRadius: '50%',
                         width: '20px',
-                        height: '20px'
+                        height: '20px',
+                        background: theme === 'dark' ? 'black' : 'white'
                       }}
                     >
                       <X size={12} />
@@ -532,8 +533,8 @@ const ChatInput = () => {
                         src={file.image_url}
                         alt={file.filename}
                         style={{
-                          width: '100px',
-                          height: '100px',
+                          width: '50px',
+                          height: '50px',
                           objectFit: 'fill',
                           borderRadius: '4px'
                         }}
@@ -542,8 +543,8 @@ const ChatInput = () => {
                       <div className='file-view' >
                         {fileLoading ? 'Loading...' : (
                           <div>
-                            <Paperclip size={16} style={{ marginBottom: '4px' }} />
                             <FilePreview
+                              show={false}
                               fileName={file.filename}
                               fileUrl={file.file_url || file.file_data || ''}
                             />
@@ -615,7 +616,7 @@ const ChatInput = () => {
             </div>
           </div>
           {<SettingsButton openModal={openSettingsModal} onClose={() => { setSettingsModal(false) }} />}
-          {openAttachModal && <div className='attach-btn-modal' ref={attachModalRef} onClick={(e) => { e.stopPropagation(); }}>
+          {openAttachModal && <div className='attach-btn-modal' ref={attachModalRef} onClick={(e) => { e.stopPropagation() }}>
             <button
               className="attach-child-btn"
               onClick={() => fileInputRef.current?.click()}
@@ -625,7 +626,10 @@ const ChatInput = () => {
                 ref={fileInputRef}
                 type="file"
                 style={{ display: 'none' }}
-                onChange={handleFileSelect}
+                onChange={(e) => {
+                  handleFileSelect(e);       // your upload logic
+                  setOpenAttachModal(false); // close modal after selection
+                }}
                 accept="*/*"
                 multiple
               />

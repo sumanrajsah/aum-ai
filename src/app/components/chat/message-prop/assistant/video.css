@@ -1,30 +1,27 @@
 .video-card {
     position: relative;
-    display: inline-block;
-    width: 300px;
+    display: block;
+    width: 100%;
     max-width: 300px;
-    break-inside: avoid;
+    flex-shrink: 0;
     cursor: pointer;
     overflow: hidden;
     border-radius: 40px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 0;
+    /* Remove default margin */
 }
-
 
 .video-card:hover .video-card-footer {
     opacity: 1;
     visibility: visible;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
 }
 
 .video-card:hover .vid {
     transform: scale(1.05);
 }
 
-.video-card-vid-cont {
+.video-card-img-cont {
     position: relative;
     width: 100%;
     overflow: hidden;
@@ -43,12 +40,30 @@ video {
 }
 
 .loading-vid-container {
-    width: 300px;
-    height: 300px;
+    width: 100%;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+}
+
+.error-vid-container {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    border-radius: 40px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(221, 220, 220, 0.1);
+    flex-shrink: 0;
+}
+
+.video-error {
+    color: #ff6b6b;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
 }
 
 .loading-vid {
@@ -102,10 +117,12 @@ html.dark .loading-vid {
     }
 }
 
-
 .video-card-footer {
     position: absolute;
-
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -114,8 +131,10 @@ html.dark .loading-vid {
             rgba(0, 0, 0, 0.1) 0%,
             rgba(0, 0, 0, 0.3) 50%,
             rgba(0, 0, 0, 0.7) 100%);
+    opacity: 0;
+    visibility: hidden;
     transition: all 0.3s ease;
-    border-radius: 12px;
+    border-radius: 40px;
     gap: 10px;
 }
 
@@ -134,19 +153,25 @@ html.dark .loading-vid {
     backdrop-filter: blur(10px);
 }
 
-.vid-card-footer-btn:hover {
+.vid-card-footer-btn:hover:not(:disabled) {
     background: rgba(0, 0, 0, 0.9);
     transform: scale(1.1);
 }
 
-.vid-card-footer-btn:active {
+.vid-card-footer-btn:active:not(:disabled) {
     transform: scale(0.95);
+}
+
+.vid-card-footer-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .video-card {
-        margin-bottom: 15px;
+        margin-bottom: 0;
+        max-width: 100%;
     }
 
     .vid-card-footer-btn {
@@ -158,29 +183,54 @@ html.dark .loading-vid {
         gap: 8px;
         opacity: 1;
         visibility: visible;
-        background: none;
-        bottom: 1%;
-        right: 1%;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        bottom: 10px;
+        right: 10px;
+        top: auto;
+        left: auto;
+        width: auto;
+        border-radius: 20px;
+        padding: 8px;
     }
 }
 
 /* Loading state improvements */
 .video-card.loading {
-    background: grey;
+    background: rgba(128, 128, 128, 0.1);
 }
 
 .video-card.loading .loading-vid {
-    height: 200px;
+    min-height: 200px;
+}
+
+/* Flex-based layout optimization */
+.video-card {
+    flex: none;
+    /* Prevents flex grow/shrink issues */
+}
+
+/* Better performance for scroll containers */
+.video-card {
+    contain: layout style paint;
+    will-change: transform;
 }
 
 @media (max-width: 600px) {
     .video-card.loading .loading-vid {
-        height: 150px;
+        min-height: 150px;
     }
+
 }
 
 @media (max-width: 350px) {
     .video-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .loading-vid-container,
+    .error-vid-container {
         width: 100%;
     }
 }
@@ -206,4 +256,33 @@ html.dark .loading-vid {
     max-height: 90vh;
     object-fit: contain;
     border-radius: 8px;
+}
+
+/* Focus states for accessibility */
+.vid-card-footer-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 2px;
+}
+
+/* Smooth transitions for all states */
+.video-card * {
+    transition: all 0.2s ease;
+}
+
+/* Improved loading animation performance */
+.loading-vid {
+    will-change: background-position;
+}
+
+/* Better error state styling */
+.error-vid-container {
+    border: 2px dashed rgba(255, 107, 107, 0.3);
+}
+
+html.dark .error-vid-container {
+    background: rgba(40, 40, 40, 0.1);
+}
+
+html.light .error-vid-container {
+    background: rgba(250, 250, 250, 0.1);
 }

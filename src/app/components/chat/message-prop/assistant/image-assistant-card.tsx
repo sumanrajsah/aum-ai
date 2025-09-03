@@ -2,7 +2,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './image.css';
 import { useChat, useImagePlaygound } from '@/context/ChatContext';
-import { Download, Expand, Images, SquarePen } from 'lucide-react';
+import { Download, Expand, Images, SquarePen, Trash2 } from 'lucide-react';
+import { useAlert } from '@/context/alertContext';
+
 
 interface ChatMessageProps {
     data?: ImageMetadata;
@@ -10,11 +12,13 @@ interface ChatMessageProps {
 }
 
 const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
-    const { setExpandImage } = useImagePlaygound(); // Fixed typo
+    const { setExpandImage } = useImagePlaygound();
     const [imageLoaded, setImageLoaded] = useState(false);
     const [shouldLoadImage, setShouldLoadImage] = useState(false);
+    const [imageError, setImageError] = useState(false);
     const { setEditInput } = useChat();
     const imageCardRef = useRef<HTMLDivElement>(null);
+    const alert = useAlert();
 
     // Intersection Observer for lazy loading
     useEffect(() => {
@@ -44,29 +48,57 @@ const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
         };
     }, [data]);
 
-    // Load image when shouldLoadImage becomes true
+    // Image loading effect - only runs when shouldLoadImage is true
     useEffect(() => {
-        if (!data || !shouldLoadImage) return;
+        if (!data?.image_url || !shouldLoadImage) {
+            setImageLoaded(false);
+            setImageError(false);
+            return;
+        }
 
-        const img = new Image(); // Simplified image creation
+        // Reset states when URL changes
+        setImageLoaded(false);
+        setImageError(false);
+
+        const img = new Image();
         img.src = data.image_url;
 
-        img.onload = () => {
+        const handleLoad = () => {
             setImageLoaded(true);
+            setImageError(false);
         };
 
-        img.onerror = (error: any) => {
-            console.log("Image failed to load:", data.image_url, error.type || "Unknown error");
-            setImageLoaded(false); // Still set to true to hide loading state
+        const handleError = (error: Event | string) => {
+            console.error("Image failed to load:", data.image_url, error);
+            setImageError(true);
+            setImageLoaded(false);
+        };
+
+        img.addEventListener('load', handleLoad);
+        img.addEventListener('error', handleError);
+
+        // Cleanup function
+        return () => {
+            img.removeEventListener('load', handleLoad);
+            img.removeEventListener('error', handleError);
+            img.src = '';
         };
     }, [data?.image_url, shouldLoadImage]);
 
     const handleDownload = async (imageUrl: string) => {
+        alert.success('Downloading...');
         try {
-            // Try direct download first
-            const response = await fetch(imageUrl);
-            if (!response.ok) {
-                throw new Error('Failed to fetch image');
+            // Try direct download first, fallback to proxy if needed
+            let response;
+            try {
+                response = await fetch(imageUrl, {
+                    mode: 'cors'
+                });
+                if (!response.ok) throw new Error('Direct fetch failed');
+            } catch {
+                // Fallback to proxy (note: cors-anywhere requires approval for production)
+                const proxyUrl = `https://cors-anywhere.herokuapp.com/${imageUrl}`;
+                response = await fetch(proxyUrl);
             }
 
             const blob = await response.blob();
@@ -79,9 +111,11 @@ const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
             link.click();
             document.body.removeChild(link);
             window.URL.revokeObjectURL(blobUrl);
+            alert.success('Download completed!');
         } catch (err) {
-            console.error('Image download failed:', err);
+            // console.error('Image download failed:', err);
             // Fallback: open image in new tab
+            alert.error('Download failed. Please try again.');
             window.open(imageUrl, '_blank');
         }
     };
@@ -90,8 +124,8 @@ const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
         return (
             <div className="image-card">
                 <div className="loading-img-container">
-                    <div className="loading-img" >
-                        <Images size={40} />
+                    <div className="loading-img">
+                        <Images size={40} color='grey' />
                     </div>
                 </div>
             </div>
@@ -103,52 +137,69 @@ const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
     return (
         <div className="image-card" ref={imageCardRef}>
             <div className="image-card-img-cont">
-                {/* Show loading state until image is loaded */}
-                {(!imageLoaded || !shouldLoadImage) && (
+                {/* Show loading state until image should load and is loaded */}
+                {(!shouldLoadImage || (!imageLoaded && !imageError)) && (
                     <div className="loading-img-container">
-                        <div className="loading-img" >
-                            <Images size={40} />
+                        <div className="loading-img">
+                            <Images size={40} color='grey' />
                         </div>
                     </div>
                 )}
 
-                {imageLoaded && shouldLoadImage && (
+                {shouldLoadImage && imageError && (
+                    <div className="error-img-container">
+                        <div className="image-error">
+                            <p>Failed to load image</p>
+                        </div>
+                    </div>
+                )}
+
+                {shouldLoadImage && imageLoaded && !imageError && (
                     <img
                         src={data.image_url}
-                        alt={data.revised_prompt}
+                        alt={data.revised_prompt || data.prompt || 'Generated image'}
                         className="img"
-                        loading="lazy" // Native lazy loading as fallback
+                        onError={() => setImageError(true)}
                     />
                 )}
 
-                <div className="image-card-footer">
-                    <button
-                        className="img-card-footer-btn"
-                        onClick={() => {
-                            setEditInput(data.prompt);
-                        }}
-                        aria-label="Edit prompt"
-                    >
-                        <SquarePen size={18} />
-                    </button>
-                    <button
-                        className="img-card-footer-btn"
-                        onClick={() => {
-                            setExpandImage(data);
-                            window.location.hash = 'image'; // More explicit window reference
-                        }}
-                        aria-label="Expand image"
-                    >
-                        <Expand size={18} />
-                    </button>
-                    <button
-                        className="img-card-footer-btn"
-                        onClick={() => handleDownload(data.image_url)}
-                        aria-label="Download image"
-                    >
-                        <Download size={18} />
-                    </button>
-                </div>
+                {shouldLoadImage && imageLoaded && (
+                    <div className="image-card-footer">
+                        <button
+                            className="img-card-footer-btn"
+                            onClick={() => setEditInput(data.prompt)}
+                            title="Edit prompt"
+                        >
+                            <SquarePen size={18} />
+                        </button>
+                        <button
+                            className="img-card-footer-btn"
+                            onClick={() => {
+                                setExpandImage(data);
+                                window.location.hash = 'image';
+                            }}
+                            title="Expand image"
+                        >
+                            <Expand size={18} />
+                        </button>
+                        <button
+                            className="img-card-footer-btn"
+                            onClick={() => handleDownload(data.image_url)}
+                            title="Download image"
+                            disabled={!imageLoaded || imageError}
+                        >
+                            <Download size={18} />
+                        </button>
+                        <button
+                            className="img-card-footer-btn"
+                            onClick={() => handleDownload(data.image_url)}
+                            title="Download image"
+                            disabled={!imageLoaded || imageError}
+                        >
+                            <Trash2 size={18} />
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

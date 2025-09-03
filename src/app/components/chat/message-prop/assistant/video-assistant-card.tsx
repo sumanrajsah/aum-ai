@@ -1,10 +1,10 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
 import './video.css';
-import { useChat, useImagePlaygound, useVideoPlayground } from '@/context/ChatContext';
-import { Download, Expand, Info, Play, SquarePen, Video } from 'lucide-react';
-import { set } from 'lodash';
+import { useChat, useVideoPlayground } from '@/context/ChatContext';
+import { Download, Expand, Play, SquarePen, Trash2 } from 'lucide-react';
 import { useAlert } from '@/context/alertContext';
+
 
 interface VideoProps {
     data?: VideoMetadata;
@@ -12,7 +12,7 @@ interface VideoProps {
 }
 
 const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
-    const { setExpandVideo, expandVideo } = useVideoPlayground();
+    const { setExpandVideo } = useVideoPlayground();
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
     const [videoError, setVideoError] = useState(false);
@@ -115,7 +115,7 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
 
             alert.success('Download completed!');
         } catch (err) {
-            console.error('Video download failed:', err);
+            // console.error('Video download failed:', err);
             alert.error('Download failed. Please try again.');
         }
     };
@@ -124,7 +124,7 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
         return (
             <div className="video-card">
                 <div className="loading-vid-container">
-                    <div className="loading-vid" >
+                    <div className="loading-vid">
                         <Play size={40} color='grey' />
                     </div>
                 </div>
@@ -140,15 +140,17 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
                 {/* Show loading state until video should load and is loaded */}
                 {(!shouldLoadVideo || (!videoLoaded && !videoError)) && (
                     <div className="loading-vid-container">
-                        <div className="loading-vid" >
+                        <div className="loading-vid">
                             <Play size={40} color='grey' />
                         </div>
                     </div>
                 )}
 
                 {shouldLoadVideo && videoError && (
-                    <div className="video-error">
-                        <p>Failed to load video</p>
+                    <div className="error-vid-container">
+                        <div className="video-error">
+                            <p>Failed to load video</p>
+                        </div>
                     </div>
                 )}
 
@@ -164,33 +166,43 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
                     />
                 )}
 
-                {shouldLoadVideo && videoLoaded && <div className="video-card-footer">
-                    <button
-                        className="vid-card-footer-btn"
-                        onClick={() => setEditInput(data.prompt)}
-                        title="Edit prompt"
-                    >
-                        <SquarePen size={18} />
-                    </button>
-                    <button
-                        className="vid-card-footer-btn"
-                        onClick={() => {
-                            setExpandVideo(data);
-                            location.hash = 'video';
-                        }}
-                        title="Expand video"
-                    >
-                        <Expand size={18} />
-                    </button>
-                    <button
-                        className="vid-card-footer-btn"
-                        onClick={() => handleDownload(data.video_url)}
-                        title="Download video"
-                        disabled={!videoLoaded || videoError}
-                    >
-                        <Download size={18} />
-                    </button>
-                </div>}
+                {shouldLoadVideo && videoLoaded && (
+                    <div className="video-card-footer">
+                        <button
+                            className="vid-card-footer-btn"
+                            onClick={() => setEditInput(data.prompt)}
+                            title="Edit prompt"
+                        >
+                            <SquarePen size={18} />
+                        </button>
+                        <button
+                            className="vid-card-footer-btn"
+                            onClick={() => {
+                                setExpandVideo(data);
+                                window.location.hash = 'video';
+                            }}
+                            title="Expand video"
+                        >
+                            <Expand size={18} />
+                        </button>
+                        <button
+                            className="vid-card-footer-btn"
+                            onClick={() => handleDownload(data.video_url)}
+                            title="Download video"
+                            disabled={!videoLoaded || videoError}
+                        >
+                            <Download size={18} />
+                        </button>
+                        <button
+                            className="vid-card-footer-btn"
+                            onClick={() => handleDownload(data.video_url)}
+                            title="Download video"
+                            disabled={!videoLoaded || videoError}
+                        >
+                            <Trash2 size={18} />
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

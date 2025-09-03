@@ -23,8 +23,6 @@ const Modal = () => {
     const modalRef = useRef<HTMLDivElement | null>(null);
     const { theme } = useTheme();
     const pathname = usePathname();
-    const [openMcpServerSetting, setOpenMcpServerSetting] = useState<boolean>(false);
-    const [openMcpServer, setOpenMcpServer] = useState<boolean>(false);
     const [openToolsModal, setOpenToolsModal] = useState<boolean>(false);
     const [openWorkspaceCreateModal, setOpenWorkspaceCreateModal] = useState<boolean>(false);
     const [openChatReanmeModal, setOpenChatRenameModal] = useState<boolean>(false);
@@ -38,9 +36,6 @@ const Modal = () => {
         const handleHash = () => {
             const hash = window.location.hash;
             //console.log('HASH:', hash);
-
-            setOpenMcpServerSetting(hash === '#server/add');
-            setOpenMcpServer(hash === '#server');
             setOpenToolsModal(hash === '#tools');
             setOpenWorkspaceCreateModal(hash === '#workspace/create');
             setOpenChatRenameModal(hash.includes('#renamechat'))
@@ -62,8 +57,6 @@ const Modal = () => {
 
     return (
         <>
-            {openMcpServerSetting && user?.uid && <McpServerModalSetting />}
-            {openMcpServer && user?.uid && <McpServerModal />}
             {openToolsModal && user?.uid && <ToolsModal />}
             {openWorkspaceCreateModal && user?.uid && <WorkspaceCreateModal />}
             {openChatReanmeModal && user?.uid && <RenameChatModal />}

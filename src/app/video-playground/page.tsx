@@ -1,43 +1,33 @@
 "use client"
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from 'axios';
-import Image from 'next/image';
-import { SyncLoader } from 'react-spinners';
-import { useSelector, useDispatch } from 'react-redux';
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import './style.css'
 
-import { Archive, CircleFadingPlus, EllipsisVertical, PanelRightClose, PanelRightOpen, ScrollText, Sun, Trash2, User, User2 } from "lucide-react";
-import { useTheme } from "next-themes";
-import Modal from "../components/modal";
-import TextAssistantMessage from "../components/chat/message-prop/assistant/text-assistant";
-import TextUserMessage from "../components/chat/message-prop/user/text-user";
 import { useAlert } from "@/context/alertContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useChat, useVideoPlayground } from "@/context/ChatContext";
-import ChatMessage from "../components/chatMessage";
 import ChatInput from "../components/chatInput";
 import { vidoeModels } from "../utils/models-list";
 import VideoAssistantCard from "../components/chat/message-prop/assistant/video-assistant-card";
 
+
+
 export default function VideoPlayground() {
-    const { messages, aiTyping, setIsChatRoom, memoizedHistory, setMessages, selectLanguage, language, setChatPage, alertModel, setAlertModel, setChatMode, selectModel, chatMode, Model } = useChat();
-    const abortControllerRef = useRef<AbortController | null>(null);
+    const { setChatPage, setIsChatRoom, setAlertModel, setChatMode, selectModel, chatMode, Model } = useChat();
     const router = useRouter();
     const [selectedChat, setSelectedChat] = useState<string | null>(null);
-    const [openDisconnecModel, setOpenDisconnectModel] = useState<boolean>(false);
     const [isInitialized, setIsInitialized] = useState<boolean>(false);
-    const { allVideos, creatingVideo, setAllVideos, setExpandVideo, expandVideo } = useVideoPlayground();
+    const { allVideos, creatingVideo, setExpandVideo, expandVideo } = useVideoPlayground();
 
-    const { user, status } = useAuth();
+    const { user } = useAuth();
     const modalRef = useRef<HTMLDivElement | null>(null);
-    const { theme } = useTheme();
     const alertMessage = useAlert();
     const [columns, setColumns] = useState<any[][]>([]);
 
     const videoModelValues = vidoeModels.map(model => model.value);
 
-    // Fix 1: Use a separate state to track initialization and prevent early returns
+    // Fix initialization and redirect logic
     useEffect(() => {
         let needsRedirect = false;
         let newUrl = '';
@@ -70,20 +60,15 @@ export default function VideoPlayground() {
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                setOpenDisconnectModel(false);
+                // Handle modal close logic here if needed
             }
         }
 
-        if (openDisconnecModel) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [openDisconnecModel]);
+    }, []);
 
     useEffect(() => {
         setChatPage(true);
@@ -94,26 +79,28 @@ export default function VideoPlayground() {
     }, [user, setChatPage, setIsChatRoom, setAlertModel]);
 
     async function deleteChat() {
+        if (!selectedChat || !user?.uid) return;
+
         try {
             const response = await axios.delete(
                 `${process.env.NEXT_PUBLIC_API_URI}/v1/chat/deleteChat`,
                 {
-                    data: { chat_id: selectedChat, uid: user?.uid },
+                    data: { chat_id: selectedChat, uid: user.uid },
                     withCredentials: true,
                 }
             );
-            console.log(response);
 
             if (response.data.status === 'success') {
-                setSelectedChat('');
+                setSelectedChat(null);
                 alertMessage.success('Deleted');
             }
         } catch (error) {
             console.error('Error deleting chat:', error);
+            alertMessage.error('Failed to delete chat');
         }
     }
 
-    function splitIntoColumns(items: any[], columnCount: number) {
+    function splitIntoColumns(items: any[], columnCount: number): any[][] {
         const columns: any[][] = Array.from({ length: columnCount }, () => []);
         items.forEach((item: any, i: number) => {
             columns[i % columnCount].push(item);
@@ -121,12 +108,13 @@ export default function VideoPlayground() {
         return columns;
     }
 
+    const getColumnCount = (): number => {
+        if (typeof window === 'undefined') return 3;
 
-    const getColumnCount = () => {
         const width = window.innerWidth;
         if (width < 600) return 1;
         if (width < 900) return 2;
-        if (width < 1000) return 3;
+        if (width < 1200) return 3;
         return 3;
     };
 
@@ -142,21 +130,48 @@ export default function VideoPlayground() {
 
     useEffect(() => {
         updateColumns();
-        window.addEventListener('resize', updateColumns);
-        return () => window.removeEventListener('resize', updateColumns);
+
+        const handleResize = () => {
+            updateColumns();
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, [allVideos, creatingVideo]);
 
+    // Don't render until properly initialized
+    if (!isInitialized) {
+        return (
+            <div className="video-playground-body">
+                <div className="loading-container">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
             {selectedChat && (
                 <div className="alert-cont">
-                    <div className="delete-alert">
+                    <div className="delete-alert" ref={modalRef}>
                         <h2>Delete Chat</h2>
                         <hr />
-                        <p>This will Delete your chat.<br />Are You sure? You want to continue.</p>
-                        <div className="delete-btn" style={{ background: 'transparent' }} onClick={() => { setSelectedChat('') }}>Cancel</div>
-                        <div className="delete-btn" onClick={deleteChat}>Delete</div>
+                        <p>This will delete your chat.<br />Are you sure you want to continue?</p>
+                        <div className="alert-buttons">
+                            <button
+                                className="delete-btn cancel-btn"
+                                onClick={() => setSelectedChat(null)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="delete-btn confirm-btn"
+                                onClick={deleteChat}
+                            >
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
@@ -164,18 +179,25 @@ export default function VideoPlayground() {
             <div className="video-playground-body">
                 <div className="video-playground-gallery">
                     {columns.map((col, colIndex) => (
-                        <div className="masonryv-column" key={colIndex}>
+                        <div className="masonry-column" key={colIndex}>
                             {col.map((video, i) => (
                                 <VideoAssistantCard
-                                    key={(video.image_id ?? 'loading') + (video.created ?? i)}
-                                    data={video}
-                                    loading={false}
+                                    key={video.video_id || video.image_id || `loading-${i}`}
+                                    data={video.loading ? undefined : video}
+                                    loading={video.loading || false}
                                 />
                             ))}
                         </div>
                     ))}
                 </div>
+
+                {allVideos.length === 0 && !creatingVideo && (
+                    <div className="empty-state">
+                        <p>No videos yet. Create your first video!</p>
+                    </div>
+                )}
             </div>
+
             <ChatInput />
         </>
     );

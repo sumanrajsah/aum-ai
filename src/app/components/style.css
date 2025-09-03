@@ -240,10 +240,14 @@ html.light .send {
 }
 
 .file-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     font-size: 6px;
-    width: 100px;
-    height: 100px;
-    border-radius: 5px;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
     background: rgba(128, 128, 128, 0.144);
     box-shadow: 0 4px 6px rgba(114, 114, 114, 0.1);
     overflow: hidden;

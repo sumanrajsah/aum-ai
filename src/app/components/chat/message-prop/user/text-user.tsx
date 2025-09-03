@@ -277,7 +277,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, role, type, file
 
 
                 {type === 'file' && <div>
-                    <FilePreview fileName={filename ?? ''} fileUrl={content} />
+                    <FilePreview fileName={filename ?? ''} fileUrl={content} show={true} />
                 </div>}
 
                 {!(type === 'event') && <div

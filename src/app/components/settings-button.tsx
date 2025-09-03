@@ -7,6 +7,7 @@ import { useTheme } from "next-themes"
 import { useChat, useImagePlaygound, useVideoPlayground } from "../../context/ChatContext"
 import { getAllLLMStyles, getLLMParamsByStyle, imageModels, llmModels, vidoeModels } from "../utils/models-list"
 import { useLLMStyleStore } from "@/store/useLLMStyleStore"
+import { calculateImagePrice, calculateVideoPrice } from "../utils/pricing"
 
 interface SettingsButtonProps {
     openModal: boolean
@@ -40,6 +41,15 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+    useEffect(() => {
+        if (Model.includes("veo")) {
+            setVideoSettings((prev) => ({
+                ...prev,
+                resolution: "720p",
+            }));
+        }
+    }, [Model, setVideoSettings]);
+
 
     if (!openModal) return null;
 
@@ -48,7 +58,18 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
             <div className="settings-btn-modal" ref={modalRef} >
                 <label>Settings</label>
                 {chatMode === 'image' &&
-                    <>
+                    <> {(() => {
+                        const price = calculateImagePrice(
+                            Model,
+                            imageSettings.size,
+                            imageSettings.quality
+                        );
+                        return (
+                            <span className="price-tag">
+                                *Price: {price.credits} credits*
+                            </span>
+                        );
+                    })()}
                         {Model === 'dalle-3' && <div className="settings-btn-cont">
                             <label><TvMinimal size={16} />Size</label>
                             <select className="model-selector-trigger" onChange={(e) => { setImageSettings(prev => ({ ...prev, size: e.target.value })) }} defaultValue={imageSettings.size}>
@@ -113,30 +134,44 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
 
                 }
                 {chatMode === 'video' &&
-                    <>{Model.includes('sora') && <div className="settings-btn-cont">
-                        <label><TvMinimal size={16} />Resolution</label>
-                        <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, resolution: e.target.value })) }} defaultValue={videoSettings.resolution}>
-                            <option value='480p'>480p</option>
-                            <option value='720p'>720p</option>
-                            <option value='1080p'>1080p</option>
-                        </select>
-                        <hr />
-                        <label><MonitorSmartphone size={16} />Ratio</label>
-                        <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, ratio: e.target.value })) }} defaultValue={videoSettings.ratio}>
-                            <option value='1:1'>1:1</option>
-                            <option value='9:16'>9:16</option>
-                            <option value='16:9'>16:9</option>
-                        </select>
-                        <hr />
-                        <label><Timer size={16} />Durations</label>
-                        <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, duration: e.target.value })) }} defaultValue={videoSettings.duration}>
-                            <option value='5'>5 seconds</option>
-                            <option value='10'>10 seconds</option>
-                            <option value='15'>15 seconds</option>
-                            <option value='20'>20 seconds</option>
-                        </select>
+                    <>
+                        {(() => {
+                            const price = calculateVideoPrice(
+                                Model,
+                                videoSettings.resolution || "720p",
+                                videoSettings.ratio || "16:9",
+                                Number(videoSettings.duration) || 5
+                            );
+                            return (
+                                <span className="price-tag">
+                                    *Price: {price.credits} credits*
+                                </span>
+                            );
+                        })()}{Model.includes('sora') && <div className="settings-btn-cont">
+                            <label><TvMinimal size={16} />Resolution</label>
+                            <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, resolution: e.target.value })) }} defaultValue={videoSettings.resolution}>
+                                <option value='480p'>480p</option>
+                                <option value='720p'>720p</option>
+                                <option value='1080p'>1080p</option>
+                            </select>
+                            <hr />
+                            <label><MonitorSmartphone size={16} />Ratio</label>
+                            <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, ratio: e.target.value })) }} defaultValue={videoSettings.ratio}>
+                                <option value='1:1'>1:1</option>
+                                <option value='9:16'>9:16</option>
+                                <option value='16:9'>16:9</option>
+                            </select>
+                            <hr />
+                            <label><Timer size={16} />Durations</label>
+                            <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, duration: e.target.value })) }} defaultValue={videoSettings.duration}>
+                                <option value='5'>5 seconds</option>
+                                <option value='10'>10 seconds</option>
+                                <option value='15'>15 seconds</option>
+                                <option value='20'>20 seconds</option>
+                            </select>
 
-                    </div>}
+
+                        </div>}
                         {Model.includes('veo') && <div className="settings-btn-cont">
                             <label><TvMinimal size={16} />Resolution</label>
                             <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, resolution: e.target.value })) }} defaultValue={videoSettings.resolution}>
