@@ -245,6 +245,7 @@ export default function CollabSignUp() {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/auth/signup`, {
                 method: 'POST',
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -255,7 +256,7 @@ export default function CollabSignUp() {
 
             if (data.message === "success") {
                 alert.success("Account created successfully! Please check your email to verify your account.");
-                router.push("/login");
+                location.href = "/login";
             } else {
                 alert.warn(data.message || "Signup failed. Please try again.");
             }

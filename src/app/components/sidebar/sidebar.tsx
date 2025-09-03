@@ -247,7 +247,7 @@ const Sidebar = () => {
                     <SidebarButton className="sidebar-button-2" data-tooltip="Image studio" onClick={() => { router.push(currentWorkspace === '' ? `/image-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/image-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>
                         <Limage size={20} />
                     </SidebarButton >
-                    <SidebarButton className="sidebar-button-2" data-tooltip="Video studio" onClick={() => { router.push(currentWorkspace === '' ? `/video-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/video-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>
+                    <SidebarButton className="sidebar-button-2" data-tooltip={"Video studio"} onClick={() => { router.push(currentWorkspace === '' ? `/video-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/video-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>
                         <Play size={20} />
                     </SidebarButton >
 

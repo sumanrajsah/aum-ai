@@ -119,6 +119,41 @@ const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
             window.open(imageUrl, '_blank');
         }
     };
+    async function deleteImage(imageId: string) {
+        alert.success('Deleting...');
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URI}/v1/image/delete`,
+                {
+                    method: "DELETE",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ image_id: imageId }),
+                }
+            );
+
+            let data: any;
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error("Invalid server response");
+            }
+
+            if (!res.ok) {
+                throw new Error(data?.error || "Failed to delete image");
+            }
+            alert.success('Deleted');
+            location.href = '/image-playground'
+            return data;
+        } catch (err: any) {
+            // Differentiate between network error and API error
+            if (err.name === "TypeError") {
+                // e.g. fetch failed due to CORS, network down, etc.
+                throw new Error("Network error: Unable to reach server");
+            }
+            throw err;
+        }
+    }
 
     if (loading) {
         return (
@@ -192,8 +227,8 @@ const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
                         </button>
                         <button
                             className="img-card-footer-btn"
-                            onClick={() => handleDownload(data.image_url)}
-                            title="Download image"
+                            onClick={() => deleteImage(data.image_id)}
+                            title="Delete"
                             disabled={!imageLoaded || imageError}
                         >
                             <Trash2 size={18} />

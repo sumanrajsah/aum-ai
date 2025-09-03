@@ -182,9 +182,9 @@ export default function Workspace({ params }: { params: Promise<{ wid: string }>
                 >
                     {(messages.length == 0) && <div className="quote" >
                         <p>You're now in {workspaces.find(ws => ws.wid === wid)?.name}</p>
-                        <div className="workspace-btn-cont">
+                        {/* <div className="workspace-btn-cont">
                             <button className="workspace-btn" onClick={() => setShowInstructions(true)}>Add Instructions</button>
-                        </div>
+                        </div> */}
                     </div>}
 
                     {messages.map((msg, index) => (

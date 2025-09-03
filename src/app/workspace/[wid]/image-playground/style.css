@@ -1,51 +1,284 @@
 .image-playground-body {
     position: relative;
-    flex-grow: 1;
+    flex: 1 1 auto;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     background: transparent;
     gap: 20px;
-    min-height: 70vh;
-    overflow-y: auto;
+    min-height: 0;
+    /* Allow flex item to shrink */
+    max-height: 100%;
+    /* Ensure it doesn't exceed parent height */
     width: 100%;
-    padding-bottom: 10vh;
+    padding: 20px;
+    padding-bottom: 20vh;
 }
 
 .image-playground-gallery {
     display: flex;
     justify-content: center;
-    column-gap: 20px;
+    gap: 10px;
     width: 100%;
-    max-width: 1000px;
-    height: 100%;
-
+    max-width: 900px;
+    flex-shrink: 0;
+    /* Prevent gallery from shrinking */
 }
 
 .masonry-column {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+    /* Prevents flex items from overflowing */
+}
+
+/* Loading state */
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    width: 100%;
+}
+
+.loading-container p {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Empty state */
+.empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40vh;
+    width: 100%;
+    text-align: center;
+}
+
+.empty-state p {
+    font-size: 18px;
+    color: #888;
+    margin: 0;
+}
+
+/* Alert/Modal styles */
+.alert-cont {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.delete-alert {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+html.dark .delete-alert {
+    background: #2a2a2a;
+    color: white;
+}
+
+.delete-alert h2 {
+    margin: 0 0 15px 0;
+    font-size: 24px;
+    color: #333;
+}
+
+html.dark .delete-alert h2 {
+    color: white;
+}
+
+.delete-alert hr {
+    border: none;
+    height: 1px;
+    background: #eee;
+    margin: 15px 0;
+}
+
+html.dark .delete-alert hr {
+    background: #555;
+}
+
+.delete-alert p {
+    margin: 20px 0;
+    line-height: 1.5;
+    color: #666;
+}
+
+html.dark .delete-alert p {
+    color: #ccc;
+}
+
+.alert-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.delete-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+.cancel-btn {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    background: #e5e5e5;
+}
+
+.confirm-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: #c82333;
+}
+
+html.dark .cancel-btn {
+    background: #555;
+    color: white;
+}
+
+html.dark .cancel-btn:hover {
+    background: #666;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .image-playground-gallery {
+        max-width: 900px;
+        gap: 15px;
+    }
 }
 
 @media (max-width: 900px) {
     .image-playground-gallery {
-        columns: 2;
-        column-gap: 15px;
+        gap: 10px;
+        padding-bottom: 20vh;
+    }
+
+    .masonry-column {
+        gap: 15px;
+    }
+
+    .image-playground-body {
+        padding: 15px;
+        gap: 15px;
     }
 }
 
 @media (max-width: 600px) {
     .image-playground-gallery {
-        columns: 2;
-        column-gap: 10px;
+        gap: 8px;
+    }
+
+    .masonry-column {
+        gap: 12px;
+    }
+
+    .image-playground-body {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .delete-alert {
+        padding: 25px;
+        margin: 20px;
+    }
+
+    .alert-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .delete-btn {
+        width: 100%;
     }
 }
 
 @media (max-width: 400px) {
-    .image-playground-gallery {
-        columns: 1;
-        column-gap: 0;
+    .image-playground-body {
+        padding: 8px;
     }
+
+    .image-playground-gallery {
+        gap: 5px;
+    }
+
+    .masonry-column {
+        gap: 10px;
+    }
+}
+
+/* Smooth scrolling */
+.image-playground-body {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    /* Firefox */
+}
+
+/* Webkit browsers scrollbar styling */
+.image-playground-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.image-playground-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.image-playground-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+html.dark .image-playground-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.image-playground-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+html.dark .image-playground-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Performance optimizations */
+.masonry-column {
+    will-change: contents;
+}
+
+/* Focus states for accessibility */
+.delete-btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
 }

@@ -119,6 +119,40 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
             alert.error('Download failed. Please try again.');
         }
     };
+    async function deleteVideo(videoId: string) {
+        alert.success('Deleting...');
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URI}/v1/video/delete`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ video_id: videoId }),
+                }
+            );
+
+            let data: any;
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error("Invalid server response");
+            }
+
+            if (!res.ok) {
+                throw new Error(data?.error || "Failed to delete video");
+            }
+
+            alert.success('Deleted');
+            location.href = '/video-playground'
+            return data;
+        } catch (err: any) {
+            if (err.name === "TypeError") {
+                throw new Error("Network error: Unable to reach server");
+            }
+            throw err;
+        }
+    }
 
     if (loading) {
         return (
@@ -195,7 +229,7 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
                         </button>
                         <button
                             className="vid-card-footer-btn"
-                            onClick={() => handleDownload(data.video_url)}
+                            onClick={() => deleteVideo(data.video_id)}
                             title="Download video"
                             disabled={!videoLoaded || videoError}
                         >

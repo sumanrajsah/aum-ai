@@ -104,7 +104,7 @@ const HistoryBar = () => {
                 >
                     <X size={16} /> Close
                 </SidebarButton>
-                <div
+                {/* <div
                     className="search-chat-btn"
                     data-tooltip="Search"
                     style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
@@ -114,7 +114,7 @@ const HistoryBar = () => {
                         type="text"
                         placeholder="Search Chats"
                     />
-                </div>
+                </div> */}
 
 
                 {memoizedHistory && Object.keys(memoizedHistory).length > 0 && (

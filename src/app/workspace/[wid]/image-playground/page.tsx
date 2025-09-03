@@ -147,23 +147,28 @@ export default function ImagePlayground({ params }: { params: Promise<{ wid: str
 
             <
                 >
-                <div
-                    className="image-playground-body"
-                >
+                <div className="image-playground-body">
                     <div className="image-playground-gallery">
                         {columns.map((col, colIndex) => (
                             <div className="masonry-column" key={colIndex}>
                                 {col.map((image, i) => (
                                     <ImageAssistantCard
-                                        key={(image.image_id ?? 'loading') + (image.created ?? i)}
-                                        data={image}
-                                        loading={false}
+                                        key={image.image_id || `loading-${i}`}
+                                        data={image.loading ? undefined : image}
+                                        loading={image.loading || false}
                                     />
                                 ))}
                             </div>
                         ))}
                     </div>
+
+                    {allImages.length === 0 && !creatingImage && (
+                        <div className="empty-state">
+                            <p>No images yet. Create your first image!</p>
+                        </div>
+                    )}
                 </div>
+
                 <ChatInput />
             </>
 

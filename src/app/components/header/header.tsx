@@ -1,7 +1,7 @@
 'use client'
 import React, { use, useEffect, useRef, useState } from "react"
 import './header.css'
-import { AlignLeft, CircleFadingPlus, Coins, Layers, PanelRightClose, PenLine, Plus, SquarePen, User2 } from "lucide-react"
+import { AlignLeft, CircleFadingPlus, Coins, Layers, MessagesSquare, PanelRightClose, PenLine, Plus, SquarePen, User2 } from "lucide-react"
 import ProfileCont from "./profile"
 import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "../../../hooks/useAuth"
@@ -11,11 +11,13 @@ import Sidebar from "../sidebar/sidebar"
 import WorkspaceCont from "./workspaceModal"
 import { useChat, useWorkspace } from "../../../context/ChatContext"
 import { useSidebarStore } from "@/store/useSidebarStore"
+import { useHistoryBarStore } from "@/store/useHistorybarStore"
 
 
 
 const Header = () => {
     const { isSidebarOpen, toggleSidebar, closeSidebar } = useSidebarStore();
+    const { isHistoryBarOpen, toggleHistoryBar, closeHistoryBar } = useHistoryBarStore()
     const router = useRouter()
     const { messages, aiTyping, setIsChatRoom, memoizedHistory, setMessages, selectModel, Model, setChatId, chatId, setHistory, chatMode, credits } = useChat();
     const [openDisconnecModel, setOpenDisconnectModel] = useState<boolean>(false)
@@ -66,6 +68,9 @@ const Header = () => {
                     {user && <button className="ham-btn" onClick={() => { router.push(currentWorkspace === '' ? `/?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>
                         <SquarePen size={20} />
                     </button>}
+                    <button className="ham-btn" data-tooltip={'chats'} onClick={() => { toggleHistoryBar() }}>
+                        <MessagesSquare size={20} />
+                    </button>
                 </div>
                 {openWorkspaceModel && user && <div className="workspace-cont" ref={modalRef}>
                     <WorkspaceCont />
