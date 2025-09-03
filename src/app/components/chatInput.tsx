@@ -16,7 +16,7 @@ import { deleteFile, uploadFileToServer } from '../utils/upload-file';
 import FilePreview from './filepreview';
 import SettingsButton from './settings-button';
 import SelectMcpButton from './mcpComp/selectmcp';
-import { llmModels } from '../utils/models-list';
+import { imageModels, llmModels, vidoeModels } from '../utils/models-list';
 import SelectToolButton from './toolComp/toolmodal';
 import { Oval } from 'react-loader-spinner';
 
@@ -35,7 +35,7 @@ interface FileData {
 }
 
 const ChatInput = () => {
-  const { handleSendMessage, aiTyping, abortControllerRef, setAiTyping, messages, editInput, setChatMode, chatMode, Model, selectModel } = useChat();
+  const { handleSendMessage, aiTyping, abortControllerRef, setAiTyping, messages, editInput, setChatMode, chatMode, Model, selectModel, credits } = useChat();
   const { selectedServers, mcpResources, mcpTools } = useMcpServer();
   const { createImage, creatingImage, allImages } = useImagePlaygound();
   const { createVideo, creatingVideo, allVideos } = useVideoPlayground();
@@ -307,7 +307,17 @@ const ChatInput = () => {
 
   // Handle form submission
   const handleSubmit = async () => {
+
     if (chatMode === 'image') {
+      const c = imageModels.find(m => m.value === Model);
+      if (c?.credits !== undefined && credits < (c.credits % 2)) {
+        // handle insufficient credits here
+        if (user?.plan !== 'pro-plus') {
+          router.push('/plan')
+        }
+        alertMessage.warn('indsufficient credits')
+        return;
+      }
       if (creatingImage) return;
       if (input.trim()) {
         createImage(input)
@@ -315,10 +325,28 @@ const ChatInput = () => {
       return;
     }
     if (chatMode === 'video') {
+      const c = vidoeModels.find(m => m.value === Model);
+      if (c?.credits !== undefined && credits < (c.credits)) {
+        // handle insufficient credits here
+        if (user?.plan !== 'pro-plus') {
+          router.push('/plan')
+        }
+        alertMessage.warn('indsufficient credits')
+        return;
+      }
       if (creatingVideo) return;
       if (input.trim()) {
         createVideo(input)
       }
+      return;
+    }
+    const c = llmModels.find(m => m.value === Model);
+    if (c?.outputCredits !== undefined && credits < (c.outputCredits)) {
+      // handle insufficient credits here
+      if (user?.plan !== 'pro-plus') {
+        router.push('/plan')
+      }
+      alertMessage.warn('indsufficient credits')
       return;
     }
     if (aiTyping) return;
@@ -362,65 +390,95 @@ const ChatInput = () => {
       }
     }
   };
-
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   // Handle keydown events (e.g., pressing Enter)
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // Prevent default behavior (new line)
-      if (chatMode === 'image') {
-        if (creatingImage) return;
-        if (input.trim()) {
-          createImage(input)
+    if (!isMobile) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Prevent default behavior (new line)
+        if (chatMode === 'image') {
+          const c = imageModels.find(m => m.value === Model);
+          if (c?.credits !== undefined && credits < (c.credits)) {
+            if (user?.plan !== 'pro-plus') {
+              router.push('/plan')
+            }
+            // handle insufficient credits here
+            alertMessage.warn('indsufficient credits')
+            return;
+          }
+          if (creatingImage) return;
+          if (input.trim()) {
+            createImage(input)
+          }
+          return;
         }
-        return;
-      }
-      if (chatMode === 'video') {
-        if (creatingVideo) return;
-        if (input.trim()) {
-          createVideo(input)
+        if (chatMode === 'video') {
+          const c = vidoeModels.find(m => m.value === Model);
+          if (c?.credits !== undefined && credits < (c.credits)) {
+            // handle insufficient credits here
+            if (user?.plan !== 'pro-plus') {
+              router.push('/plan')
+            }
+            alertMessage.warn('indsufficient credits')
+            return;
+          }
+          if (creatingVideo) return;
+          if (input.trim()) {
+            createVideo(input)
+          }
+          return;
         }
-        return;
-      }
-      if (aiTyping) return; // Prevent sending messages while AI is typing
-      if (input.trim() || selectedFiles.length > 0) {
-        // Prepare message data
-        const messageData: MessageContentItem[] = [];
+        const c = llmModels.find(m => m.value === Model);
+        if (c?.outputCredits !== undefined && credits < (c.outputCredits % 2)) {
+          // handle insufficient credits here
+          if (user?.plan !== 'pro-plus') {
+            router.push('/plan')
+          }
+          alertMessage.warn('indsufficient credits')
+          return;
+        }
+        if (aiTyping) return; // Prevent sending messages while AI is typing
+        if (input.trim() || selectedFiles.length > 0) {
+          // Prepare message data
+          const messageData: MessageContentItem[] = [];
 
-        // Add all selected files/images
-        selectedFiles.forEach(file => {
-          if (file.type === 'image') {
+          // Add all selected files/images
+          selectedFiles.forEach(file => {
+            if (file.type === 'image') {
+              messageData.push({
+                type: 'image_url',
+                image_url: file.image_url!
+              });
+            } else {
+              messageData.push({
+                type: 'file',
+                file: {
+                  filename: file.filename,
+                  file_data: file.file_data,
+                  file_url: file.file_url
+                }
+              });
+            }
+          });
+
+          // Add text data if present
+          if (input.trim()) {
             messageData.push({
-              type: 'image_url',
-              image_url: file.image_url!
-            });
-          } else {
-            messageData.push({
-              type: 'file',
-              file: {
-                filename: file.filename,
-                file_data: file.file_data,
-                file_url: file.file_url
-              }
+              type: 'text',
+              text: input.trim()
             });
           }
-        });
 
-        // Add text data if present
-        if (input.trim()) {
-          messageData.push({
-            type: 'text',
-            text: input.trim()
-          });
-        }
-
-        handleSendMessage(messageData, selectedServers.map(server => server.sid), mcpTools, false);
-        setInput('');
-        setSelectedFiles([]);
-        if (textareaRef.current) {
-          textareaRef.current.blur();
+          handleSendMessage(messageData, selectedServers.map(server => server.sid), mcpTools, false);
+          setInput('');
+          setSelectedFiles([]);
+          if (textareaRef.current) {
+            textareaRef.current.blur();
+          }
         }
       }
     }
+
   };
 
   // Handle stop button click

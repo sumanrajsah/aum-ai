@@ -21,7 +21,7 @@ const Sidebar = () => {
     const { isSidebarOpen, toggleSidebar, closeSidebar } = useSidebarStore();
     const { isHistoryBarOpen, toggleHistoryBar, closeHistoryBar } = useHistoryBarStore()
     const router = useRouter();
-    const { messages, aiTyping, setIsChatRoom, memoizedHistory, setMessages, selectModel, Model, setChatId, chatId, setHistory, chatMode } = useChat();
+    const { messages, aiTyping, setIsChatRoom, memoizedHistory, setMessages, selectModel, Model, setChatId, chatId, setHistory, chatMode, setAgentId } = useChat();
     const { currentWorkspace, setCurrentWorkspace, workspaces } = useWorkspace();
     // console.log(memoizedHistory)
     const [activeMenuChatId, setActiveMenuChatId] = useState<string | null>(null);
@@ -119,7 +119,7 @@ const Sidebar = () => {
                 <div className="sidebar-2-top-cont" onClick={(e) => { e.stopPropagation() }}>
 
 
-                    <SidebarButton className="sidebar-button" onClick={() => { router.push(currentWorkspace === '' ? `/?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>
+                    <SidebarButton className="sidebar-button" onClick={() => { router.push(`/?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(""); setAgentId('') }}>
                         <SquarePen size={20} />New Chat
                     </SidebarButton >
                     <SidebarButton className="sidebar-button" onClick={() => { router.push('/create') }}>
@@ -222,7 +222,7 @@ const Sidebar = () => {
                         <PanelLeft size={20} />
                     </SidebarButton>
 
-                    <SidebarButton className="sidebar-button-2" data-tooltip="New Chat" onClick={() => { router.push(currentWorkspace === '' ? `/?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}> <SquarePen size={20} /></SidebarButton>
+                    <SidebarButton className="sidebar-button-2" data-tooltip="New Chat" onClick={() => { router.push(`/?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}> <SquarePen size={20} /></SidebarButton>
                     <SidebarButton className="sidebar-button-2" data-tooltip="Create" onClick={() => { router.push('/create') }}>
                         <PlusCircle size={20} />
                     </SidebarButton >

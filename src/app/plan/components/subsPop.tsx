@@ -377,11 +377,12 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
             const options = {
                 key: data.key,
                 subscription_id: data.subscription_id,
-                name: "QUBICSQUARE",
-                description: `${plan.name} Plan Subscription`,
+                name: "Qubicsquare Technologies Private Limited",
+                description: `Subscribe to AUM AI ${plan.name} Plan Subscription`,
+                image: "https://www.qubicsquare.tech/qubicsquare512.png",
                 ...(plan.offer_id ? { offer_id: plan.offer_id } : {}),
                 prefill: {
-                    email: user.email || "user@example.com",
+                    email: user.email || " ",
                     contact: userInfo.contact,
                 },
                 handler: async function (response: any) {
@@ -393,6 +394,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                             body: JSON.stringify({
                                 ...response,
                                 user_id: user.uid,
+                                plan_id: plan.plan_id
                             }),
                         });
 
@@ -438,7 +440,8 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                     }
                 },
                 theme: {
-                    color: "#6366f1"
+                    color: "#0A090D",
+                    backdrop_color: "#7256B1"
                 },
                 retry: {
                     enabled: true,
@@ -647,7 +650,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                             </button>
                             <button
                                 className="btn-primary"
-                                onClick={() => setStep('user-info')}
+                                onClick={() => handleUpgrade()}
                                 disabled={loading || !user}
                             >
                                 Continue

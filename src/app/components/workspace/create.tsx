@@ -44,7 +44,8 @@ const WorkspaceCreateModal = () => {
 
             //const data = await response.json();
             alertMessage.success("Workspace created successfully!");
-            // router.push(`/workspace/${data.workspaceId}`);
+
+            location.href = '/workspace'
 
         } catch (error) {
             console.error("Error creating workspace:", error);

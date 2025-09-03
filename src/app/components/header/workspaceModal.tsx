@@ -28,7 +28,7 @@ const WorkspaceCont = () => {
 
     return (
         <div className="workspace-body">
-            <button className="workspace-btn" onClick={() => { router.push(`/workspace`); setCurrentWorkspace(''); setMessages([]); setChatId('') }}>
+            <button className="workspace-btn" onClick={() => { setCurrentWorkspace(''); setMessages([]); setChatId(''); router.push(`/workspace`); }}>
                 <User2 size={14} />Home
             </button>
             {workspaces.map((workspace: Workspace) => (

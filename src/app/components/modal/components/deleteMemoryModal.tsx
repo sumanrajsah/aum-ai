@@ -49,8 +49,8 @@ const DeleteMemoryModal: React.FC<DeleteMemoryModalProps> = ({
         setError('');
 
         // Validate confirmation text
-        if (confirmText.toLowerCase() !== 'delete') {
-            setError('Please type "delete" to confirm');
+        if (confirmText.toLowerCase() !== 'forget') {
+            setError('Please type "forget" to confirm');
             return;
         }
 
@@ -125,14 +125,14 @@ const DeleteMemoryModal: React.FC<DeleteMemoryModalProps> = ({
                     <form onSubmit={handleDeleteMemory} className="delete-form">
                         <div className="delete-form-group">
                             <label htmlFor="confirmText">
-                                Type <strong>"delete"</strong> to confirm:
+                                Type <strong>"forget"</strong> to confirm:
                             </label>
                             <input
                                 type="text"
                                 id="confirmText"
                                 value={confirmText}
                                 onChange={(e) => setConfirmText(e.target.value)}
-                                placeholder="Type 'delete' here"
+                                placeholder="Type 'forget' here"
                                 required
                                 disabled={loading}
                                 autoComplete="off"
@@ -151,9 +151,9 @@ const DeleteMemoryModal: React.FC<DeleteMemoryModalProps> = ({
                             <button
                                 type="submit"
                                 className="delete-confirm-button"
-                                disabled={loading || confirmText.toLowerCase() !== 'delete'}
+                                disabled={loading || confirmText.toLowerCase() !== 'forget'}
                             >
-                                {loading ? 'Deleting...' : 'Delete Memory'}
+                                {loading ? 'Deleting...' : 'forget Memory'}
                             </button>
                         </div>
                     </form>
