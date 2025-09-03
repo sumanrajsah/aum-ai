@@ -116,7 +116,7 @@ const Sidebar = () => {
                         <PanelLeft size={20} />
                     </SidebarButton >
                 </div>
-                <div className="sidebar-2-top-cont" onClick={(e) => { e.stopPropagation() }}>
+                <div className="sidebar-2-top-cont top-cont-scroll" onClick={(e) => { e.stopPropagation() }}>
 
 
                     <SidebarButton className="sidebar-button" onClick={() => { router.push(`/?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(""); setAgentId('') }}>

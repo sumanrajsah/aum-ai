@@ -136,11 +136,18 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
                 {chatMode === 'video' &&
                     <>
                         {(() => {
+                            let duration = Number(videoSettings.duration) || 5;
+
+                            // if Model name contains "veo", force duration = 8
+                            if (Model?.toLowerCase().includes("veo")) {
+                                duration = 8;
+                            }
+
                             const price = calculateVideoPrice(
                                 Model,
                                 videoSettings.resolution || "720p",
                                 videoSettings.ratio || "16:9",
-                                Number(videoSettings.duration) || 5
+                                duration
                             );
                             return (
                                 <span className="price-tag">

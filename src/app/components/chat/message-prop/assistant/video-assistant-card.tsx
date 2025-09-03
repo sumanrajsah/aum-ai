@@ -91,27 +91,12 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
         try {
             alert.success('Downloading...');
 
-            // Try direct download first, fallback to proxy if needed
-            let response;
-            try {
-                response = await fetch(videoUrl);
-                if (!response.ok) throw new Error('Direct fetch failed');
-            } catch {
-                // Fallback to proxy (note: cors-anywhere requires approval for production)
-                const proxyUrl = `https://cors-anywhere.herokuapp.com/${videoUrl}`;
-                response = await fetch(proxyUrl);
-            }
-
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
-
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = `video-${Date.now()}.mp4`;
+            const link = document.createElement("a");
+            link.href = videoUrl + "?download=1";
+            //link.target = "_blank"; // optional
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
 
             alert.success('Download completed!');
         } catch (err) {

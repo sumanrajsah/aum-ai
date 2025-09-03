@@ -86,39 +86,26 @@ const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
     }, [data?.image_url, shouldLoadImage]);
 
     const handleDownload = async (imageUrl: string) => {
-        alert.success('Downloading...');
         try {
-            // Try direct download first, fallback to proxy if needed
-            let response;
-            try {
-                response = await fetch(imageUrl, {
-                    mode: 'cors'
-                });
-                if (!response.ok) throw new Error('Direct fetch failed');
-            } catch {
-                // Fallback to proxy (note: cors-anywhere requires approval for production)
-                const proxyUrl = `https://cors-anywhere.herokuapp.com/${imageUrl}`;
-                response = await fetch(proxyUrl);
-            }
+            // Notify user
+            alert.success("Downloading...");
 
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
-
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = `image-${Date.now()}.png`;
+            // Create and click hidden link
+            const link = document.createElement("a");
+            link.href = imageUrl + "?download=1";
+            //link.target = "_blank"; // optional
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
-            alert.success('Download completed!');
+
+            alert.success("Download completed!");
         } catch (err) {
-            // console.error('Image download failed:', err);
-            // Fallback: open image in new tab
-            alert.error('Download failed. Please try again.');
-            window.open(imageUrl, '_blank');
+            console.error("Image download failed:", err);
+            alert.error("Download failed. Opening in new tab...");
+            window.open(imageUrl, "_blank");
         }
     };
+
     async function deleteImage(imageId: string) {
         alert.success('Deleting...');
         try {
