@@ -310,7 +310,7 @@ const ChatInput = () => {
 
     if (chatMode === 'image') {
       const c = imageModels.find(m => m.value === Model);
-      if (c?.credits !== undefined && credits < (c.credits % 2)) {
+      if (c?.credits !== undefined && credits < (c.credits)) {
         // handle insufficient credits here
         if (user?.plan !== 'pro-plus') {
           router.push('/plan')
