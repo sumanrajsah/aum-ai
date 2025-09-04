@@ -34,7 +34,7 @@ const pricingData = {
             buttonText: 'Get Plus Plan',
             buttonStyle: 'primary',
             link: 'plus',
-            plan_id: 'plan_R9OLfO0iomjpBl'
+            plan_id: 'plan_RAc3QE4F30l4Io'
         },
         pro: {
             name: 'Pro',
@@ -58,8 +58,8 @@ const pricingData = {
             buttonText: 'Get Pro Plan',
             buttonStyle: 'primary',
             link: 'pro',
-            plan_id: 'plan_R9OLqUVsvWFqUc',
-            offer_id: "offer_R9OYEZvpUBKXZ9"
+            plan_id: 'plan_RAc3jUVpeKvSUB',
+            offer_id: "offer_RAc2QK56PuiJm5"
         },
         proPlus: {
             name: 'Pro+',
@@ -83,8 +83,8 @@ const pricingData = {
             buttonText: 'Get Pro+ Plan',
             buttonStyle: 'primary',
             link: 'pro-plus',
-            plan_id: 'plan_R9OM0QcI4GlZXF',
-            offer_id: "offer_R9OYEZvpUBKXZ9"
+            plan_id: 'plan_RAc40zHJYd1d1T',
+            offer_id: "offer_RAc2QK56PuiJm5"
         }
     }
 };
