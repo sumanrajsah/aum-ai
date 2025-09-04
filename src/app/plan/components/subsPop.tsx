@@ -85,6 +85,8 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
     const [countdown, setCountdown] = useState(3);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [customerId, setCustomerId] = useState();
+    const [subId, setSubId] = useState();
+    const [paymentId, setPaymentId] = useState();
     const [userInfo, setUserInfo] = useState<UserInfo>({
         name: user?.name ?? "",
         contact: '',
@@ -261,18 +263,13 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
-                    body: JSON.stringify({ uid: user?.uid }),
+                    body: JSON.stringify({ uid: user?.uid, plan_id: plan?.plan_id, sub_id: subId, pay_id: paymentId }),
                 });
                 const data = await res.json();
 
                 const status = data?.status || "unknown";
 
-                if (status === 'verified') {
-                    setStep('activating');
-                }
-                if (status === 'created') {
-                    setStep('verifying');
-                }
+
                 if (status === 'active') {
                     setStep('success');
                     return;
@@ -370,7 +367,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
             if (data.error) {
                 throw new Error(data.error);
             }
-
+            setStep('verifying');
             const Razorpay = await loadRazorpay();
 
             // 2. Open Razorpay checkout
@@ -399,12 +396,21 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                         });
 
                         const verifyData = await verify.json();
+                        console.log(verifyData);
 
                         if (!verifyData.ok) {
                             throw new Error(verifyData.message || "Verification failed");
                         }
+                        setSubId(verifyData.subscription_id);
+                        setPaymentId(verifyData.payment_id);
 
-                        subscriptionStatus();
+                        setStep('activating');
+
+
+
+
+
+
                     } catch (error) {
                         console.error('Payment verification failed:', error);
                         setStep('failed');
@@ -460,6 +466,12 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
         }
     };
     console.log(currentPlan)
+
+    useEffect(() => {
+        if (step === 'activating' && subId && paymentId) {
+            subscriptionStatus();
+        }
+    }, [step, subId, paymentId]);
 
     const handleClose = () => {
         setStep('confirm');

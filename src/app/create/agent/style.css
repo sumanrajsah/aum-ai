@@ -329,7 +329,7 @@ html.dark .cagent-container {
     background: rgba(128, 128, 128, 0.1);
 }
 
-.server-info {
+.create-server-info {
     display: flex;
     flex-direction: column;
     gap: 4px;

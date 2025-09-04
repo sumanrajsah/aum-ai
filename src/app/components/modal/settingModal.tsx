@@ -1,6 +1,6 @@
 import { Children, useEffect, useRef, useState } from "react";
 import './setting.css'
-import { Brain, BrainCircuit, ChevronRight, CreditCard, IndianRupee, Layers, LogOut, Pickaxe, PlusCircle, Server, Settings, Telescope, Trash2, User2, Wallet, Wrench, X } from "lucide-react";
+import { Brain, BrainCircuit, ChevronRight, CreditCard, IndianRupee, Layers, LogOut, Pickaxe, PlusCircle, Server, Settings, Telescope, Trash2, User2, Wallet, Wrench, X, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "../ThemeToggle";
@@ -13,6 +13,7 @@ import ChangePasswordModal from "./components/changePassword";
 import EditProfileModal from "./components/editProfile";
 import SelectThemeButton from "../themeButton";
 import DeleteMemoryModal from "./components/deleteMemoryModal";
+import { getQuickAccess, updateQuickAccess } from "@/app/utils/quickAccess";
 
 
 const PLAN_PRICES: Record<string, string> = {
@@ -111,11 +112,13 @@ const ModalSetting = () => {
     const { user } = useAuth();
     const router = useRouter();
     const [isVisible, setIsVisible] = useState(false);
-    const [activeSection, setActiveSection] = useState<'account' | 'subscription' | 'system' | 'memory'>('system');
+    const [activeSection, setActiveSection] = useState<'account' | 'subscription' | 'system' | 'memory' | 'quick'>('system');
     const [openPasswordModal, setPasswordModal] = useState(false)
     const [openProfileModal, setProfileModal] = useState(false)
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [quickAccess, setQuickAccess] = useState<any>(null);
+    const [loadingQuickAccess, setLoadingQuickAccess] = useState(false);
     type Memory = {
         memory_id: string;
         createdAt: string;
@@ -128,6 +131,23 @@ const ModalSetting = () => {
     const [memories, setMemories] = useState<Memory[]>([]);
     const [loadingMemories, setLoadingMemories] = useState(true);
     const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; memoryId: string; text: string }>({ isOpen: false, memoryId: '', text: '' });
+
+    async function refreshQuickAccess() {
+        setLoadingQuickAccess(true);
+        try {
+            const data = await getQuickAccess(user!.uid);
+            setQuickAccess(data);
+            console.log(data);
+        } catch {
+            setQuickAccess(null);
+        } finally {
+            setLoadingQuickAccess(false);
+        }
+    }
+    useEffect(() => {
+        if (user?.uid)
+            refreshQuickAccess();
+    }, [user]);
     useEffect(() => {
         const fetchMemories = async () => {
             if (!user) return;
@@ -151,6 +171,7 @@ const ModalSetting = () => {
     }, [user, activeSection]);
     useEffect(() => {
         const fetchBilling = async () => {
+            setLoading(true);
             try {
                 const res = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URI}/v1/payment/billing/${user?.uid}`,
@@ -188,7 +209,8 @@ const ModalSetting = () => {
         { id: 'system', label: 'System', icon: Settings },
         { id: 'account', label: 'Account', icon: User2 },
         { id: 'subscription', label: 'Subscription', icon: CreditCard },
-        { id: 'memory', label: 'Memory', icon: Brain }
+        { id: 'memory', label: 'Memory', icon: Brain },
+        { id: 'quick', label: 'Quick Access', icon: Zap }
     ];
     const price = user?.plan ? PLAN_PRICES[user.plan.toLowerCase()] : "Custom";
     const getPaymentIcon = (method: string) => {
@@ -296,7 +318,10 @@ const ModalSetting = () => {
                 return (
                     <div className="settings-content">
                         <h3 className="settings-title">Subscription</h3>
-                        <div className="settings-section">
+                        {loading && <p>
+                            Loading...
+                        </p>}
+                        {!loading && <div className="settings-section">
                             <div className="subscription-card">
                                 <div className="subscription-header">
                                     <h4 className="subscription-plan" style={{ textTransform: 'uppercase' }}>
@@ -330,8 +355,8 @@ const ModalSetting = () => {
                                     </div>
                                 </div>
                             )}
-                        </div>
-                        {user?.plan && (
+                        </div>}
+                        {!loading && user?.plan && (
                             <div className="settings-section">
                                 <h4 className="features-title">Features in {PLANS[user.plan === "pro-plus" ? "proPlus" : user.plan].name}</h4>
                                 <ul className="features-list">
@@ -348,7 +373,7 @@ const ModalSetting = () => {
                                 </ul>
                             </div>
                         )}
-                        {user?.plan !== 'pro-plus' && <div className="settings-section">
+                        {!loading && user?.plan !== 'pro-plus' && <div className="settings-section">
                             {user?.plan !== 'pro-plus' && <button className="setting-button-secondary" onClick={() => router.push('/plan')}>Upgrade Plan</button>}
                         </div>}
                     </div>
@@ -408,6 +433,66 @@ const ModalSetting = () => {
                     </div>
 
                 );
+            case 'quick':
+                return (
+                    <div className="settings-content">
+                        <h3 className="settings-title">Quick Access</h3>
+                        <div className="settings-section">
+                            <div className="setting-item">
+                                <label className="setting-label">Manage Quick Access</label>
+                                <p className="setting-description">
+                                    Remove your favorite agents from Quick Access
+                                </p>
+                            </div>
+
+                            {loadingQuickAccess ? (
+                                <div className="memory-loading">
+                                    <p>Loading quick access...</p>
+                                </div>
+                            ) : quickAccess?.agents?.length === 0 ? (
+                                <div className="memory-empty">
+                                    <p>No agents in quick access yet</p>
+                                </div>
+                            ) : (
+                                <div className="memory-list">
+                                    {quickAccess.agents.map((agent: any) => (
+                                        <div key={agent.handle} className="memory-item">
+                                            <div className="memory-row">
+                                                <div className="memory-info">
+                                                    <img
+                                                        style={{ borderRadius: '30%' }}
+                                                        src={agent.image}
+                                                        alt={agent.name}
+                                                        height={24}
+                                                        width={24}
+                                                    />
+                                                    <div className="memory-text">
+                                                        {agent.name}
+                                                    </div>
+                                                </div>
+
+                                                <button
+                                                    className="memory-delete-btn"
+                                                    onClick={() => {
+                                                        if (user) {
+                                                            updateQuickAccess(user.uid, agent.aid, "remove").then(() =>
+                                                                refreshQuickAccess()
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+
+                );
             default:
                 return null;
         }
@@ -431,7 +516,7 @@ const ModalSetting = () => {
                                     <button
                                         key={section.id}
                                         className={`sidebar-item ${activeSection === section.id ? 'active' : ''}`}
-                                        onClick={() => setActiveSection(section.id as 'account' | 'subscription' | 'system' | 'memory')}
+                                        onClick={() => setActiveSection(section.id as 'account' | 'subscription' | 'system' | 'memory' | 'quick')}
                                     >
                                         <Icon size={18} />
                                         <span>{section.label}</span>

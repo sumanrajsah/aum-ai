@@ -48,6 +48,7 @@ export default function InviteTokenPage({
                 return;
             }
             setResult(("message" in json && json.message) || "Success!");
+            location.href = `/workspace`;
             if ("wid" in json && json.wid) setWid(json.wid);
         } catch (e: any) {
             setResult(e?.message || "Request failed");

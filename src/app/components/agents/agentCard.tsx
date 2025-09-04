@@ -106,7 +106,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onClick }) => {
                 <div className="footer-info">
                 </div>
                 <div className="card-actions">
-                    <button className="action-btn chat-btn" onClick={() => router.push(`/agent/${agent.aid}`)}>
+                    <button className="action-btn chat-btn" onClick={() => router.push(`/agent/${agent.aid}?mode=text`)}>
                         <MessageCircle size={20} />
                         chat
                     </button>

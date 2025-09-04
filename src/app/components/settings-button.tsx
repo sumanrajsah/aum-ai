@@ -17,7 +17,7 @@ interface SettingsButtonProps {
 const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) => {
     const { imageSettings, setImageSettings } = useImagePlaygound();
     const { videoSettings, setVideoSettings } = useVideoPlayground();
-    const { selectModel, Model, chatMode } = useChat();
+    const { selectModel, Model, chatMode, setVideoCredits } = useChat();
     const searchParams = useSearchParams();
     const router = useRouter()
     const modalRef = useRef<HTMLDivElement>(null);
@@ -149,6 +149,7 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
                                 videoSettings.ratio || "16:9",
                                 duration
                             );
+                            setVideoCredits(price.credits);
                             return (
                                 <span className="price-tag">
                                     *Price: {price.credits} credits*

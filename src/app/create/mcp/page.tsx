@@ -9,6 +9,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useAlert } from "../../../context/alertContext";
 import axios from "axios";
 import { MCP } from "@/app/components/mcpComp/function";
+import { useRouter } from "next/navigation";
 
 // Define the McpServer type
 interface McpServer {
@@ -25,6 +26,7 @@ interface McpServer {
 }
 
 const McpServerModalSetting = () => {
+    const router = useRouter();
     const [create, setCreate] = useState(false)
     const [mcpServer, setMcpServer] = useState<McpServer>({
         label: "",
@@ -135,6 +137,7 @@ const McpServerModalSetting = () => {
                         type: "http",
                         tools: []
                     });
+                    location.href = '/store/mcp/mine';
                 } else {
                     alertMessage.warn(response.data.message);
                 }
@@ -202,7 +205,6 @@ const McpServerModalSetting = () => {
                             type="password"
                         />
                     </>}
-
                     <div className="server-btn-cont">
                         {isPending ? (
                             <Oval height={30} width={30} color="gray" secondaryColor="gray" visible />
@@ -215,6 +217,7 @@ const McpServerModalSetting = () => {
                             </button>
                         )}
                     </div>
+
                 </div>}
 
                 <div className="server-btn-cont">

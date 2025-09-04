@@ -85,6 +85,7 @@ export default function PublishAgent() {
 
             if (status === 200) {
                 alert.success(resData.message);
+                location.href = '/store/agents';
             } else {
                 alert.warn('publishing failed');
             }

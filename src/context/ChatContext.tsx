@@ -46,6 +46,11 @@ interface ChatContextType {
 
     setCredits: React.Dispatch<React.SetStateAction<number>>;
     credits: number;
+    setVideoCredits: React.Dispatch<React.SetStateAction<number>>;
+    videoCredits: number;
+
+    event: string;
+    setEvent: React.Dispatch<React.SetStateAction<string>>;
 }
 interface MCPServerContextType {
     setMcpServers: React.Dispatch<React.SetStateAction<MCPServerInfo[]>>;
@@ -455,6 +460,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const [chatMode, setChatMode] = useState<ChatMode>('text'); // Replace 'default' with an actual ChatMode value
     const { temperature, top_p, frequency_penalty, presence_penalty } = useLLMStyleStore();
     const [credits, setCredits] = useState<number>(0)
+    const [videoCredits, setVideoCredits] = useState<number>(0)
     const [event, setEvent] = useState('')
 
     //agents 
@@ -816,7 +822,8 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                 aiWriting,
                 setAgentId,
                 agentId, userAgents, setUserAgents, tools, setTools,
-                credits, setCredits
+                credits, setCredits,
+                videoCredits, setVideoCredits, event, setEvent
 
             }}
         >

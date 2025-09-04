@@ -6,6 +6,9 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useChat } from '@/context/ChatContext';
 import { llmModels } from '@/app/utils/models-list';
+import { Oval } from 'react-loader-spinner';
+import { updateQuickAccess } from '@/app/utils/quickAccess';
+import { useAuth } from '@/hooks/useAuth';
 
 
 interface AgentPopupModalProps {
@@ -14,10 +17,11 @@ interface AgentPopupModalProps {
 }
 
 const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) => {
+    const { user } = useAuth();
     const router = useRouter()
     const [agentData, setAgentData] = useState<any>();
     const [loading, setLoading] = useState<boolean>(false);
-    const { setEditInput } = useChat();
+    const { setEditInput, setChatMode } = useChat();
     const data = {
         _id: "68a0d88cfff21901c459a964",
         name: "deepwiki",
@@ -94,19 +98,34 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
         router.push(`/agent/${agent_id}`)
 
     };
-
+    const handleQuickAccess = async ({ userId, agentId, isQuick }: { userId: string; agentId: string; isQuick: boolean }) => {
+        const action = isQuick ? "remove" : "add";
+        try {
+            const result = await updateQuickAccess(userId, agentId, action);
+            console.log("Updated:", result.quickAccess);
+            // refresh state/UI accordingly
+        } catch (err) {
+            alert("Failed to update quick access");
+        }
+    };
 
     return (
         <div className={`agent-modal-overlay`} role="dialog"
             aria-modal="true"
             onClick={onClose}>
-            {!agentData && <div className="agent-modal-container error" onClick={(e) => e.stopPropagation()}>
+            {!agentData && !loading && <div className="agent-modal-container error" onClick={(e) => e.stopPropagation()}>
                 <div className="header-controls">
                     <button className="close-btn" onClick={onClose}>
                         <X />
                     </button>
                 </div>
                 Not Found
+            </div>}
+            {!agentData && loading && <div className="agent-modal-container error" onClick={(e) => e.stopPropagation()}>
+                <div className="header-controls">
+                    <Oval height="50" width="50" color="gray" />
+                </div>
+                Loading...
             </div>}
             {agentData && <div className="agent-modal-container" onClick={(e) => e.stopPropagation()} >
                 {/* Header */}
@@ -265,8 +284,8 @@ const AgentPopupModal: React.FC<AgentPopupModalProps> = ({ agent_id, onClose }) 
 
                 {/* Footer */}
                 <div className="agent-modal-footer">
-                    <button className="btn-secondary">Add to Quick Access</button>
-                    <button className="btn-primary" onClick={() => router.push(`/agent/${agent_id}`)}><MessageCircle size={20} /> Start Chat</button>
+                    <button className="btn-secondary" onClick={() => handleQuickAccess({ userId: user?.uid ?? '', agentId: agent_id, isQuick: false })}>Add to Quick Access</button>
+                    <button className="btn-primary" onClick={() => { router.push(`/agent/${agent_id}?mode=text`); setChatMode('text') }}><MessageCircle size={20} /> Start Chat</button>
                 </div>
             </div>}
         </div>

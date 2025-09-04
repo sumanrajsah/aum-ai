@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "../../../hooks/useAuth"
 import { useTheme } from "next-themes"
 import Image from "next/image"
-import { Archive, BrainCircuit, ChevronDown, ChevronRight, ImagePlay, Images, Layers, MessagesSquare, Moon, PanelLeft, Play, Plus, PlusCircle, ScrollText, Search, Image as Limage, EllipsisVertical, MessageSquare, PenLine, Rocket, SquarePen, User, UserPlus } from "lucide-react"
+import { Archive, BrainCircuit, ChevronDown, ChevronRight, ImagePlay, Images, Layers, MessagesSquare, Moon, PanelLeft, Play, Plus, PlusCircle, ScrollText, Search, Image as Limage, EllipsisVertical, MessageSquare, PenLine, Rocket, SquarePen, User, UserPlus, Zap } from "lucide-react"
 import { useChat, useWorkspace } from "../../../context/ChatContext"
 import axios from "axios"
 import SidebarButton from "./sidebarbutton"
@@ -14,6 +14,7 @@ import { useAlert } from "../../../context/alertContext"
 import { useSidebarStore } from "@/store/useSidebarStore"
 import { useHistoryBarStore } from "@/store/useHistorybarStore"
 import ProfileCont from "./profile"
+import { getQuickAccess } from "@/app/utils/quickAccess"
 
 
 
@@ -35,6 +36,22 @@ const Sidebar = () => {
     const [isStudioExpannd, setStudioExpand] = useState(true)
     const [openProfileModal, setProfileModal] = useState(false)
     const modalRef = useRef<HTMLDivElement | null>(null);
+    const [quickAccessExpanded, setQuickAccessExpanded] = useState(false);
+    const [quickAccess, setQuickAccess] = useState<any>(null);
+
+    useEffect(() => {
+        async function load() {
+            try {
+                const data = await getQuickAccess(user!.uid);
+                setQuickAccess(data);
+                console.log(data);
+            } catch {
+                setQuickAccess(null);
+            }
+        }
+        if (user?.uid)
+            load();
+    }, [user]);
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (SidebarRef.current && !SidebarRef.current.contains(event.target as Node)) {
@@ -75,8 +92,8 @@ const Sidebar = () => {
 
 
     function toggleDropdown(type: string) {
-        if (type === 'agent') {
-            setAgentExpand(!isAgentExpannd)
+        if (type === 'quickAccess') {
+            setQuickAccessExpanded(!quickAccessExpanded)
             setWorkspaceExpand(false)
         }
         if (type === 'workspace') {
@@ -111,11 +128,11 @@ const Sidebar = () => {
             {isSidebarOpen && <div className="sidebar" onClick={() => { setActiveMenuChatId('') }} ref={SidebarRef}>
                 <div className="slogo-cont" >
                     <Image src="/sitraone.png" onClick={() => { router.push('/'); setMessages([]); }} alt="0xXplorer" width={30} height={30} priority />
-                    <h3 className="slogo-text">AUM AI</h3>
                     <SidebarButton className="sidebar-button-2 close-sidebar" style={{ cursor: 'w-resize' }} data-tooltip="Close Sidebar" onClick={() => { toggleSidebar() }}>
                         <PanelLeft size={20} />
                     </SidebarButton >
                 </div>
+                <hr />
                 <div className="sidebar-2-top-cont top-cont-scroll" onClick={(e) => { e.stopPropagation() }}>
 
 
@@ -128,6 +145,56 @@ const Sidebar = () => {
                     <SidebarButton className="sidebar-button" data-tooltip={'chats'} onClick={() => { toggleHistoryBar() }}>
                         <MessagesSquare size={20} /> Chats
                     </SidebarButton>
+                    {user?.plan !== 'free' && (
+                        <SidebarButton
+                            className="sidebar-button"
+                            data-tooltip={'quick access'}
+                            onClick={() => toggleDropdown('quickAccess')}
+                        >
+                            <Zap size={20} /> Quick Access{" "}
+                            <span className="expand-sidebar-icon">
+                                {quickAccessExpanded ? (
+                                    <ChevronDown size={16} />
+                                ) : (
+                                    <ChevronRight size={16} />
+                                )}
+                            </span>
+                        </SidebarButton>
+                    )}
+
+                    {quickAccessExpanded && (
+                        <div className="sidebar-dropdown-cont">
+                            <button
+                                className="dropdown-list"
+                                onClick={() => {
+                                    location.hash = '#settings';
+                                }}
+                            >
+                                <Plus size={14} /> Manage Quick Access
+                            </button>
+                            <hr />
+                            {quickAccess?.agents?.map((agent: any) => (
+                                <button
+                                    className="dropdown-list"
+                                    key={agent.aid}
+                                    onClick={() => {
+                                        router.push(`/agent/${agent.aid}`);
+                                        setMessages([]);
+                                        setChatId('');
+                                    }}
+                                >
+                                    <img
+                                        style={{ borderRadius: '30%' }}
+                                        src={agent.image}
+                                        alt={agent.name}
+                                        height={24}
+                                        width={24}
+                                    />
+                                    @{agent.handle}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     <SidebarButton className="sidebar-button" onClick={() => { window.location.href = (currentWorkspace === '' ? `/?model=dalle-3&mode=image` : `/workspace/${currentWorkspace}?model=dalle-3&mode=image`); setMessages([]); setChatId("") }}>
                         <ImagePlay size={16} />AI Media Studio
@@ -171,6 +238,7 @@ const Sidebar = () => {
                     </div>}
                 </div>
                 <div className="sidebar-2-bottom-cont" onClick={(e) => { e.stopPropagation() }}>
+                    <hr />
 
                     {user && <SidebarButton className="sidebar-button account-btn" onClick={() => { setProfileModal(!openProfileModal) }}>
                         <div className="user-avatar">

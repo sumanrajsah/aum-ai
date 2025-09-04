@@ -94,6 +94,8 @@ export default function CreateAgents() {
     const [starters, setStarters] = useState<Starter[]>([]);
     const [expandedServers, setExpandedServers] = useState<Set<string>>(new Set());
 
+    const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+    const [usernameChecking, setUsernameChecking] = useState(false);
     // UI states
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -131,6 +133,14 @@ export default function CreateAgents() {
     // Validation function
     const validateForm = (): boolean => {
         const newErrors: { [key: string]: string } = {};
+        if (user?.plan === 'free' && userAgents.length >= 1) {
+            newErrors.agentImage = "You can only create one agent on the free plan. Please upgrade your plan.";
+        }
+        if (!imageFile) {
+            newErrors.agentImage = "Agent image is required";
+        } else if (imageFile.size > 2 * 1024 * 1024) {
+            newErrors.agentImage = "Image size should be less than 2MB";
+        }
 
         if (!agentName.trim()) {
             newErrors.agentName = "Agent name is required";
@@ -163,6 +173,39 @@ export default function CreateAgents() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+    const validateUsername = (username: string) => {
+        const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+        return usernameRegex.test(username);
+    };
+
+    useEffect(() => {
+        const checkUsernameAvailability = async () => {
+            if (agentHandle.length >= 3 && validateUsername(agentHandle)) {
+                setUsernameChecking(true);
+                try {
+                    // Simulate API call - replace with actual endpoint
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/agents/check-handle`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ handle: agentHandle })
+                    });
+                    const data = await response.json();
+                    console.log(data)
+                    setUsernameAvailable(data.available);
+                } catch (error) {
+                    setUsernameAvailable(null);
+                } finally {
+                    setUsernameChecking(false);
+                }
+            } else {
+                setUsernameAvailable(null);
+            }
+        };
+
+        const timeoutId = setTimeout(checkUsernameAvailability, 500);
+        return () => clearTimeout(timeoutId);
+    }, [agentHandle]);
 
     // MCP Tools helper functions
     const toggleServerExpansion = (sid: string) => {
@@ -317,7 +360,7 @@ export default function CreateAgents() {
 
             if (response.status === 201) {
                 alertMessage.success("Agent Created Successfully");
-                router.push('/store/agents/mine');
+                location.href = '/store/agents/mine';
             } else {
                 alertMessage.warn(response.data.message);
             }
@@ -399,14 +442,14 @@ export default function CreateAgents() {
                 <h2>Agent Info</h2>
                 {/* Agent Image */}
                 <div className="agent-image-container">
-                    <label className="image-preview-label">
-                        <div className="image-preview">
+                    <label className={`image-preview-label ${errors.agentImage ? 'error' : ''}`}>
+                        <div className={`image-preview ${errors.agentImage ? 'error' : ''}`}>
                             {selectedImage ? <Image
                                 src={selectedImage || "/sitraone.png"}
                                 alt="AI Agent"
                                 width={100}
                                 height={100}
-                                className="image-circle"
+                                className={`image-circle ${errors.agentImage ? 'error' : ''}`}
                             /> : <Plus size={20} className="image-circle-icon" />}
                             <div className="upload-overlay">
                                 <UploadCloud />
@@ -414,6 +457,7 @@ export default function CreateAgents() {
                         </div>
                         <input type="file" accept="image/*" onChange={handleImageChange} hidden />
                     </label>
+                    {errors.agentImage && <span className="error-message">{errors.agentImage}</span>}
                 </div>
 
                 {/* Agent Name */}
@@ -424,7 +468,7 @@ export default function CreateAgents() {
                         placeholder="Aum Agent"
                         className={`cagent-input ${errors.agentName ? 'error' : ''}`}
                         value={agentName}
-                        onChange={(e) => setAgentName(e.target.value)}
+                        onChange={(e) => setAgentName((e.target.value).toLowerCase())}
                         maxLength={100}
                     />
                     {errors.agentName && <span className="error-message">{errors.agentName}</span>}
@@ -440,12 +484,34 @@ export default function CreateAgents() {
                         value={agentHandle}
                         onChange={(e) => setAgentHandle(e.target.value)}
                         maxLength={100}
+                        style={{
+                            borderColor: errors.agentHandle ? '#ff4444' :
+                                usernameAvailable === false ? '#ff4444' :
+                                    usernameAvailable === true ? '#44ff44' : '',
+                            paddingRight: '35px'
+                        }}
                     />
+                    {usernameChecking && (
+                        <div style={{ position: 'absolute', right: '50px' }}>
+                            <Oval height="16" width="16" color="gray" />
+                        </div>
+                    )}
+                    {!usernameChecking && usernameAvailable === true && (
+                        <span style={{ position: 'absolute', right: '50px', color: '#44ff44' }}>
+                            ✓
+                        </span>
+                    )}
+                    {!usernameChecking && usernameAvailable === false && (
+                        <span style={{ position: 'absolute', right: '50px', color: '#ff4444' }}>
+                            ✗
+                        </span>
+                    )
+                    }
                     {errors.agentHandle && <span className="error-message">{errors.agentHandle}</span>}
-                </div>
+                </div >
 
                 {/* Description */}
-                <div className="cagent-box">
+                < div className="cagent-box" >
                     <label>Description:</label>
                     <textarea
                         placeholder="Brief description of your agent"
@@ -453,8 +519,8 @@ export default function CreateAgents() {
                         onChange={(e) => setDescription(e.target.value)}
                         maxLength={500}
                     />
-                </div>
-            </div>
+                </div >
+            </div >
             <div className="cagent-container">
                 <h2>Agent Configurations</h2>
                 {/* Primary Model */}
@@ -584,7 +650,7 @@ export default function CreateAgents() {
                                             className="tool-checkbox mcp-server-header"
                                             onClick={() => toggleServerExpansion(server.sid.toString())}
                                         >
-                                            <div className="server-info">
+                                            <div className="create-server-info">
                                                 <div className="tool-name">
                                                     {server.label}
                                                     <span className="tool-count">({selectedToolsCount}/{serverTools.length})</span>
@@ -745,6 +811,6 @@ export default function CreateAgents() {
                     {isLoading ? 'Creating...' : 'Create Agent'}
                 </button>
             </div>
-        </div>
+        </div >
     );
 }

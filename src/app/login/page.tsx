@@ -41,7 +41,7 @@ export default function CollabLogin() {
         if (res?.ok) {
             alertMessage.success("Login successful");
             setLoading(false)
-            router.push("/");
+            location.href = "/";
         } else {
             setLoading(false)
             alertMessage.warn("Invalid credentials")
@@ -69,7 +69,7 @@ export default function CollabLogin() {
                 secondaryColor="gray"
             /><p>Loading...</p></div> : (status === "authenticated" ? <div className="collab-sbody">
                 <h1>✅</h1>
-                <h1>Authentocated</h1>
+                <h1>Authenticated</h1>
                 <p>Redirecting to dashboard...</p>
             </div> : <div className="collab-sbody">
                 <button className="collab-sbutton" onClick={() => { router.push('/signup') }} style={{ width: "auto" }}>Create an account</button>

@@ -758,8 +758,8 @@ html.light .toggle-slider::before {
         width: 100%;
         min-width: 100%;
         height: auto;
-        gap: 8px;
-        padding-bottom: 8px;
+        gap: 2px;
+        padding-bottom: 5px;
         scrollbar-width: thin;
     }
 
@@ -779,10 +779,11 @@ html.light .toggle-slider::before {
     .sidebar-item {
         min-width: max-content;
         justify-content: center;
-        padding: 10px 16px;
+        padding: 5px 8px;
         white-space: nowrap;
         flex-shrink: 0;
-        max-width: 100px;
+        max-width: 60px;
+        gap: 2px;
     }
 
     .settings-main {
@@ -1278,6 +1279,12 @@ html.light .toggle-slider::before {
     color: rgba(128, 128, 128, 0.9);
     flex-wrap: wrap;
     text-align: left;
+}
+
+.memory-info {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
 }
 
 .memory-delete-btn {

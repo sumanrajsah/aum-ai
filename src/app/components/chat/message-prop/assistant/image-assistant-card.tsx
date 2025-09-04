@@ -97,8 +97,6 @@ const ImageAssistantCard: React.FC<ChatMessageProps> = ({ data, loading }) => {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            alert.success("Download completed!");
         } catch (err) {
             console.error("Image download failed:", err);
             alert.error("Download failed. Opening in new tab...");

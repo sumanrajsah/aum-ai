@@ -244,7 +244,7 @@ export default function WorkspacePage() {
                     aria-labelledby="invite-modal-title"
                 >
                     {loading ? <div className="modal-w">
-                        Deleting...
+                        Inviting...
                     </div> : <div className="modal-w">
                         <div className="modal-header">
                             <h3 id="invite-modal-title">

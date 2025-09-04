@@ -35,7 +35,7 @@ interface FileData {
 }
 
 const ChatInput = () => {
-  const { handleSendMessage, aiTyping, abortControllerRef, setAiTyping, messages, editInput, setChatMode, chatMode, Model, selectModel, credits } = useChat();
+  const { handleSendMessage, aiTyping, abortControllerRef, setAiTyping, messages, editInput, setChatMode, chatMode, Model, selectModel, credits, videoCredits } = useChat();
   const { selectedServers, mcpResources, mcpTools } = useMcpServer();
   const { createImage, creatingImage, allImages } = useImagePlaygound();
   const { createVideo, creatingVideo, allVideos } = useVideoPlayground();
@@ -322,11 +322,16 @@ const ChatInput = () => {
       if (input.trim()) {
         createImage(input)
       }
+      setInput('');
+      setSelectedFiles([]);
+      if (textareaRef.current) {
+        textareaRef.current.blur();
+      }
       return;
     }
     if (chatMode === 'video') {
       const c = vidoeModels.find(m => m.value === Model);
-      if (c?.credits !== undefined && credits < (c.credits)) {
+      if (c?.credits !== undefined && credits < (videoCredits)) {
         // handle insufficient credits here
         if (user?.plan !== 'pro-plus') {
           router.push('/plan')
@@ -337,6 +342,11 @@ const ChatInput = () => {
       if (creatingVideo) return;
       if (input.trim()) {
         createVideo(input)
+      }
+      setInput('');
+      setSelectedFiles([]);
+      if (textareaRef.current) {
+        textareaRef.current.blur();
       }
       return;
     }
@@ -410,11 +420,16 @@ const ChatInput = () => {
           if (input.trim()) {
             createImage(input)
           }
+          setInput('');
+          setSelectedFiles([]);
+          if (textareaRef.current) {
+            textareaRef.current.blur();
+          }
           return;
         }
         if (chatMode === 'video') {
           const c = vidoeModels.find(m => m.value === Model);
-          if (c?.credits !== undefined && credits < (c.credits)) {
+          if (c?.credits !== undefined && credits < (videoCredits)) {
             // handle insufficient credits here
             if (user?.plan !== 'pro-plus') {
               router.push('/plan')
@@ -425,6 +440,11 @@ const ChatInput = () => {
           if (creatingVideo) return;
           if (input.trim()) {
             createVideo(input)
+          }
+          setInput('');
+          setSelectedFiles([]);
+          if (textareaRef.current) {
+            textareaRef.current.blur();
           }
           return;
         }

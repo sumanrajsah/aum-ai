@@ -109,7 +109,6 @@ export default function InvitesPage() {
                                 <th>Expires</th>
                                 <th>Token</th>
                                 <th>Link</th>
-                                <th>Copy</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -122,26 +121,16 @@ export default function InvitesPage() {
                                         </td>
                                         <td>{formatDate(inv.created_at as any)}</td>
                                         <td>{formatDate(inv.expires_at as any)}</td>
-                                        <td className="mono token">{inv.token}</td>
+                                        <td className="mono token"> {inv.status === 'pending' ? `${inv.token}` : '---'}</td>
                                         <td>
-                                            <button
+                                            {inv.status === 'pending' ? <button
                                                 className="copy-btn"
                                                 type="button"
                                                 onClick={() => router.push(`/workspace/invite/${inv.token}`)}
                                                 title="Open invite link"
                                             >
                                                 Open
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button
-                                                className="copy-btn"
-                                                type="button"
-                                                onClick={() => copy(inviteUrl(inv.token))}
-                                                title="Copy invite link"
-                                            >
-                                                Copy
-                                            </button>
+                                            </button> : '---'}
                                         </td>
                                     </tr>
                                 ))

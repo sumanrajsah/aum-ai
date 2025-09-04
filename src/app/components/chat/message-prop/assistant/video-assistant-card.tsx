@@ -98,7 +98,6 @@ const VideoAssistantCard: React.FC<VideoProps> = ({ data, loading }) => {
             link.click();
             document.body.removeChild(link);
 
-            alert.success('Download completed!');
         } catch (err) {
             // console.error('Video download failed:', err);
             alert.error('Download failed. Please try again.');
