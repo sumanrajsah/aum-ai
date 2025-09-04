@@ -1,10 +1,10 @@
 {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "0xxplorer - AI Blockchain Explorer",
-    "url": "https://0xxplorer.com/",
-    "description": "0xXplorer AI- Your AI-powered assistant for seamless blockchain exploration and insights.",
-    "image": "https://0xxplorer.com/0xai512.png",
+    "name": "Aum AI - AI Blockchain Explorer",
+    "url": "https://aum.sitrai.com/",
+    "description": "Aum AI - Your AI-powered assistant for seamless blockchain exploration and insights.",
+    "image": "https://aum.sitrai.com/aum.png",
     "author": {
         "@type": "Organization",
         "name": "Qubicsquare Technologies Private Limited",
