@@ -708,7 +708,7 @@ const ChatInput = () => {
                   handleFileSelect(e);       // your upload logic
                   setOpenAttachModal(false); // close modal after selection
                 }}
-                accept="*/*"
+                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
                 multiple
               />
             </button>
