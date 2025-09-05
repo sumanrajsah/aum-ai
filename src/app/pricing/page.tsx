@@ -70,9 +70,7 @@ const imagePricing = {
 export default function PricingPage() {
 
 
-    const formatCredits = (credits: any) => {
-        return credits >= 1000 ? `${(credits / 1000).toFixed(1)}K` : credits;
-    };
+
 
     return (
         <div className="container">
@@ -139,7 +137,7 @@ export default function PricingPage() {
                             {Object.entries(imagePricing).map(([name, credits], index) => (
                                 <tr key={name} className={`table-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
                                     <td className="model-name">{name}</td>
-                                    <td className="credits">{formatCredits(credits)}</td>
+                                    <td className="credits">{credits + 50}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -165,7 +163,7 @@ export default function PricingPage() {
                             {Object.entries(videoPricing.veo).map(([name, credits], index) => (
                                 <tr key={name} className={`table-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
                                     <td className="model-name">{name}</td>
-                                    <td className="credits">{formatCredits(credits)}</td>
+                                    <td className="credits">{credits + 100}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -196,7 +194,7 @@ export default function PricingPage() {
                                     <td className="resolution-name">{res}</td>
                                     {plans.map((p, i) => (
                                         <td key={i} className="credits">
-                                            <div className="credit-value">{formatCredits(p.credits)}</div>
+                                            <div className="credit-value">{p.credits + 100}</div>
                                         </td>
                                     ))}
                                 </tr>

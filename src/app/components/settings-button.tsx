@@ -46,6 +46,7 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
             setVideoSettings((prev) => ({
                 ...prev,
                 resolution: "720p",
+                duration: "8",
             }));
         }
     }, [Model, setVideoSettings]);
@@ -149,10 +150,10 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
                                 videoSettings.ratio || "16:9",
                                 duration
                             );
-                            setVideoCredits(price.credits);
+                            setVideoCredits(price.credits + 100);
                             return (
                                 <span className="price-tag">
-                                    *Price: {price.credits} credits*
+                                    *Price: {price.credits + 100} credits*
                                 </span>
                             );
                         })()}{Model.includes('sora') && <div className="settings-btn-cont">

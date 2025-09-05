@@ -52,7 +52,15 @@ const WorkspaceCreateModal = () => {
             alertMessage.warn("Please try again later.");
         }
     }
-
+    if (user?.plan === 'free') {
+        return (
+            <Modal>
+                <h2 className="wcreate-title">Upgrade Required</h2>
+                <p className="wcreate-description">You need to upgrade your plan to create a workspace.</p>
+                <button className="wcreate-btn" onClick={() => { router.push('/plan') }}>Upgrade Now</button>
+            </Modal>
+        );
+    }
 
     return (
         <Modal>

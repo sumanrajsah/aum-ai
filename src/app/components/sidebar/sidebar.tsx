@@ -145,22 +145,22 @@ const Sidebar = () => {
                     <SidebarButton className="sidebar-button" data-tooltip={'chats'} onClick={() => { toggleHistoryBar() }}>
                         <MessagesSquare size={20} /> Chats
                     </SidebarButton>
-                    {user?.plan !== 'free' && (
-                        <SidebarButton
-                            className="sidebar-button"
-                            data-tooltip={'quick access'}
-                            onClick={() => toggleDropdown('quickAccess')}
-                        >
-                            <Zap size={20} /> Quick Access{" "}
-                            <span className="expand-sidebar-icon">
-                                {quickAccessExpanded ? (
-                                    <ChevronDown size={16} />
-                                ) : (
-                                    <ChevronRight size={16} />
-                                )}
-                            </span>
-                        </SidebarButton>
-                    )}
+
+                    <SidebarButton
+                        className="sidebar-button"
+                        data-tooltip={'quick access'}
+                        onClick={() => toggleDropdown('quickAccess')}
+                    >
+                        <Zap size={20} /> Quick Access{" "}
+                        <span className="expand-sidebar-icon">
+                            {quickAccessExpanded ? (
+                                <ChevronDown size={16} />
+                            ) : (
+                                <ChevronRight size={16} />
+                            )}
+                        </span>
+                    </SidebarButton>
+
 
                     {quickAccessExpanded && (
                         <div className="sidebar-dropdown-cont">
@@ -218,9 +218,9 @@ const Sidebar = () => {
                         <button className="dropdown-list" onClick={() => { router.push('/store/mcp') }}>    <svg fill="currentColor" height="20px" viewBox="0 0 24 24" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M15.688 2.343a2.588 2.588 0 00-3.61 0l-9.626 9.44a.863.863 0 01-1.203 0 .823.823 0 010-1.18l9.626-9.44a4.313 4.313 0 016.016 0 4.116 4.116 0 011.204 3.54 4.3 4.3 0 013.609 1.18l.05.05a4.115 4.115 0 010 5.9l-8.706 8.537a.274.274 0 000 .393l1.788 1.754a.823.823 0 010 1.18.863.863 0 01-1.203 0l-1.788-1.753a1.92 1.92 0 010-2.754l8.706-8.538a2.47 2.47 0 000-3.54l-.05-.049a2.588 2.588 0 00-3.607-.003l-7.172 7.034-.002.002-.098.097a.863.863 0 01-1.204 0 .823.823 0 010-1.18l7.273-7.133a2.47 2.47 0 00-.003-3.537z"></path><path d="M14.485 4.703a.823.823 0 000-1.18.863.863 0 00-1.204 0l-7.119 6.982a4.115 4.115 0 000 5.9 4.314 4.314 0 006.016 0l7.12-6.982a.823.823 0 000-1.18.863.863 0 00-1.204 0l-7.119 6.982a2.588 2.588 0 01-3.61 0 2.47 2.47 0 010-3.54l7.12-6.982z"></path></svg> MCPs</button>
                         <button className="dropdown-list" onClick={() => { router.push('/store/prompts') }} >  <MessageSquare size={16} /> Prompts</button>
                     </div>
-                    {user?.plan !== 'free' && <SidebarButton className="sidebar-button" data-tooltip={'history'} onClick={() => toggleDropdown('workspace')}>
+                    <SidebarButton className="sidebar-button" data-tooltip={'history'} onClick={() => toggleDropdown('workspace')}>
                         <Layers size={20} /> Workspaces <span className="expand-sidebar-icon">{isWorkspaceExpannd ? <ChevronDown size={16} /> : <ChevronRight size={16} />}</span>
-                    </SidebarButton>}
+                    </SidebarButton>
                     {isWorkspaceExpannd && <div className="sidebar-dropdown-cont">
                         <button className="dropdown-list" onClick={() => { location.href = '#workspace/create' }}><Plus size={14} />Create</button>
                         <button className="dropdown-list" onClick={() => { router.push(`/workspace/invite`) }}>

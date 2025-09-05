@@ -14,6 +14,7 @@ import EditProfileModal from "./components/editProfile";
 import SelectThemeButton from "../themeButton";
 import DeleteMemoryModal from "./components/deleteMemoryModal";
 import { getQuickAccess, updateQuickAccess } from "@/app/utils/quickAccess";
+import BgButton from "../bgButton";
 
 
 const PLAN_PRICES: Record<string, string> = {
@@ -119,6 +120,7 @@ const ModalSetting = () => {
     const [loading, setLoading] = useState(true);
     const [quickAccess, setQuickAccess] = useState<any>(null);
     const [loadingQuickAccess, setLoadingQuickAccess] = useState(false);
+
     type Memory = {
         memory_id: string;
         createdAt: string;
@@ -309,6 +311,10 @@ const ModalSetting = () => {
                             <div className="setting-item">
                                 <label className="setting-label">Theme</label>
                                 <SelectThemeButton />
+                            </div>
+                            <div className="setting-item">
+                                <label className="setting-label">Background</label>
+                                <BgButton />
                             </div>
                         </div>
 

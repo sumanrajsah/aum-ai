@@ -9,13 +9,17 @@ import { useSidebarStore } from "@/store/useSidebarStore";
 import { usePathname } from "next/navigation";
 import Modal from "../modal";
 import HistoryBar from "../sidebar/historyBar";
+import SpaceBackground from "../bgspace";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 export default function PageStruct1({ children }: { children: React.ReactNode }) {
     const { isSidebarOpen, toggleSidebar } = useSidebarStore();
+    const { settings, loading } = useSettingsStore();
     const pathname = usePathname();
 
     return (
         <>
+            {settings.background === "space" && !loading && <SpaceBackground />}
             <Modal />
             {(pathname !== '/login' && pathname !== '/signup') ? <div className="page-struct1">
                 <Header />

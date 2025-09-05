@@ -120,7 +120,7 @@ const SelectModelButton = () => {
                                         </div>
                                     ) : model.credits ? (
                                         <div className="model-credits">
-                                            <span className="credit-item">Credits: {model.credits} </span>
+                                            <span className="credit-item">Credits: {model.credits} {chatMode === 'video' && '/s'} </span>
                                         </div>
                                     ) : null}
                                 </div>
