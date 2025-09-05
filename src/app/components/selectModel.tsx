@@ -7,6 +7,11 @@ import { useTheme } from "next-themes"
 import { useChat } from "../../context/ChatContext"
 import { imageModels, llmModels, vidoeModels } from "../utils/models-list"
 
+export const llmModelsFree = ['gpt-5-nano', 'gpt-4.1-nano', 'mistral-small-2503', 'ministral-3b', 'grok-3-mini', 'mistral-nemo', 'phi-4-mini-reasoning', 'gpt-4o-mini'];
+
+export function isModelAvailable(modelValue: string): boolean {
+    return llmModelsFree.includes(modelValue);
+}
 
 const SelectModelButton = () => {
     const { selectModel, Model, chatMode } = useChat();
@@ -115,8 +120,9 @@ const SelectModelButton = () => {
                                     <span className="s-model-name">{model.label}</span>
                                     {hasIOCredits(model) ? (
                                         <div className="model-credits">
-                                            <span className="credit-item">Input: {model.inputCredits} </span>
-                                            <span className="credit-item">Output: {model.outputCredits} </span>
+                                            {!isModelAvailable(model.value) && <span className="credit-item">Input: {model.inputCredits} </span>}
+                                            {!isModelAvailable(model.value) && <span className="credit-item">Output: {model.outputCredits} </span>}
+                                            {isModelAvailable(model.value) && <span className="credit-item">Free</span>}
                                         </div>
                                     ) : model.credits ? (
                                         <div className="model-credits">
