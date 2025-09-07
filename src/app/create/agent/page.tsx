@@ -271,7 +271,7 @@ export default function CreateAgents() {
     const handleDemoChange = (id: number, value: string) => {
         setStarters((prev) =>
             prev.map((demo) =>
-                demo.id === id ? { ...demo, 'message': value } : demo
+                demo.id === id ? { ...demo, messages: value } : demo
             )
         );
     };
@@ -280,6 +280,7 @@ export default function CreateAgents() {
         const newId = Date.now();
         setStarters([...starters, { id: newId, messages: "" }]);
     };
+
 
     const removeDemo = (id: number) => {
         setStarters(starters.filter((starter) => starter.id !== id));
@@ -482,7 +483,7 @@ export default function CreateAgents() {
                         placeholder="@aumAgent"
                         className={`cagent-input ${errors.agentHandle ? 'error' : ''}`}
                         value={agentHandle}
-                        onChange={(e) => setAgentHandle(e.target.value)}
+                        onChange={(e) => setAgentHandle((e.target.value).toLowerCase())}
                         maxLength={100}
                         style={{
                             borderColor: errors.agentHandle ? '#ff4444' :
