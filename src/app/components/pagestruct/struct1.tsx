@@ -21,7 +21,7 @@ export default function PageStruct1({ children }: { children: React.ReactNode })
         <>
             {settings.background === "space" && !loading && <SpaceBackground />}
             <Modal />
-            {(pathname !== '/login' && pathname !== '/signup') ? <div className="page-struct1">
+            {(pathname !== '/login' && pathname !== '/signup' && pathname !== '/term-and-condition') ? <div className="page-struct1">
                 <Header />
                 <Sidebar />
                 <HistoryBar />
