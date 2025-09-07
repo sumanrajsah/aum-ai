@@ -468,7 +468,7 @@ export default function CreateAgents() {
                         placeholder="Aum Agent"
                         className={`cagent-input ${errors.agentName ? 'error' : ''}`}
                         value={agentName}
-                        onChange={(e) => setAgentName((e.target.value).toLowerCase())}
+                        onChange={(e) => setAgentName((e.target.value))}
                         maxLength={100}
                     />
                     {errors.agentName && <span className="error-message">{errors.agentName}</span>}
