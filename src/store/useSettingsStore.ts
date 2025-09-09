@@ -6,7 +6,8 @@ type Settings = {
     theme: 'light' | 'dark';
     language: string;
     background: "none" | "space" // <— add this
-    systemContextWindow: number
+    systemContextWindow: number;
+    memory: boolean;
 };
 
 type SettingsStore = {
@@ -39,7 +40,7 @@ async function saveSettingsApi(settings: Settings): Promise<void> {
 export const useSettingsStore = create<SettingsStore>()(
     persist(
         (set, get) => ({
-            settings: { theme: 'light', language: 'en', background: "none", systemContextWindow: 3 }, // defaults
+            settings: { theme: 'light', language: 'en', background: "none", systemContextWindow: 3, memory: false }, // defaults
             loading: false,
             error: undefined,
 

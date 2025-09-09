@@ -15,6 +15,7 @@ import SelectThemeButton from "../themeButton";
 import DeleteMemoryModal from "./components/deleteMemoryModal";
 import { getQuickAccess, updateQuickAccess } from "@/app/utils/quickAccess";
 import BgButton from "../bgButton";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 
 const PLAN_PRICES: Record<string, string> = {
@@ -120,6 +121,7 @@ const ModalSetting = () => {
     const [loading, setLoading] = useState(true);
     const [quickAccess, setQuickAccess] = useState<any>(null);
     const [loadingQuickAccess, setLoadingQuickAccess] = useState(false);
+    const { settings, setSettings } = useSettingsStore();
 
     type Memory = {
         memory_id: string;
@@ -390,6 +392,25 @@ const ModalSetting = () => {
                         <h3 className="settings-title">Memory Management</h3>
                         <div className="settings-section">
                             <div className="setting-item">
+                                <label className="setting-label">Memory Storage</label>
+                                <p className="setting-description">
+                                    Remember your conversations across sessions for a more personalized experience.
+                                </p>
+                                <div className="setting-toggle">
+                                    <input
+                                        type="checkbox"
+                                        className="toggle-checkbox"
+                                        checked={settings.memory}
+                                        onChange={(e) => setSettings({ memory: e.target.checked })}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div className="settings-section">
+                            <div className="setting-item">
                                 <label className="setting-label">Stored Memories</label>
                                 <p className="setting-description">
                                     View and manage your stored conversation memories
@@ -409,7 +430,6 @@ const ModalSetting = () => {
                                     {memories.map((memory, index) => (
                                         <div key={memory.memory_id} className="memory-item">
                                             <div className="memory-row">
-                                                {/* ✅ Only show the AI-generated description */}
                                                 <div className="memory-text">
                                                     {memory.text && memory.text !== "" ? (
                                                         <p>{memory.text}</p>
@@ -429,7 +449,6 @@ const ModalSetting = () => {
                                                 >
                                                     <Trash2 size={14} />
                                                 </button>
-
                                             </div>
                                         </div>
                                     ))}
@@ -437,7 +456,6 @@ const ModalSetting = () => {
                             )}
                         </div>
                     </div>
-
                 );
             case 'quick':
                 return (
