@@ -1,31 +1,31 @@
-# --- deps ---
-FROM node:22-bookworm-slim AS deps
+# --- base ---
+FROM node:20-bookworm-slim AS base
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
-COPY package*.json ./
-RUN npm ci --include=dev
+RUN apt-get update && apt-get install -y git python3 build-essential curl \
+ && rm -rf /var/lib/apt/lists/* \
+ && corepack enable && corepack prepare yarn@stable --activate
+
+# --- deps ---
+FROM base AS deps
+COPY package.json yarn.lock ./
+COPY .yarn .yarn
+COPY .yarnrc.yml ./
+RUN yarn install --immutable
 
 # --- build ---
-FROM node:22-bookworm-slim AS build
-WORKDIR /app
-ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
-COPY --from=deps /app/node_modules ./node_modules
+FROM base AS build
+COPY --from=deps /app /app
 COPY . .
-RUN npm run build
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+RUN yarn build
 
-# --- run (slim, no dev deps) ---
-FROM node:22-bookworm-slim AS run
+# --- run ---
+FROM base AS run
 WORKDIR /app
-ENV NODE_ENV=production PORT=3000 NEXT_TELEMETRY_DISABLED=1
-# only install prod deps
-COPY package*.json ./
-RUN npm ci --omit=dev
-# copy build output and needed files
+ENV NODE_ENV=production PORT=3001 NEXT_TELEMETRY_DISABLED=1
 COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
-COPY --from=build /app/next.config.* ./    # if exists
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package*.json ./    # keep scripts
-EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD node -e "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
-CMD ["npm","run","start","--","-p","3000"]
+COPY --from=deps /app ./
+EXPOSE 3001
+CMD ["yarn", "start", "-p", "3001"]

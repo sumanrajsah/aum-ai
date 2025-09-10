@@ -27,7 +27,7 @@ export default function manifest(): MetadataRoute.Manifest {
                 purpose: "any",
             },
         ],
-        categories: ["social", "chatbot", "AI", "dapp", "blockchain"],
+        categories: ["social", "chatbot", "AI", "dapp", "blockchain", "chatgpt", "gemini", "groq", "llm", "mcp", "ai agents", "no-code", "low-code", "productivity", "web3", "crypto"],
         display_override: ["fullscreen", "window-controls-overlay"],
         shortcuts: [
             {
