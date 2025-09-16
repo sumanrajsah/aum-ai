@@ -99,10 +99,10 @@
 }
 
 /* Default styles */
-.connect-button {
+.header-button {
 
     position: relative;
-    padding: clamp(5px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
+    padding: clamp(5px, 1.5vw, 10px) clamp(10px, 2vw, 10px);
     cursor: pointer;
     border-radius: clamp(6px, 1.5vw, 10px);
     font-size: clamp(12px, 2.2vw, 14px);
@@ -131,7 +131,7 @@
     border-radius: 50%;
 }
 
-.connect-button:hover {
+.header-button:hover {
 
     background-clip: none;
     transform: scale(1.03);
@@ -186,7 +186,7 @@
 
 html.dark {
 
-    .connect-button {
+    .header-button {
         background: linear-gradient(145deg,
                 rgba(var(--bg-color1), 0.18),
                 rgba(var(--bg-color1), 0.08));
@@ -201,7 +201,7 @@ html.dark {
 
 html.light {
 
-    .connect-button {
+    .header-button {
         background: linear-gradient(145deg,
                 rgba(var(--bg-color1), 0.12),
                 rgba(var(--bg-color1), 0.06));
@@ -237,6 +237,8 @@ html.light {
         padding: 5px 5px;
         gap: 5px;
     }
+
+
 }
 
 @media screen and (max-width: 500px) {

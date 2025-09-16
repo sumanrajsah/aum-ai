@@ -75,18 +75,18 @@ const Header = () => {
                 {openWorkspaceModel && user && <div className="workspace-cont" ref={modalRef}>
                     <WorkspaceCont />
                 </div>}
-                {/* {pathname !== '/' && !pathname.startsWith('/c/') && <button onClick={() => router.push('/')} className="connect-button">Home</button>} */}
+                {/* {pathname !== '/' && !pathname.startsWith('/c/') && <button onClick={() => router.push('/')} className="header-button">Home</button>} */}
                 <div className="btn-cont">
                     {user && <button className="credit-btn" onClick={() => router.push('/credits')}><Coins size={20} />{credits}</button>}
-                    {pathname === '/store/agents' && user && <button onClick={() => router.push('/store/agents/mine')} className="connect-button">My Agents</button>}
-                    {pathname === '/store/mcp' && user && <button onClick={() => router.push('/store/mcp/mine')} className="connect-button">My MCP</button>}
+                    {pathname === '/store/agents' && user && <button onClick={() => router.push('/store/agents/mine')} className="header-button">My Agents</button>}
+                    {pathname === '/store/mcp' && user && <button onClick={() => router.push('/store/mcp/mine')} className="header-button">My MCP</button>}
 
-                    {!(user) ? <button className="connect-button"
+                    {!(user) ? <button className="header-button"
                         onClick={() => {
                             router.push('/login')
                         }}
                     >Sign In</button> : null}
-                    {!(user) ? <button className="connect-button"
+                    {!(user) ? <button className="header-button"
                         onClick={() => {
                             router.push('/signup')
                         }}

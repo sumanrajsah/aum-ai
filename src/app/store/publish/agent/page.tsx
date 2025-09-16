@@ -278,9 +278,9 @@ export default function PublishAgent() {
                                 type="number"
                                 value={price}
                                 onChange={handlePriceChange}
-                                placeholder="0"
-                                min="0"
-                                step="0.01"
+                                placeholder="min 10 AUM"
+                                min="10"
+                                step="1"
                                 className="modern-input"
                             />
                         </div>
@@ -295,7 +295,7 @@ export default function PublishAgent() {
                 <button
                     className="publish-btn"
                     onClick={handlePublish}
-                    disabled={isPublishing || selectedConfigVersion === null}
+                    disabled={isPublishing || selectedConfigVersion === null || price === '' || Number(price) < 10}
                 >
                     {isPublishing ? (
                         <>
