@@ -131,8 +131,8 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, aid
 
             } catch (e) { console.log(e) }
         }
-        if (user) getData()
-    }, [user])
+        if (user && chatId) getData()
+    }, [chatId])
 
     useEffect(() => {
         if (messages.length > 0) {
@@ -194,10 +194,32 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, aid
                 <div
                     className="chat-cont"
                 >
-                    {(messages.length == 0) && <div className="quote" >
-                        {user && <p>How can I assist, {user.name}</p>}
-                        {!user && <p>Get Started With AUM AI</p>}
-                    </div>}
+                    {loadingChat && (
+                        <div className="chat-skeleton">
+                            {/* User message skeleton */}
+                            <div className="message user">
+                                <div className="bubble"></div>
+                            </div>
+
+                            {/* AI message skeleton */}
+                            <div className="message ai">
+                                <div className="bubble short"></div>
+                                <div className="bubble"></div>
+                                <div className="bubble medium"></div>
+                            </div>
+                            <br />
+                            <div className="message user">
+                                <div className="bubble"></div>
+                            </div>
+
+                            {/* AI message skeleton */}
+                            <div className="message ai">
+                                <div className="bubble short"></div>
+                                <div className="bubble"></div>
+                                <div className="bubble medium"></div>
+                            </div>
+                        </div>
+                    )}
                     {messages.map((msg, index) => {
                         // Group consecutive image_url items together
                         const groupedContent: any[] = [];

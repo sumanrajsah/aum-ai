@@ -400,6 +400,59 @@ button:hover {
   border: none;
 }
 
+.chat-skeleton {
+  position: relative;
+  display: block;
+  background: transparent;
+  gap: 20px;
+  height: auto;
+  width: 90%;
+  max-width: 800px;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message.ai {
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bubble {
+  height: 16px;
+  width: 100%;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #5353535b 25%, #4444445b 50%, #5e5d5d52 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.bubble.short {
+  width: 60%;
+}
+
+.bubble.medium {
+  width: 80%;
+}
+
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 
 
 @media screen and (max-width: 1000px) {

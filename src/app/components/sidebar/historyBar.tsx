@@ -143,6 +143,7 @@ const HistoryBar = () => {
                                                                 : `/workspace/${item.wid}/c/${item.chat_id}?model=${Model}&mode=${chatMode}`
                                                         );
                                                     }
+                                                    setMessages([]);
                                                     setSelectedChat(item.chat_id);
                                                 }}
                                                 style={{

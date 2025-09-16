@@ -132,8 +132,8 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, wid
 
             } catch { }
         }
-        if (user) getData()
-    }, [user])
+        if (user && chatId) getData()
+    }, [chatId])
 
     useEffect(() => {
         if (messages.length > 0) {
@@ -183,11 +183,34 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, wid
                     width={20}
                     height={20}
                 /></div> : <>
-                    {(messages.length == 0) && <div className="quote" >
-                        {user && <p>How can I assist, {user.name}</p>}
-                        {!user && <p>Get Started With AUM AI</p>}
-                    </div>}
-                    {messages.map((msg, index) => (
+                    {loadingChat && (
+                        <div className="chat-skeleton">
+                            {/* User message skeleton */}
+                            <div className="message user">
+                                <div className="bubble"></div>
+                            </div>
+
+                            {/* AI message skeleton */}
+                            <div className="message ai">
+                                <div className="bubble short"></div>
+                                <div className="bubble"></div>
+                                <div className="bubble medium"></div>
+                            </div>
+                            <br />
+                            <div className="message user">
+                                <div className="bubble"></div>
+                            </div>
+
+                            {/* AI message skeleton */}
+                            <div className="message ai">
+                                <div className="bubble short"></div>
+                                <div className="bubble"></div>
+                                <div className="bubble medium"></div>
+                            </div>
+                        </div>
+                    )}
+
+                    {!loadingChat && messages.map((msg, index) => (
                         <div className="chat-cont-message" key={msg.msg_id}>
                             {Array.isArray(msg.content) ? (
                                 msg.content.map((item: MessageContentItem, idx) => {

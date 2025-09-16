@@ -105,7 +105,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                 }
 
                 const data = await response.json();
-                console.log('Chat data:', data);
+                //  console.log('Chat data:', data);
 
                 const chat: Message[] = data.chats.map((msg: MessageInterface) => ({
                     content: msg.content,
@@ -118,7 +118,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                     tool_calls: msg.tool_calls
                 }));
 
-                console.log(chat);
+                //   console.log(chat);
 
                 //            setChatTitle(data.chat.title)
                 setMessages(chat)
@@ -126,9 +126,12 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                 setLoadingChat(false)
 
             } catch (e) { console.log(e) }
+            finally {
+                setLoadingChat(false)
+            }
         }
-        if (user) getData()
-    }, [user])
+        if (user && chatId) getData()
+    }, [chatId]);
 
     useEffect(() => {
         if (messages.length > 0) {
@@ -189,11 +192,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                 <div
                     className="chat-cont"
                 >
-                    {(messages.length == 0) && <div className="quote" >
-                        {user && <p>How can I assist, {user.name}</p>}
-                        {!user && <p>Get Started With AUM AI</p>}
-                    </div>}
-                    {messages.map((msg, index) => {
+                    {!loadingChat && messages.map((msg, index) => {
                         // Group consecutive image_url items together
                         const groupedContent: any[] = [];
                         let currentImageGroup: any[] = [];
@@ -335,6 +334,32 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                             </div>
                         );
                     })}
+                    {loadingChat && (
+                        <div className="chat-skeleton">
+                            {/* User message skeleton */}
+                            <div className="message user">
+                                <div className="bubble"></div>
+                            </div>
+
+                            {/* AI message skeleton */}
+                            <div className="message ai">
+                                <div className="bubble short"></div>
+                                <div className="bubble"></div>
+                                <div className="bubble medium"></div>
+                            </div>
+                            <br />
+                            <div className="message user">
+                                <div className="bubble"></div>
+                            </div>
+
+                            {/* AI message skeleton */}
+                            <div className="message ai">
+                                <div className="bubble short"></div>
+                                <div className="bubble"></div>
+                                <div className="bubble medium"></div>
+                            </div>
+                        </div>
+                    )}
 
 
                     {(aiTyping) && (
