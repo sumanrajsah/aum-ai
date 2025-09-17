@@ -398,6 +398,17 @@ export default function CollabSignUp() {
                                     Create Account
                                 </button>
                             )}
+                            {/* Google Sign In option */}
+                            {!loading && (
+                                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
+                                        <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                        <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
+                                        <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                    </div>
+                                    <GoogleSignInButton islogin={false} className="google-signup-button" />
+                                </div>
+                            )}
 
                             <div style={{ textAlign: 'center', fontSize: '0.8em', color: '#666', marginTop: '10px' }}>
                                 <p>By creating an account, you agree to our <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Terms of Service</Link> and <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Privacy Policy</Link></p>
@@ -405,16 +416,6 @@ export default function CollabSignUp() {
                         </div>
                     </form>
 
-                    {/* Google Sign In option */}
-                    {!loading && (
-                        <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
-                                <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
-                                <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
-                                <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             )}
         </>
