@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import "./GSB.css";
+import { useAuth } from "@/hooks/useAuth";
 
 interface GoogleSignInButtonProps {
     className?: string;
@@ -18,6 +19,7 @@ export default function GoogleSignInButton({
     onError,
 }: GoogleSignInButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
+    const { isAuthLoading } = useAuth()
 
     const handleCredentialResponse = useCallback(
         async (response: any) => {
@@ -71,7 +73,7 @@ export default function GoogleSignInButton({
                         theme: "outline",
                         size: "large",
                         text: islogin ? "signin_with" : "signup_with",
-                        shape: "rectangular",
+                        shape: "circle",
                     }
                 );
             }
@@ -81,9 +83,9 @@ export default function GoogleSignInButton({
     }, [handleCredentialResponse, islogin]);
 
     return (
-        <div className={className}>
+        <>
             {isLoading && <div className="spinner"></div>}
-            <div id="gsi-button"></div>
-        </div>
+            {!isLoading && <button id="gsi-button"></button>}
+        </>
     );
 }

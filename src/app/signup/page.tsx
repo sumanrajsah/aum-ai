@@ -400,14 +400,16 @@ export default function CollabSignUp() {
                             )}
                             {/* Google Sign In option */}
                             {!loading && (
-                                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
-                                        <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
-                                        <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
-                                        <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                <>
+                                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
+                                            <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                            <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
+                                            <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                        </div>
                                     </div>
-                                    <GoogleSignInButton islogin={false} className="google-signup-button" />
-                                </div>
+                                    <GoogleSignInButton islogin={false} />
+                                </>
                             )}
 
                             <div style={{ textAlign: 'center', fontSize: '0.8em', color: '#666', marginTop: '10px' }}>

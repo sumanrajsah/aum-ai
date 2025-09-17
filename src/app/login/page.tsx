@@ -98,16 +98,20 @@ export default function CollabLogin() {
                         wrapperClass=""
                         secondaryColor="gray"
                     /><p>Wait...</p></> : <button className="collab-button" onClick={handleLogin} type="submit">Submit</button>}
-                    {!loading && (
-                        <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
-                                <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
-                                <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
-                                <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
-                            </div>
-                            <GoogleSignInButton islogin={true} className="google-signup-button" />
-                        </div>
-                    )}
+                    <div style={{ display: 'flex', gap: '10px', flexDirection: 'column', marginTop: '20px', width: '100%' }}>
+                        {!loading && (
+                            <>
+                                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
+                                        <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                        <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
+                                        <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                    </div>
+                                </div>
+                                <GoogleSignInButton islogin={true} className="google-signup-button" />
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>)}
         </>
