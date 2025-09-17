@@ -22,21 +22,21 @@ const SelectToolButton = () => {
 
     const toggleToolSelection = (toolName: string) => {
         setTools(prev =>
-            prev.includes(toolName)
-                ? prev.filter(t => t !== toolName)
-                : [...prev, toolName]
+            prev.includes(toolName) ? [] : [toolName]  // only keep one tool
         );
     };
 
+
     const tools = [
+        // {
+        //     id: 'image',
+        //     name: 'Create an Image',
+        //     description: 'Generate AI-powered images and visual content',
+        //     icon: Images
+        // },
         {
-            id: 'image',
-            name: 'Create an Image',
-            description: 'Generate AI-powered images and visual content',
-            icon: Images
-        },
-        {
-            id: 'search',
+            id: 'web_search',
+            label: 'Search',
             name: 'Search on Web',
             description: 'Browse and search the internet for information',
             icon: Globe
@@ -53,7 +53,7 @@ const SelectToolButton = () => {
                 <p className="modal-subtitle">Choose the tools you want to enable for this session</p>
             </div>
 
-            {/* <div className="selecttool-btn-cont">
+            <div className="selecttool-btn-cont">
                 {tools.map((tool) => {
                     const IconComponent = tool.icon;
                     const isSelected = prevTools.includes(tool.id);
@@ -61,7 +61,7 @@ const SelectToolButton = () => {
                     return (
                         <div
                             key={tool.id}
-                            className={`tool-checkbox ${isSelected ? 'selected' : ''}`}
+                            className={`tool-modal-checkbox ${isSelected ? 'selected' : ''}`}
                             onClick={() => toggleToolSelection(tool.id)}
                         >
                             <div className="tool-content">
@@ -82,13 +82,13 @@ const SelectToolButton = () => {
                         </div>
                     );
                 })}
-            </div> */}
+            </div>
 
-            {/* <div className="tool-modal-footer">
+            <div className="tool-modal-footer">
                 <div className="selected-count">
                     {prevTools.length} tool{prevTools.length !== 1 ? 's' : ''} selected
                 </div>
-            </div> */}
+            </div>
         </div>
     )
 }

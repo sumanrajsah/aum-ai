@@ -10,11 +10,14 @@ import { fetchApps } from "./utils";
 import ModalCont from "../modal/modalCont";
 import SelectMcpButton from "../mcpComp/selectmcp";
 import SelectToolButton from "../toolComp/toolmodal";
+import { useChat, useMcpServer } from "@/context/ChatContext";
 
 
 const ToolsModal = () => {
 
     const { theme } = useTheme()
+    const { selectedServers } = useMcpServer();
+    const { tools } = useChat();
 
     const [apps, setApps] = useState<any[]>([]);
 
@@ -29,8 +32,8 @@ const ToolsModal = () => {
 
     return (
         <ModalCont>
-            <SelectToolButton />
-            <SelectMcpButton />
+            {selectedServers.length === 0 && <SelectToolButton />}
+            {tools.length === 0 && <SelectMcpButton />}
         </ModalCont>
     );
 };

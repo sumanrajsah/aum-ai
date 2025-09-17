@@ -133,10 +133,11 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
     const renderLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (props) => {
         return (
             <a
+                {...props}
                 href={props.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: role === 'assistant' ? 'white' : 'skyblue', textDecoration: 'underline' }}
+                className="render-link"
             >
                 {props.children}
             </a>

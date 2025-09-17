@@ -744,13 +744,14 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                         const msg_id = parsed.msg_id;
                         aiResponse += parsed.response;
                         //if (parsed.type === 'text') setAiTyping(false);
-                        setAiWriting(true)
+                        if (parsed.type !== 'event' || parsed.type !== 'error') setAiWriting(true);
                         if (parsed.type === 'error') {
                             alertMessage.error(parsed.response);
                             return;
                         }
                         if (parsed.type === 'event') {
                             // alertMessage.error(parsed.response);
+                            setEvent(parsed.response)
 
                         }
 
@@ -794,6 +795,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
             setAiTyping(false);
             setMessages(prevMessages => prevMessages.filter(message => message.type !== 'event'));
             setAiWriting(false)
+            setEvent('')
 
         }
     }, [user, router, chat, chatId]);

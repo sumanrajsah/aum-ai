@@ -107,6 +107,33 @@
     font-size: smaller;
 }
 
+.render-link {
+    display: inline-block;
+    text-decoration: none;
+    background: rgba(var(--bg-color1), 0.15);
+    font-weight: 500;
+    border-radius: 9999px;
+    /* pill shape */
+    padding: 5px;
+    font-size: 10px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.render-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.render-link:active {
+    transform: scale(0.97);
+}
+
+.render-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
+}
+
 
 @media screen and (max-width: 1000px) {
     .assistant-msg-cont {

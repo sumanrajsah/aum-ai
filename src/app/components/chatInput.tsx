@@ -19,6 +19,7 @@ import SelectMcpButton from './mcpComp/selectmcp';
 import { imageModels, llmModels, vidoeModels } from '../utils/models-list';
 import SelectToolButton from './toolComp/toolmodal';
 import { Oval } from 'react-loader-spinner';
+import { ToolChips } from './toolChip';
 
 interface ChatInputProps {
   pause: boolean;
@@ -546,6 +547,7 @@ const ChatInput = () => {
           }}
 
         >
+          <ToolChips />
           {/* Multiple files preview */}
           {fileLoading && <div className="files-preview-cont"> <div className='file-view' > <Oval
             visible={true}

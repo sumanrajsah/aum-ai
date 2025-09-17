@@ -45,7 +45,7 @@
     gap: 5px;
 }
 
-.tool-checkbox {
+.tool-modal-checkbox {
     position: relative;
     display: flex;
     align-items: flex-start;
@@ -61,17 +61,17 @@
     border: 1px solid rgba(var(--border-color), 0.1);
 }
 
-.tool-checkbox:hover {
+.tool-modal-checkbox:hover {
     background: rgba(94, 129, 173, 0.15);
 }
 
-.tool-checkbox.selected {
+.tool-modal-checkbox.selected {
     background: rgba(94, 129, 173, 0.2);
     border-color: rgba(94, 129, 173, 0.4);
     box-shadow: 0 0 0 1px rgba(94, 129, 173, 0.3);
 }
 
-.tool-checkbox.selected:hover {
+.tool-modal-checkbox.selected:hover {
     background: rgba(94, 129, 173, 0.25);
     border-color: rgba(94, 129, 173, 0.5);
 }
@@ -102,7 +102,7 @@
     flex-shrink: 0;
 }
 
-.tool-checkbox.selected .tool-icon {
+.tool-modal-checkbox.selected .tool-icon {
     background: rgba(94, 129, 173, 0.2);
     color: rgba(94, 129, 173, 1);
 }
@@ -167,7 +167,7 @@
         font-size: 13px;
     }
 
-    .tool-checkbox {
+    .tool-modal-checkbox {
         padding: 5px;
     }
 
@@ -192,7 +192,7 @@
         gap: 14px;
     }
 
-    .tool-checkbox {
+    .tool-modal-checkbox {
         padding: 5px;
     }
 
@@ -229,7 +229,7 @@
         font-size: 16px;
     }
 
-    .tool-checkbox {
+    .tool-modal-checkbox {
         padding: 5px;
     }
 
@@ -246,23 +246,23 @@
 
 /* High contrast mode */
 @media (prefers-contrast: high) {
-    .tool-checkbox {
+    .tool-modal-checkbox {
         border-width: 2px;
     }
 
-    .tool-checkbox:hover,
-    .tool-checkbox.selected {
+    .tool-modal-checkbox:hover,
+    .tool-modal-checkbox.selected {
         border-width: 2px;
     }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    .tool-checkbox {
+    .tool-modal-checkbox {
         transition: none;
     }
 
-    .tool-checkbox:hover {
+    .tool-modal-checkbox:hover {
         transform: none;
     }
 }

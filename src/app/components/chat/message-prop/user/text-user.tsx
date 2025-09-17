@@ -115,7 +115,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, role, type, file
                 href={props.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: 'blue', textDecoration: 'underline' }}
+                style={{ textDecoration: 'none' }}
             >
                 {props.children}
             </a>

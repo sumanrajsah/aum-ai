@@ -35,7 +35,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser, type }) => {
 
   const [copyText, setCopyText] = useState<String>('Copy')
   // console.log(bytecode, abi)
-  const { aiTyping, setAiTyping, setEditInput, aiWriting } = useChat();
+  const { aiTyping, setAiTyping, setEditInput, aiWriting, event } = useChat();
   const [isImageLoaded, setImageLoaded] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
   const [selectedImage, setSelectImage] = useState<string | null>(null);
@@ -523,7 +523,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser, type }) => {
           width={20}
           height={20}
           className='msg-loading-img'
-        />{!aiWriting && <span className='thinking-text'>Thinking</span>}</div>}
+        />{!aiWriting && <span className='thinking-text'>{event}</span>}<span className='thinking-text'>{event}</span></div>}
 
       </div>
     </>
