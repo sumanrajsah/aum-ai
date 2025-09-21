@@ -89,7 +89,11 @@ export default function GoogleSignInButton({
             {isLoading && <div className="spinner"></div>}
             {!isLoading && <button id="gsi-button" style={{
                 width: "100%",           // responsive container
-                maxWidth: "500px"     // limit max size
+                maxWidth: "500px",     // limit max size
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center'
             }}></button>}
         </>
     );
