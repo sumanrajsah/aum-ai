@@ -175,8 +175,165 @@
     color: white;
 }
 
+.logout-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.15s ease-out;
+}
+
+.logout-modal-content {
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: slideIn 0.2s ease-out;
+    border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.logout-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.logout-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.logout-modal-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.logout-modal-close-btn:hover:not(:disabled) {
+    background-color: var(--bg-color1);
+}
+
+.logout-modal-close-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.logout-modal-body {
+    padding: 20px 24px;
+}
+
+.logout-modal-body p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.logout-modal-actions {
+    display: flex;
+    gap: 12px;
+    padding: 16px 24px 24px;
+    justify-content: flex-end;
+}
+
+.logout-modal-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.logout-cancel-btn {
+    background-color: transparent;
+    border-color: var(--border-color, #e5e7eb);
+}
+
+.logout-cancel-btn:hover:not(:disabled) {
+    background-color: white;
+    color: rgba(var(--bg-color1));
+}
+
+.logout-confirm-btn {
+    background-color: #dc2626;
+    color: white;
+    border-color: #dc2626;
+}
+
+.logout-confirm-btn:hover:not(:disabled) {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+}
+
+.logout-modal-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Spinner for loading state */
+.logout-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* Dark theme */
 html.dark {
+
     /* .profile-sidebar-body {
         background: linear-gradient(to right, #1C273B, #191E2B);
         box-shadow:
@@ -184,6 +341,13 @@ html.dark {
             0 4px 10px rgba(0, 0, 0, 0.1),
             inset 0 1px 1px rgba(255, 255, 255, 0.05);
     } */
+    .logout-modal-content {
+        background: linear-gradient(to right, #1C273B, #191E2B);
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.25),
+            0 4px 10px rgba(0, 0, 0, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
 
     .user-avatar {
         background: rgba(255, 255, 255, 0.05);
@@ -210,6 +374,7 @@ html.dark {
 
 /* Light theme */
 html.light {
+
     /* .profile-sidebar-body {
         background: linear-gradient(to right, #D6E2FB, #E3EBFD);
         box-shadow:
@@ -217,6 +382,13 @@ html.light {
             0 4px 12px rgba(0, 0, 0, 0.06),
             inset 0 2px 4px rgba(255, 255, 255, 0.6);
     } */
+    .logout-modal-content {
+        background: linear-gradient(to right, #D6E2FB, #E3EBFD);
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.1),
+            0 4px 12px rgba(0, 0, 0, 0.06),
+            inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    }
 
     .user-avatar {
         background: rgba(94, 129, 173, 0.08);

@@ -52,7 +52,7 @@ export default function CollabLogin() {
 
     useEffect(() => {
         if (status === "authenticated") {
-            router.push("/");
+            location.href = "/";
         }
     }, [status]);
 
@@ -72,7 +72,7 @@ export default function CollabLogin() {
                 <h1>Authenticated</h1>
                 <p>Redirecting to dashboard...</p>
             </div> : <div className="collab-sbody">
-                <button className="collab-sbutton" onClick={() => { router.push('/signup') }} style={{ width: "auto" }}>Create an account</button>
+
                 <div className="cs-heading">
                     <Image src={'/sitraone.png'} height={50} width={50} alt="sitraone" />
                     <br />
@@ -97,12 +97,12 @@ export default function CollabLogin() {
                         wrapperStyle={{}}
                         wrapperClass=""
                         secondaryColor="gray"
-                    /><p>Wait...</p></> : <button className="collab-button" onClick={handleLogin} type="submit">Submit</button>}
-                    <div style={{ display: 'flex', gap: '10px', flexDirection: 'column', marginTop: '20px', width: '100%' }}>
+                    /><p>Wait...</p></> : <button className="collab-button" onClick={handleLogin} type="submit">Login</button>}
+                    <div style={{ display: 'flex', gap: '5px', flexDirection: 'column', marginTop: '5px', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                         {!loading && (
                             <>
-                                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
+                                <div style={{ marginTop: '5px', textAlign: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
                                         <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
                                         <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
                                         <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
@@ -111,6 +111,9 @@ export default function CollabLogin() {
                                 <GoogleSignInButton islogin={true} className="google-signup-button" />
                             </>
                         )}
+                        <br />
+                        <label style={{ width: '100%', textAlign: 'center' }}>Don't have an account?</label>
+                        <button className="collab-button" onClick={() => { router.push('/signup') }}>Create an account</button>
                     </div>
                 </div>
             </div>)}

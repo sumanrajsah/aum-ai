@@ -285,7 +285,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, role, type, file
                         display: 'flex',
                         flexDirection: role === 'user' ? 'row-reverse' : 'row', // Align user messages to the right, AI messages to the left
                         alignItems: 'flex-end', // Align items to the bottom
-                        maxWidth: '100%', // Limit the width of the message container
+                        maxWidth: '70%', // Limit the width of the message container
                         background: 'transparent',
                     }}
                 >
@@ -304,7 +304,7 @@ const TextUserMessage: React.FC<ChatMessageProps> = ({ content, role, type, file
 
                             <Markdown
                                 remarkPlugins={[remarkGfm, remarkMath]}
-                                rehypePlugins={[rehypeRaw, rehypeKatex, [rehypeExternalLinks, { target: '_blank', rel: 'noopener noreferrer' }]]}
+                                rehypePlugins={[rehypeKatex, [rehypeExternalLinks, { target: '_blank', rel: 'noopener noreferrer' }]]}
                                 // @ts-ignore
                                 components={{
                                     a: renderLink,

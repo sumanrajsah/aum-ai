@@ -154,7 +154,7 @@ export default function CollabSignUp() {
 
             if (data.message === "success") {
                 alert.success("Account created successfully! Please check your email to verify your account.");
-                location.href = "/login";
+                location.href = "/";
             } else {
                 alert.warn(data.message || "Signup failed. Please try again.");
             }
@@ -169,7 +169,7 @@ export default function CollabSignUp() {
 
     useEffect(() => {
         if (status === "authenticated") {
-            router.push("/dashboard");
+            location.href = "/";
         }
     }, [status, router]);
 
@@ -197,18 +197,12 @@ export default function CollabSignUp() {
                 </div>
             ) : (
                 <div className="collab-sbody">
-                    <button
-                        className="collab-sbutton"
-                        onClick={() => { router.push('/login') }}
-                        style={{ width: "auto" }}
-                    >
-                        Already have an account? Login
-                    </button>
+
 
                     <div className="cs-heading">
                         <Image src={'/sitraone.png'} height={50} width={50} alt="sitraone" />
                         <br />
-                        <h1>Create an account</h1>
+                        <h1>Sign Up</h1>
                     </div>
 
                     <form className="cs-signup-cont" onSubmit={handleSubmit}>
@@ -259,33 +253,18 @@ export default function CollabSignUp() {
 
                         <div className="cs-signup-box">
                             <label>Password *</label>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    placeholder="Enter a strong password"
-                                    onChange={(e) => handlePasswordChange(e, "password")}
-                                    type={showPassword ? "text" : "password"}
-                                    style={{
-                                        borderColor: fieldErrors.password ? '#ff4444' : '',
-                                        paddingRight: '40px'
-                                    }}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    style={{
-                                        position: 'absolute',
-                                        right: '10px',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        background: 'none',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        color: '#666'
-                                    }}
-                                >
-                                    {showPassword ? '🙈' : '👁️'}
-                                </button>
-                            </div>
+
+                            <input
+                                placeholder="Enter a strong password"
+                                onChange={(e) => handlePasswordChange(e, "password")}
+                                type={showPassword ? "text" : "password"}
+                                style={{
+                                    borderColor: fieldErrors.password ? '#ff4444' : '',
+                                    paddingRight: '40px'
+                                }}
+                            />
+
+
                             {fieldErrors.password && (
                                 <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
                                     {fieldErrors.password}
@@ -327,34 +306,17 @@ export default function CollabSignUp() {
 
                         <div className="cs-signup-box">
                             <label>Confirm Password *</label>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    placeholder="Re-enter your password"
-                                    onChange={(e) => handlePasswordChange(e, "confirmPassword")}
-                                    type={showConfirmPassword ? "text" : "password"}
-                                    style={{
-                                        borderColor: fieldErrors.confirmPassword || fieldErrors.passwordMismatch ? '#ff4444' :
-                                            formData.confirmPassword && formData.password === formData.confirmPassword ? '#44ff44' : '',
-                                        paddingRight: '40px'
-                                    }}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    style={{
-                                        position: 'absolute',
-                                        right: '10px',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        background: 'none',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        color: '#666'
-                                    }}
-                                >
-                                    {showConfirmPassword ? '🙈' : '👁️'}
-                                </button>
-                            </div>
+
+                            <input
+                                placeholder="Re-enter your password"
+                                onChange={(e) => handlePasswordChange(e, "confirmPassword")}
+                                type={showConfirmPassword ? "text" : "password"}
+                                style={{
+                                    borderColor: fieldErrors.confirmPassword || fieldErrors.passwordMismatch ? '#ff4444' :
+                                        formData.confirmPassword && formData.password === formData.confirmPassword ? '#44ff44' : '',
+                                    paddingRight: '40px'
+                                }}
+                            />
                             {(fieldErrors.confirmPassword || fieldErrors.passwordMismatch) && (
                                 <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
                                     {fieldErrors.confirmPassword || fieldErrors.passwordMismatch}
@@ -367,7 +329,7 @@ export default function CollabSignUp() {
                             )}
                         </div>
 
-                        <div style={{ display: 'flex', gap: '10px', flexDirection: 'column', marginTop: '20px' }}>
+                        <div style={{ display: 'flex', gap: '10px', flexDirection: 'column', marginTop: '20px', alignItems: 'center', justifyContent: 'center' }}>
                             {loading ? (
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
                                     <Oval
@@ -395,14 +357,14 @@ export default function CollabSignUp() {
                                         passwordStrength.level === "Weak"
                                     }
                                 >
-                                    Create Account
+                                    Sign Up
                                 </button>
                             )}
                             {/* Google Sign In option */}
                             {!loading && (
                                 <>
-                                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
+                                    <div style={{ marginTop: '5px', textAlign: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
                                             <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
                                             <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
                                             <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
@@ -411,10 +373,19 @@ export default function CollabSignUp() {
                                     <GoogleSignInButton islogin={false} />
                                 </>
                             )}
+                            <br />
+                            <label style={{ width: '100%', textAlign: 'center' }}>Already have an account?</label>
+                            <button
+                                className="collab-button"
+                                onClick={() => { router.push('/login') }}
+                            >
+                                Login
+                            </button>
 
                             <div style={{ textAlign: 'center', fontSize: '0.8em', color: '#666', marginTop: '10px' }}>
                                 <p>By creating an account, you agree to our <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Terms of Service</Link> and <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Privacy Policy</Link></p>
                             </div>
+
                         </div>
                     </form>
 

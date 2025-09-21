@@ -48,5 +48,5 @@ export const useAuth = () => {
         fetchUser();
     }, []);
 
-    return { user, status, isAuthLoading: loading };
+    return { user, setUser, status, setStatus, isAuthLoading: loading };
 };

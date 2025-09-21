@@ -4,18 +4,12 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg,
-            rgba(248, 248, 248, 0.95),
-            rgba(242, 242, 242, 0.9));
-    color: #0E1111;
-    padding: clamp(12px, 2vw, 16px) clamp(16px, 2vw, 24px);
+
     cursor: pointer;
-    border-radius: clamp(12px, 2vw, 16px);
-    border: 2px solid rgba(14, 17, 17, 0.12);
     font-size: clamp(15px, 2.5vw, 17px);
     font-weight: 600;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     gap: clamp(10px, 2vw, 14px);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     touch-action: manipulation;

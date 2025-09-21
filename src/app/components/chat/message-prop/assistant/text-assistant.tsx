@@ -20,6 +20,7 @@ import { useTheme } from 'next-themes';
 import { useAlert } from '@/context/alertContext';
 import { llmModels } from '@/app/utils/models-list';
 import { usePathname } from 'next/navigation';
+import HtmlPreview from '@/app/components/htmlPreview';
 
 
 
@@ -37,6 +38,7 @@ interface ChatMessageProps {
 const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type, model }) => {
     const alertMessage = useAlert()
     if (content === '') return null;
+    const [codePreview, setCodePreview] = useState('');
     const [copyText, setCopyText] = useState<String>('Copy')
     const { aiTyping, setAiTyping, setEditInput } = useChat();
     const [isImageLoaded, setImageLoaded] = useState(false);
@@ -49,6 +51,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
     const [showToolsData, setShowToolsData] = useState<boolean>(false);
     const [showThought, setShowThought] = useState<boolean>(false);
     const [thoughtData, setThoughtData] = useState('');
+    const [previewOpen, setPreviewOpen] = React.useState(false);
     const { visibleText, thoughtText, hasThought } = useMemo(() => {
         if (type === "text") {
             return extractThoughts(content);
@@ -182,7 +185,11 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
     // Custom renderer for code blocks
     const renderCode = ({ node, inline, className, children, ...props }: any) => {
         const match = /language-(\w+)/.exec(className || '');
-        const codeText = String(children).replace(/\n$/, '');
+        const codeText = ([] as any[])
+            .concat(children)          // ensures children is an array
+            .map((child: any) => (typeof child === 'string' ? child : ''))
+            .join('')
+            .replace(/\n$/, '');      // remove trailing newline
         const language = match ? match[1] : 'text'; // Default to 'text' if no language is specified
 
         return !inline && match ? (
@@ -227,6 +234,12 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
                         className='copy-button2'
                     >
                         <Copy size={15} />{copyText}{/* Copy icon */}
+                    </button>
+                    <button
+                        onClick={() => { setCodePreview(codeText); setPreviewOpen(true) }}
+                        className='copy-button'
+                    >
+                        Preview
                     </button>
                 </div>
 
@@ -305,6 +318,11 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
                 <Image src={selectedImage} alt={'user-image'} width={5024} height={5024} className='image_url-modal' onClick={(e) => { e.stopPropagation(); }} />
             </div>
             }
+            {codePreview && <HtmlPreview
+                code={codePreview} // your HTML+CSS+JS string
+                open={previewOpen}
+                onClose={() => setPreviewOpen(false)}
+            />}
             <div ref={containerRef}
                 style={{
                     display: 'flex',
@@ -463,7 +481,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
                                             {showThought && (
                                                 <Markdown
                                                     remarkPlugins={[remarkGfm, remarkMath]}
-                                                    rehypePlugins={[rehypeRaw, rehypeKatex, [rehypeExternalLinks, { target: '_blank', rel: 'noopener noreferrer' }]]}
+                                                    rehypePlugins={[rehypeKatex, [rehypeExternalLinks, { target: '_blank', rel: 'noopener noreferrer' }]]}
                                                     // @ts-ignore
                                                     components={{
                                                         a: renderLink,
@@ -509,7 +527,7 @@ const TextAssistantMessage: React.FC<ChatMessageProps> = ({ content, role, type,
 
                                     <Markdown
                                         remarkPlugins={[remarkGfm, remarkMath]}
-                                        rehypePlugins={[rehypeRaw, rehypeKatex, [rehypeExternalLinks, { target: '_blank', rel: 'noopener noreferrer' }]]}
+                                        rehypePlugins={[rehypeKatex, [rehypeExternalLinks, { target: '_blank', rel: 'noopener noreferrer' }]]}
                                         // @ts-ignore
                                         components={{
                                             a: renderLink,

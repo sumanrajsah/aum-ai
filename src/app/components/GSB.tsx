@@ -73,7 +73,7 @@ export default function GoogleSignInButton({
                         theme: "outline",
                         size: "large",
                         text: islogin ? "signin_with" : "signup_with",
-                        shape: "circle",
+                        shape: "rectangular",
                     }
                 );
             }
@@ -85,7 +85,10 @@ export default function GoogleSignInButton({
     return (
         <>
             {isLoading && <div className="spinner"></div>}
-            {!isLoading && <button id="gsi-button"></button>}
+            {!isLoading && <button id="gsi-button" style={{
+                width: "100%",           // responsive container
+                maxWidth: "500px"     // limit max size
+            }}></button>}
         </>
     );
 }

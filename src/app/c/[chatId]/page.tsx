@@ -118,7 +118,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                     tool_calls: msg.tool_calls
                 }));
 
-                //   console.log(chat);
+                console.log(chat);
 
                 //            setChatTitle(data.chat.title)
                 setMessages(chat)
