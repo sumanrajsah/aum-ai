@@ -64,6 +64,7 @@ export default function GoogleSignInButton({
                 (window as any).google.accounts.id.initialize({
                     client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
                     callback: handleCredentialResponse,
+                    auto_select: false,
                 });
 
                 // Render inline Google button inside container
@@ -74,6 +75,7 @@ export default function GoogleSignInButton({
                         size: "large",
                         text: islogin ? "signin_with" : "signup_with",
                         shape: "rectangular",
+                        type: "standard",
                     }
                 );
             }
