@@ -56,7 +56,7 @@ const Header = () => {
         <>
             <div className={`header ${isSidebarOpen ? 'collapsed' : 'expanded'}`} onClick={async () => { setOpenDisconnectModel(false) }} >
                 <div className="header-left-btn-cont">
-                    {!isSidebarOpen && user && <button className="ham-btn" title="open" onClick={(e) => {
+                    {!isSidebarOpen && <button className="ham-btn" title="open" onClick={(e) => {
                         // e.stopPropagation()
                         toggleSidebar()
                     }}>

@@ -90,6 +90,7 @@ const HistoryBar = () => {
 
     if (!mounted) return null;
 
+
     const currentTheme = theme === 'system' ? systemTheme : theme;
 
     return (
@@ -115,7 +116,11 @@ const HistoryBar = () => {
                         placeholder="Search Chats"
                     />
                 </div> */}
-
+                {!user?.uid &&
+                    <div className="history-panel-cont" style={{ display: 'flex', justifyContent: 'center', padding: '20px', textAlign: 'center' }}>
+                        <p>You must be logged in to see or save history.</p>
+                    </div>
+                }
 
                 {memoizedHistory && Object.keys(memoizedHistory).length > 0 && (
                     <div className="history-panel">

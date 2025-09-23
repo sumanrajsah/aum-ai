@@ -203,7 +203,7 @@ const Sidebar = () => {
                         <button className="dropdown-list" onClick={() => { router.push(currentWorkspace === '' ? `/image-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/image-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}> <Limage size={16} /> Image</button>
                         <button className="dropdown-list" onClick={() => { router.push(currentWorkspace === '' ? `/video-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/video-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId("") }}>  <Play size={16} /> Video</button>
                     </div>
-                    <SidebarButton className="sidebar-button" onClick={() => { router.push('/store') }}>
+                    <SidebarButton className="sidebar-button" onClick={() => { router.push('/store/agents') }}>
                         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
                             <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -306,7 +306,7 @@ const Sidebar = () => {
                     >
                         <Search size={20} />
                     </SidebarButton>
-                    <SidebarButton className="sidebar-button-2" data-tooltip={'AUM Store'} onClick={() => { router.push('/store') }}>      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <SidebarButton className="sidebar-button-2" data-tooltip={'AUM Store'} onClick={() => { router.push('/store/agents') }}>      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
                         <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" />
                         <circle cx="12" cy="12" r="1.5" fill="currentColor" />

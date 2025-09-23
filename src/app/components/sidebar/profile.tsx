@@ -62,6 +62,7 @@ const ProfileCont = () => {
             setStatus("unauthenticated");
             alertMessage.success("✅ Logout successful");
             location.href = "/login";
+            localStorage.removeItem("auth-user");
         } else {
             alertMessage.warn("⚠️ Logout failed");
         }

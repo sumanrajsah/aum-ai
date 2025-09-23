@@ -147,6 +147,11 @@ const McpServerModalSetting = () => {
             alertMessage.error("Something went wrong while saving");
         }
     };
+    if (!user?.uid) {
+        return <div className="mcpserver-body">
+            <p>You must be logged in to create an MCP server.</p>
+        </div>
+    }
 
     return (
         <div className="mcpserver-body">

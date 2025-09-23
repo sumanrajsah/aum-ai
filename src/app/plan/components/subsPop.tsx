@@ -55,6 +55,12 @@ interface SubscriptionPopupProps {
     onSetLoading: (loading: boolean) => void;
     onSetIsPopupOpen: (open: boolean) => void;
 }
+interface CouponInfo {
+    code: string;
+    discount: number;
+    discountType: 'percentage' | 'fixed';
+    isValid: boolean;
+}
 
 // Utility function to load Razorpay script
 const loadRazorpay = (): Promise<any> => {
@@ -100,6 +106,97 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
         }
     });
     const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
+    const [couponCode, setCouponCode] = useState<string>('');
+    const [couponInfo, setCouponInfo] = useState<CouponInfo | null>(null);
+    const [couponLoading, setCouponLoading] = useState<boolean>(false);
+    const [couponError, setCouponError] = useState<string>('');
+
+    const validateCoupon = async () => {
+        if (!couponCode.trim()) {
+            setCouponError('Please enter a coupon code');
+            return;
+        }
+
+        setCouponLoading(true);
+        setCouponError('');
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/payment/coupon/validate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    coupon_code: couponCode.trim(),
+                    plan_id: plan?.plan_id,
+                    user_id: user?.uid
+                })
+            });
+
+            const data = await response.json();
+            console.log(data)
+
+            if (data.coupon.active) {
+                setCouponInfo({
+                    code: couponCode.trim(),
+                    discount: data.coupon.offerDetails.discount,
+                    discountType: data.coupon.offerDetails.discountType,
+                    isValid: data.coupon.active
+                });
+                setCouponError('');
+            } else {
+                setCouponError(data.message || 'Invalid coupon code');
+                setCouponInfo(null);
+            }
+        } catch (error) {
+            setCouponError('Failed to validate coupon. Please try again.');
+            setCouponInfo(null);
+        } finally {
+            setCouponLoading(false);
+        }
+    };
+
+    const removeCoupon = () => {
+        setCouponCode('');
+        setCouponInfo(null);
+        setCouponError('');
+    };
+
+    // Update calculateSavings function to include coupon discount
+    const calculateDiscount = () => {
+        let savings = 0;
+
+        // Plan discount
+        if (plan?.original && plan?.discounted) {
+            savings += plan.original - plan.discounted;
+        }
+
+        // Coupon discount
+        if (couponInfo?.isValid) {
+            const basePrice = plan?.discounted || plan?.price || 0;
+            if (couponInfo.discountType === 'percentage') {
+                savings += (basePrice * couponInfo.discount) / 100;
+            } else {
+                savings += couponInfo.discount;
+            }
+        }
+
+        return savings;
+    };
+
+    // Update calculateFinalPrice function
+    const calculateFinalPrice = () => {
+        let finalPrice = plan?.discounted || plan?.price || 0;
+
+        if (couponInfo?.isValid) {
+            if (couponInfo.discountType === 'percentage') {
+                finalPrice -= (finalPrice * couponInfo.discount) / 100;
+            } else {
+                finalPrice -= couponInfo.discount;
+            }
+        }
+
+        return Math.max(0, finalPrice);
+    };
 
     const formatPrice = (price: number) => {
         return `${pricingData.symbol}${price.toLocaleString('en-IN')}`;
@@ -353,12 +450,13 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     plan_id: plan.plan_id,
+                    coupon_code: couponCode.trim(),
                     user_id: user.uid,
                     customer_email: user.email,
                     customer_id: customerId,
                     contact: userInfo.contact,
                     billing_address: userInfo.address,
-                    ...(plan.offer_id ? { offer_id: plan.offer_id } : {}),
+                    // ...(plan.offer_id ? { offer_id: plan.offer_id } : {}),
                 }),
             });
 
@@ -377,7 +475,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                 name: "Qubicsquare Technologies Private Limited",
                 description: `Subscribe to AUM AI ${plan.name} Plan Subscription`,
                 image: "https://www.qubicsquare.tech/qubicsquare512.png",
-                ...(plan.offer_id ? { offer_id: plan.offer_id } : {}),
+                // ...(plan.offer_id ? { offer_id: plan.offer_id } : {}),
                 prefill: {
                     email: user.email || " ",
                     contact: userInfo.contact,
@@ -609,9 +707,9 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                             <div className="plan-summary">
                                 <div className="plan-name-badge">
                                     <span className="plan-name">{plan.name} Plan</span>
-                                    {plan.discount && (
+                                    {/* {plan.discount && (
                                         <span className="discount-tag">{plan.discount}</span>
-                                    )}
+                                    )} */}
                                 </div>
 
                                 <div className="price-breakdown">
@@ -624,31 +722,86 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                                                 </span>
                                             </div>
                                             <div className="price-row discount-row">
-                                                <span>Discount Applied:</span>
+                                                <span>Plan Discount:</span>
                                                 <span className="discount-amount">
-                                                    -{formatPrice(calculateSavings())}
-                                                </span>
-                                            </div>
-                                            <div className="price-row total-row">
-                                                <span>Final Price:</span>
-                                                <span className="final-price">
-                                                    {formatPrice(plan.discounted)}{plan.period}
+                                                    -{formatPrice(plan.original! - plan.discounted)}
                                                 </span>
                                             </div>
                                         </>
                                     ) : (
-                                        <div className="price-row total-row">
-                                            <span>Total:</span>
-                                            <span className="final-price">
-                                                {formatPrice(plan.price)}{plan.period}
+                                        <div className="price-row">
+                                            <span>Plan Price:</span>
+                                            <span>{formatPrice(plan.price)}</span>
+                                        </div>
+                                    )}
+
+                                    {couponInfo?.isValid && (
+                                        <div className="price-row discount-row">
+                                            <span>Coupon ({couponInfo.code}):</span>
+                                            <span className="discount-amount">
+                                                -{couponInfo.discountType === 'percentage'
+                                                    ? `${couponInfo.discount}%`
+                                                    : formatPrice(couponInfo.discount)
+                                                }
                                             </span>
                                         </div>
                                     )}
+
+                                    <div className="price-row total-row">
+                                        <span>Final Price:</span>
+                                        <span className="final-price">
+                                            {formatPrice(calculateFinalPrice())}{plan.period}
+                                        </span>
+                                    </div>
                                 </div>
 
                                 {pricingData.gstIncluded && (
                                     <p className="gst-note">*Price includes all applicable taxes</p>
                                 )}
+                                <div className="coupon-section">
+                                    <div className="coupon-input-container">
+                                        <input
+                                            type="text"
+                                            placeholder="Enter coupon code"
+                                            value={couponCode}
+                                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                            className={`coupon-input ${couponError ? 'error' : ''} ${couponInfo?.isValid ? 'success' : ''}`}
+                                            disabled={couponLoading || couponInfo?.isValid}
+                                        />
+                                        {couponInfo?.isValid ? (
+                                            <button
+                                                type="button"
+                                                className="coupon-btn remove-coupon"
+                                                onClick={removeCoupon}
+                                            >
+                                                Remove
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                className="coupon-btn apply-coupon"
+                                                onClick={validateCoupon}
+                                                disabled={couponLoading || !couponCode.trim()}
+                                            >
+                                                {couponLoading ? 'Applying...' : 'Apply'}
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {couponError && (
+                                        <div className="coupon-error">{couponError}</div>
+                                    )}
+
+                                    {couponInfo?.isValid && (
+                                        <div className="coupon-success">
+                                            ✓ Coupon applied successfully! Save {
+                                                couponInfo.discountType === 'percentage'
+                                                    ? `${couponInfo.discount}%`
+                                                    : formatPrice(couponInfo.discount)
+                                            }
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 

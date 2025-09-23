@@ -137,7 +137,11 @@ export default function ImagePlayground() {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [allImages, creatingImage]);
-
+    if (!user?.uid) {
+        return <div className="image-playground-body">
+            <p>You must be logged in to create image</p>
+        </div>
+    }
     // Don't render until properly initialized
     if (!isInitialized) {
         return (

@@ -40,9 +40,9 @@ const pricingData = {
             name: 'Pro',
             price: 999,
             original: 999,
-            discounted: 249,
+            discounted: null,
             period: '/month',
-            popular: false,
+            popular: true,
             earlyAccess: false,
             earlyAccessText: '🚀 Early Access - Limited Time',
             discount: '75% OFF',
@@ -65,9 +65,9 @@ const pricingData = {
             name: 'Pro+',
             price: 1999,
             original: 1999,
-            discounted: 499,
+            discounted: null,
             period: '/month',
-            popular: true,
+            popular: false,
             earlyAccess: false,
             earlyAccessText: '🚀 Early Access - Limited Time',
             discount: '75% OFF',
@@ -197,9 +197,9 @@ const PricingPage = () => {
                                 <div className="card-header">
                                     <h3 className="plan-name">{plan.name}</h3>
                                     <div className="price-section">
-                                        {plan.discounted && (
+                                        {/* {plan.discounted && (
                                             <div className="discount-badge">{plan.discount}</div>
-                                        )}
+                                        )} */}
                                         <div className="price-display">
                                             {plan.discounted ? (
                                                 <>

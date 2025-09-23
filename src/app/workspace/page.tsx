@@ -135,6 +135,11 @@ export default function WorkspacePage() {
             </div>
         );
     }
+    if (!user?.uid) {
+        return <div className="mcpserver-body">
+            <p>You must be logged in to create a Workspace.</p>
+        </div>
+    }
     if (user?.plan === 'free') {
         return (
             <div className="workspace-home">

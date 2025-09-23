@@ -12,9 +12,10 @@ import { ReactNode } from "react";
 
 interface ModalProps {
     children: ReactNode;
+    closeBtn?: boolean;
 }
 
-const ModalCont = ({ children }: ModalProps) => {
+const ModalCont = ({ children, closeBtn = true }: ModalProps) => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -42,13 +43,13 @@ const ModalCont = ({ children }: ModalProps) => {
             onClick={handleBackdropClick}
         >
             <div className="modal-wrapper">
-                <button
+                {closeBtn && <button
                     className="modal-close-btn"
                     onClick={handleClose}
                     aria-label="Close modal"
                 >
                     <X size={20} />
-                </button>
+                </button>}
 
                 <div className="modal-cont">
                     {children}

@@ -27,6 +27,7 @@ import PageStruct1 from "./components/pagestruct/struct1";
 import TextAssistantMessage from "./components/chat/message-prop/assistant/text-assistant";
 import TextUserMessage from "./components/chat/message-prop/user/text-user";
 import ToolResultRender from "./components/chat/message-prop/assistant/toolsResult";
+import { Oval } from "react-loader-spinner";
 
 
 export default function Home() {
@@ -36,7 +37,7 @@ export default function Home() {
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [openDisconnecModel, setOpenDisconnectModel] = useState<boolean>(false)
   const { setCurrentWorkspace, currentWorkspace } = useWorkspace()
-  const { user, status } = useAuth()
+  const { user, status, isAuthLoading, guestUser } = useAuth()
   const modalRef = useRef<HTMLDivElement | null>(null);
   const { theme } = useTheme();
   const alertMessage = useAlert()
@@ -63,9 +64,9 @@ export default function Home() {
 
   useEffect(() => {
 
-    if (status === 'unauthenticated') {
-      router.push('/login')
-    }
+    // if (status === 'unauthenticated') {
+    //   router.push('/login')
+    // }
 
     setCurrentWorkspace('')
     setChatPage(true)
@@ -92,6 +93,30 @@ export default function Home() {
     }
   }
 
+  if (isAuthLoading) {
+    return <div className="chat-cont"><Oval
+      visible={true}
+      height="50"
+      width="50"
+      color="gray"
+      ariaLabel="oval-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      secondaryColor="gray"
+    /><p>Loading...</p></div>
+  }
+  if (
+    status === 'unauthenticated' ||
+    !user ||
+    (
+      guestUser?.credits &&
+      typeof guestUser.credits.used === 'number' &&
+      typeof guestUser.credits.dailyLimit === 'number' &&
+      guestUser.credits.used >= guestUser.credits.dailyLimit
+    )
+  ) {
+    location.href = '#login'
+  }
 
   return (
     <>

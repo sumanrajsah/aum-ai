@@ -428,7 +428,11 @@ export default function CreateAgents() {
             </div>
         );
     }
-
+    if (!user?.uid) {
+        return <div className="mcpserver-body">
+            <p>You must be logged in to create an Ai Agent.</p>
+        </div>
+    }
     if (user?.plan === 'free' && userAgents.length >= 1) {
         return <div className="agent-image-container">
             <h2>You can only create one agent on the free plan.</h2>
@@ -601,21 +605,21 @@ export default function CreateAgents() {
                 </div>
 
                 {/* Prebuilt Tools */}
-                {/* {getTools(primaryModel) && <div className="cagent-box">
+                {getTools(primaryModel) && <div className="cagent-box">
                     <label>Select Prebuilt Tools: {selectedPrebuiltTools.length}</label>
                     <div className="tool-checkbox-group">
-                        <div className="tool-checkbox" onClick={() => togglePrebuiltTool("search")}>
+                        <div className="tool-checkbox" onClick={() => togglePrebuiltTool("web_search")}>
                             <div className="tool-name">🔍 Search</div>
                             <div className="tool-des">Allows the AI to search the web and retrieve real-time information.</div>
                             <label className="tool-check" onClick={(e) => e.stopPropagation()}>
                                 <ToggleSwitch
-                                    checked={selectedPrebuiltTools.includes("search")}
-                                    onChange={() => togglePrebuiltTool("search")}
+                                    checked={selectedPrebuiltTools.includes("web_search")}
+                                    onChange={() => togglePrebuiltTool("web_search")}
                                     id="prebuilt-search-toggle"
                                 />
                             </label>
                         </div>
-                        <div className="tool-checkbox" onClick={() => togglePrebuiltTool("image")}>
+                        {/* <div className="tool-checkbox" onClick={() => togglePrebuiltTool("image")}>
                             <div className="tool-name">🌄 Image</div>
                             <div className="tool-des">Allows the AI to generate and process images.</div>
                             <label className="tool-check" onClick={(e) => e.stopPropagation()}>
@@ -625,9 +629,9 @@ export default function CreateAgents() {
                                     id="prebuilt-image-toggle"
                                 />
                             </label>
-                        </div>
+                        </div> */}
                     </div>
-                </div>} */}
+                </div>}
 
                 {/* MCP Tools */}
                 {mcpServers.length === 0 && <div className="cgent-box">

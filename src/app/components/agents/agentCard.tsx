@@ -4,6 +4,7 @@ import './AgentCard.css';
 import { llmModels } from '@/app/utils/models-list';
 import { Bolt, MessageCircle, Rocket } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useChat } from '@/context/ChatContext';
 
 interface Demo {
     id: number;
@@ -50,6 +51,7 @@ interface AgentCardProps {
 }
 
 const AgentCard: React.FC<AgentCardProps> = ({ agent, onClick }) => {
+    const { setMessages } = useChat();
     const formatDate = (dateString: any) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             month: 'short',
@@ -106,7 +108,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onClick }) => {
                 <div className="footer-info">
                 </div>
                 <div className="card-actions">
-                    <button className="action-btn chat-btn" onClick={() => router.push(`/agent/${agent.aid}?mode=text`)}>
+                    <button className="action-btn chat-btn" onClick={() => { setMessages([]); router.push(`/agent/${agent.aid}?mode=text`) }}>
                         <MessageCircle size={20} />
                         chat
                     </button>

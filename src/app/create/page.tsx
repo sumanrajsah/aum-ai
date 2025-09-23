@@ -49,7 +49,7 @@ export default function Create() {
     ];
 
     return (
-        <div className="create">
+        <div className="create-body">
             <div className="create-container">
 
                 <div className="create-header">

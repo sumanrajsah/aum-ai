@@ -554,8 +554,8 @@ const ModalSetting = () => {
                     </div>
                 </div>
             </div>
-            {user && <ChangePasswordModal isOpen={openPasswordModal} onClose={() => setPasswordModal(!openPasswordModal)} userEmail={user?.email} />}
-            {user && <EditProfileModal isOpen={openProfileModal} onClose={() => setProfileModal(!openProfileModal)} currentName={user?.name ?? ""} currentUsername={user.username} />}
+            {user && <ChangePasswordModal isOpen={openPasswordModal} onClose={() => setPasswordModal(!openPasswordModal)} userEmail={user?.email ?? ""} />}
+            {user && <EditProfileModal isOpen={openProfileModal} onClose={() => setProfileModal(!openProfileModal)} currentName={user?.name ?? ""} currentUsername={user.username ?? ""} />}
             {user && <DeleteMemoryModal
                 isOpen={deleteModal.isOpen}
                 onClose={() => setDeleteModal({ isOpen: false, memoryId: '', text: '' })}

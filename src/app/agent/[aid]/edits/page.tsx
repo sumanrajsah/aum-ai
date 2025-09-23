@@ -691,18 +691,18 @@ export default function EditAgent() {
                 <div className="cagent-box">
                     <label>Select Prebuilt Tools: {selectedPrebuiltTools.length}</label>
                     <div className="tool-checkbox-group">
-                        <div className="tool-checkbox" onClick={() => togglePrebuiltTool("search")}>
+                        <div className="tool-checkbox" onClick={() => togglePrebuiltTool("web_search")}>
                             <div className="tool-name">🔍 Search</div>
                             <div className="tool-des">Allows the AI to search the web and retrieve real-time information.</div>
                             <label className="tool-check" onClick={(e) => e.stopPropagation()}>
                                 <ToggleSwitch
-                                    checked={selectedPrebuiltTools.includes("search")}
-                                    onChange={() => togglePrebuiltTool("search")}
+                                    checked={selectedPrebuiltTools.includes("web_search")}
+                                    onChange={() => togglePrebuiltTool("web_search")}
                                     id="prebuilt-search-toggle"
                                 />
                             </label>
                         </div>
-                        <div className="tool-checkbox" onClick={() => togglePrebuiltTool("image")}>
+                        {/* <div className="tool-checkbox" onClick={() => togglePrebuiltTool("image")}>
                             <div className="tool-name">🌄 Image</div>
                             <div className="tool-des">Allows the AI to generate and process images.</div>
                             <label className="tool-check" onClick={(e) => e.stopPropagation()}>
@@ -712,7 +712,7 @@ export default function EditAgent() {
                                     id="prebuilt-image-toggle"
                                 />
                             </label>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 

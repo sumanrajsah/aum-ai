@@ -155,6 +155,16 @@
     background: rgba(var(--bg-color1), 0.2);
     color: rgba(var(--bg-color1), 0.9);
     font-weight: 600;
+
+    .credit-item {
+        font-size: 12px;
+        opacity: 1;
+    }
+}
+
+.credit-item {
+    font-size: 10px;
+    opacity: 0.6;
 }
 
 .s-model-name {

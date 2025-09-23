@@ -535,7 +535,7 @@ const ChatInput = () => {
   return (
     <>
       <div className='input-body'>
-        {messages.length === 0 && user && !input && (selectedFiles.length === 0) && !(pathname.includes('/image-playground')) && !(pathname.includes('/video-playground')) && !(pathname.includes('/agent')) && <div className='chatmode-cont'>
+        {messages.length === 0 && !input && (selectedFiles.length === 0) && !(pathname.includes('/image-playground')) && !(pathname.includes('/video-playground')) && !(pathname.includes('/agent')) && <div className='chatmode-cont'>
           <button className={chatMode === 'text' ? 'active' : ''} onClick={() => { setChatMode('text'); router.push(`/?model=gpt-5-nano&mode=${'text'}`); selectModel('gpt-5-nano') }} >Text</button>
           <button className={chatMode === 'image' ? 'active' : ''} onClick={() => { setChatMode('image'); router.push(`/?model=dalle-3&mode=${'image'}`); selectModel('dalle-3') }} >Image</button>
           <button className={chatMode === 'video' ? 'active' : ''} onClick={() => { setChatMode('video'); router.push(`/?model=sora&mode=${'video'}`); selectModel('sora') }}>Video</button>
@@ -668,14 +668,14 @@ const ChatInput = () => {
 
                 <Plus size={20} />
               </button>}
-              {user && !(pathname.includes('/agent')) && <SelectModelButton />}
-              {user && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { setSettingsModal(!openSettingsModal) }}><Settings size={18} /></button>}
+              {!(pathname.includes('/agent')) && <SelectModelButton />}
+              {!(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { setSettingsModal(!openSettingsModal) }}><Settings size={18} /></button>}
             </div>
 
 
 
             <div className='input-btn-cont-right'>
-              {user && showToolsBtn && chatMode === 'text' && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { window.location.hash = '#tools' }}><Settings2 size={18} /></button>}
+              {showToolsBtn && chatMode === 'text' && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { window.location.hash = '#tools' }}><Settings2 size={18} /></button>}
               {!((aiTyping) || (creatingImage)) && <button
                 className='button-send send'
                 onClick={handleSubmit}

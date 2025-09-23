@@ -13,6 +13,7 @@ import ImageModal from "./chat/modals/image-modal";
 import { useImagePlaygound, useVideoPlayground } from "@/context/ChatContext";
 import VideoModal from "./chat/modals/video-modal";
 import ModalSetting from "./modal/settingModal";
+import LoginModal from "./modal/login";
 
 const Modal = () => {
     const router = useRouter();
@@ -29,6 +30,7 @@ const Modal = () => {
     const [openImageModal, setImageModal] = useState<boolean>(false)
     const [openVideoModal, setOpenVideoModal] = useState<boolean>(false);
     const [openSettingsModal, setOpenSettingsModal] = useState<boolean>(false);
+    const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -42,6 +44,7 @@ const Modal = () => {
             setImageModal(hash.includes('#image'))
             setOpenVideoModal(hash === '#video');
             setOpenSettingsModal(hash === '#settings');
+            setOpenLoginModal(hash === '#login');
         };
 
         // Run on mount
@@ -57,12 +60,14 @@ const Modal = () => {
 
     return (
         <>
-            {openToolsModal && user?.uid && <ToolsModal />}
+            {openToolsModal && <ToolsModal />}
             {openWorkspaceCreateModal && user?.uid && <WorkspaceCreateModal />}
             {openChatReanmeModal && user?.uid && <RenameChatModal />}
             {openImageModal && expandImage && user?.uid && <ImageModal />}
             {openVideoModal && expandVideo && user?.uid && <VideoModal />}
             {openSettingsModal && user?.uid && <ModalSetting />}
+            {openLoginModal && status !== "authenticated" && <LoginModal />}
+
         </>
     );
 };

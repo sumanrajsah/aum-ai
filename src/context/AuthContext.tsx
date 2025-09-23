@@ -17,9 +17,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const auth = useAuth();
 
     useEffect(() => {
-        if (auth.status === "unauthenticated" && pathname.includes('/login') && pathname.includes('/signup')) {
-            location.href = "/login";
-        }
+        // if (auth.status === "unauthenticated" && pathname.includes('/login') && pathname.includes('/signup')) {
+        //     location.href = "/login";
+        // }
         if (auth.user && auth.user.plan === "free" && pathname.includes("/workspace")) {
             location.href = "/plan";
         }

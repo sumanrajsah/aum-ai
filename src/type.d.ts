@@ -134,21 +134,26 @@ type VideoMetadata = {
     revised_prompt: string;
     prompt: string;
 }
-
+interface Starter {
+    id: number;
+    messages: string;
+}
 type AgentInfo = {
     name: string;
     description: string;
     handle: string;
     image: string;
-    config: {
+    config?: {
         models: {
             primary: ModelConfig,
             secondary: ModelConfig
         }
         allowedTools?: string[];
         mcp?: McpServerTool[]
-        demos: Demo[];
+        starters: Starter[];
     }
+    current_version?: any;
+    configs?: any[]
     uid: string;
     aid: string;
     status: string;

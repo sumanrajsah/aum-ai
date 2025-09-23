@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
 import { useChat } from "../../context/ChatContext"
 import { imageModels, llmModels, vidoeModels } from "../utils/models-list"
+import { useAuth } from "@/hooks/useAuth"
 
 export const llmModelsFree = ['gpt-5-nano', 'gpt-4.1-nano', 'mistral-small-2503', 'ministral-3b', 'grok-3-mini', 'mistral-nemo', 'phi-4-mini-reasoning', 'gpt-4o-mini'];
 
@@ -14,6 +15,7 @@ export function isModelAvailable(modelValue: string): boolean {
 }
 
 const SelectModelButton = () => {
+    const { user } = useAuth();
     const { selectModel, Model, chatMode } = useChat();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedModel, setSelectedModel] = useState(Model);
@@ -106,9 +108,13 @@ const SelectModelButton = () => {
                                 <DollarSign size={10} />Pricing
                             </button>
                         </div>
+
                     </div>
+                    {!user?.uid && (
+                        <p className="dropdown-title" style={{ display: 'flex', justifyContent: 'center', fontSize: '12px' }}>Login to unlock more models.</p>
+                    )}
                     <ul className="model-list" role="listbox">
-                        {models.map((model) => (
+                        {(user?.uid ? models : models.filter(m => isModelAvailable(m.value))).map((model) => (
                             <li
                                 key={model.value}
                                 className={`model-option ${selectedModel === model.value ? 'selected' : ''}`}
@@ -120,22 +126,25 @@ const SelectModelButton = () => {
                                     <span className="s-model-name">{model.label}</span>
                                     {hasIOCredits(model) ? (
                                         <div className="model-credits">
-                                            {!isModelAvailable(model.value) && <span className="credit-item">Input: {model.inputCredits} </span>}
-                                            {!isModelAvailable(model.value) && <span className="credit-item">Output: {model.outputCredits} </span>}
+                                            {!isModelAvailable(model.value) && <span className="credit-item">Input: {model.inputCredits} | </span>}
+                                            {!isModelAvailable(model.value) && <span className="credit-item">Output: {model.outputCredits}</span>}
                                             {isModelAvailable(model.value) && <span className="credit-item">Free</span>}
                                         </div>
                                     ) : model.credits ? (
                                         <div className="model-credits">
-                                            <span className="credit-item">Credits: {model.credits} {chatMode === 'video' && '/s'} </span>
+                                            <span className="credit-item">
+                                                Credits: {model.credits} {chatMode === 'video' && '/s'}
+                                            </span>
                                         </div>
                                     ) : null}
                                 </div>
-                                {selectedModel === model.value && (
-                                    <Check className="check-icon" size={16} />
-                                )}
+                                {selectedModel === model.value && <Check className="check-icon" size={16} />}
                             </li>
                         ))}
+
                     </ul>
+
+
                 </div>
             )}
         </div>

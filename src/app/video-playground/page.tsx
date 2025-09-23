@@ -138,7 +138,11 @@ export default function VideoPlayground() {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [allVideos, creatingVideo]);
-
+    if (!user?.uid) {
+        return <div className="video-playground-body">
+            <p>You must be logged in to create video</p>
+        </div>
+    }
     // Don't render until properly initialized
     if (!isInitialized) {
         return (

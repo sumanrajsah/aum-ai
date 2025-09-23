@@ -1,18 +1,20 @@
 /* Enhanced Create Page Styles */
-.create {
-    min-height: 100vh;
-    padding-top: 5vh;
-    padding-bottom: 5vh;
+.create-body {
+    min-height: 90dvh;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
     display: flex;
+    align-items: flex-start;
     justify-content: center;
     position: relative;
+    width: 90%;
 }
 
 .create-container {
-    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
     position: relative;
+    padding-bottom: 5vh;
     z-index: 2;
 }
 

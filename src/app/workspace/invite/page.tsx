@@ -82,6 +82,12 @@ export default function InvitesPage() {
     const inviteUrl = (token: string) =>
         `${process.env.NEXT_PUBLIC_BASE_URL || "https://app.example.com"}/invite/${token}`;
 
+    if (!user?.uid) {
+        return <div className="invites">
+            <p>You must be logged in to see Invite.</p>
+        </div>
+    }
+
     return (
         <div className="invites">
             <div className="invites-header">

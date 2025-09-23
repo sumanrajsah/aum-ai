@@ -106,6 +106,21 @@ export default function AgentHome({ params }: { params: Promise<{ aid: string }>
 
         }
     }
+    const getStarters = (): Starter[] => {
+        if (agentInfo?.configs && agentInfo.configs.length > 0) {
+            const currentConfig = agentInfo.configs.find(config => config.version === agentInfo.current_version);
+            return currentConfig?.config.starters || [];
+        }
+        return [];
+    };
+
+    const starters = getStarters();
+
+    if (!user?.uid) {
+        return <div className="chat-cont">
+            <p>You must be logged in to chat with ai agents</p>
+        </div>
+    }
 
 
     return (
@@ -134,6 +149,7 @@ export default function AgentHome({ params }: { params: Promise<{ aid: string }>
                         <br />
 
                     </div>}
+
                     {messages.map((msg, index) => (
                         <div className="chat-cont-message" key={msg.msg_id}>
                             {Array.isArray(msg.content) ? (
@@ -222,7 +238,22 @@ export default function AgentHome({ params }: { params: Promise<{ aid: string }>
                     )}
 
                 </div>
-                {agentInfo && <ChatInput />}
+                {agentInfo && <>
+                    {starters.length > 0 && (
+                        <div className="starters-container">
+                            <div className="starters-grid">
+                                {starters.map((starter) => (
+                                    <button
+                                        key={starter.id}
+                                        className="starter-button"
+
+                                    >
+                                        {starter.messages}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )} <ChatInput /></>}
             </>
 
 
