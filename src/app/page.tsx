@@ -106,8 +106,6 @@ export default function Home() {
     /><p>Loading...</p></div>
   }
   if (
-    status === 'unauthenticated' ||
-    !user ||
     (
       guestUser?.credits &&
       typeof guestUser.credits.used === 'number' &&
