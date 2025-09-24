@@ -239,7 +239,7 @@ export default function AgentHome({ params }: { params: Promise<{ aid: string }>
 
                 </div>
                 {agentInfo && <>
-                    {starters.length > 0 && (
+                    {/* {starters.length > 0 && (
                         <div className="starters-container">
                             <div className="starters-grid">
                                 {starters.map((starter) => (
@@ -253,7 +253,8 @@ export default function AgentHome({ params }: { params: Promise<{ aid: string }>
                                 ))}
                             </div>
                         </div>
-                    )} <ChatInput /></>}
+                    )}  */}
+                    <ChatInput /></>}
             </>
 
 
