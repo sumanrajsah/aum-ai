@@ -21,7 +21,7 @@ export default function PromptsPage() {
     return (
         <div className="mcp-page-body">
             <div className="mcp-header">
-                <h1>Comming Soon</h1>
+                <h1>Coming Soon</h1>
             </div>
         </div>
 
