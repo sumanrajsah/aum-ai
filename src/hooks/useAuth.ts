@@ -72,7 +72,7 @@ export const useAuth = () => {
             if (index > -1) listeners.splice(index, 1);
         };
     }, []);
-    console.log({ user, guestUser, status, loading });
+    // console.log({ user, guestUser, status, loading });
 
     return { user, guestUser, status, setUser, setStatus, isAuthLoading: loading };
 };

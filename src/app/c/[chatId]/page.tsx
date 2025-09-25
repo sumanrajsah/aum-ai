@@ -105,7 +105,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
                 }
 
                 const data = await response.json();
-                //  console.log('Chat data:', data);
+                console.log('Chat data:', data);
 
                 const chat: Message[] = data.chats.map((msg: MessageInterface) => ({
                     content: msg.content,
@@ -131,7 +131,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string }> }
             }
         }
         if (user && chatId) getData()
-    }, [chatId]);
+    }, [chatId, user]);
 
     useEffect(() => {
         if (messages.length > 0) {

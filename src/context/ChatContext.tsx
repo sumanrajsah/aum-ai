@@ -751,6 +751,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
                         }
                         if (parsed.type === 'event') {
                             // alertMessage.error(parsed.response);
+                            setMessages(prevMessages => prevMessages.filter(message => message.type !== 'event'));
                             setEvent(parsed.response)
 
                         }

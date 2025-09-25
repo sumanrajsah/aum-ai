@@ -132,7 +132,7 @@ export default function Chat({ params }: { params: Promise<{ chatId: string, aid
             } catch (e) { console.log(e) }
         }
         if (user && chatId) getData()
-    }, [chatId])
+    }, [chatId, user]);
 
     useEffect(() => {
         if (messages.length > 0) {
