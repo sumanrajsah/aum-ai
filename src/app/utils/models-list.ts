@@ -7,7 +7,7 @@ export const llmModels = [
 
     { value: "deepseek-r1", label: "DeepSeek R1", tools: false, mediaSupport: false, inputCredits: 15, outputCredits: 59, cw: 128 },
     { value: "deepseek-r1-0528", label: "DeepSeek R1 0528", tools: false, mediaSupport: false, inputCredits: 15, outputCredits: 59, cw: 128 },
-    { value: "deepseek-v3", label: "DeepSeek V3", tools: false, mediaSupport: false, inputCredits: 12, outputCredits: 50, cw: 128 },
+    // { value: "deepseek-v3", label: "DeepSeek V3", tools: false, mediaSupport: false, inputCredits: 12, outputCredits: 50, cw: 128 },
     { value: "deepseek-v3-0324", label: "DeepSeek V3 0324", tools: false, mediaSupport: false, inputCredits: 12, outputCredits: 50, cw: 128 },
 
     { value: "gemini-2.0-flash", label: "Gemini 2.0 Flash", tools: true, mediaSupport: true, inputCredits: 1, outputCredits: 8, cw: 1048 },
