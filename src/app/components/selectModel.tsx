@@ -8,7 +8,7 @@ import { useChat } from "../../context/ChatContext"
 import { imageModels, llmModels, vidoeModels } from "../utils/models-list"
 import { useAuth } from "@/hooks/useAuth"
 
-export const llmModelsFree = ['gpt-5-nano', 'gpt-4.1-nano', 'mistral-small-2503', 'ministral-3b', 'grok-3-mini', 'mistral-nemo', 'phi-4-mini-reasoning', 'gpt-4o-mini'];
+export const llmModelsFree = ['gpt-5-nano', 'gpt-4.1-nano', 'mistral-small-2503', 'ministral-3b', 'grok-3-mini', 'mistral-nemo', 'phi-4-mini-reasoning', 'gpt-4o-mini', 'grok-4-fast-non-reasoning', 'grok-4-fast-reasoning'];
 
 export function isModelAvailable(modelValue: string): boolean {
     return llmModelsFree.includes(modelValue);
