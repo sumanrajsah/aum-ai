@@ -27,6 +27,8 @@ export const llmModels = [
 
     { value: "grok-3-mini", label: "Grok 3 Mini", tools: true, mediaSupport: false, inputCredits: 3, outputCredits: 4, cw: 131 },
     { value: "grok-3", label: "Grok 3", tools: true, mediaSupport: false, inputCredits: 36, outputCredits: 180, cw: 131 },
+    { value: "grok-4-fast-non-reasoning", label: "Grok 4 Fast Non-Reasoning", tools: true, mediaSupport: false, inputCredits: 3, outputCredits: 4, cw: 2000 },
+    { value: "grok-4-fast-reasoning", label: "Grok 4 Fast Reasoning", tools: true, mediaSupport: false, inputCredits: 36, outputCredits: 180, cw: 2000 },
 
     { value: "llama-3.1-405b", label: "Llama 3.1 405B", tools: false, mediaSupport: false, inputCredits: 64, outputCredits: 216, cw: 128 },
     { value: "llama-4-Maverick-17B-128E", label: "Llama 4 Maverick", tools: false, mediaSupport: true, inputCredits: 7, outputCredits: 12, cw: 1048 },
