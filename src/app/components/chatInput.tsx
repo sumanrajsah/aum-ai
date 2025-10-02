@@ -126,7 +126,7 @@ const ChatInput = () => {
       }
     }
     if (files.length + selectedFiles.length > 2) {
-      alert.warn('files not mre than 2');
+      alert.warn('files not more than 2');
       return
     };
     if (files.length === 0) return;

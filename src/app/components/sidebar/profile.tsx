@@ -60,7 +60,7 @@ const ProfileCont = () => {
         if (res?.ok) {
             setUser(null);
             setStatus("unauthenticated");
-            alertMessage.success("✅ Logout successful");
+            // alertMessage.success("✅ Logout successful");
             location.href = "/login";
             localStorage.removeItem("auth-user");
         } else {

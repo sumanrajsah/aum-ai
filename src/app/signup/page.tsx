@@ -329,65 +329,65 @@ export default function CollabSignUp() {
                             )}
                         </div>
 
-                        <div style={{ display: 'flex', gap: '10px', flexDirection: 'column', marginTop: '20px', alignItems: 'center', justifyContent: 'center' }}>
-                            {loading ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                                    <Oval
-                                        visible={true}
-                                        height="20"
-                                        width="20"
-                                        color="gray"
-                                        ariaLabel="oval-loading"
-                                        wrapperStyle={{}}
-                                        wrapperClass=""
-                                        secondaryColor="gray"
-                                    />
-                                    <p>Creating Account...</p>
-                                </div>
-                            ) : (
-                                <button
-                                    className="collab-button"
-                                    type="submit"
-                                    disabled={
-                                        !formData.email ||
-                                        !formData.password ||
-                                        !formData.confirmPassword ||
-                                        formData.password !== formData.confirmPassword ||
-                                        emailValid === false ||
-                                        passwordStrength.level === "Weak"
-                                    }
-                                >
-                                    Sign Up
-                                </button>
-                            )}
-                            {/* Google Sign In option */}
-                            {!loading && (
-                                <>
-                                    <div style={{ marginTop: '5px', textAlign: 'center' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
-                                            <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
-                                            <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
-                                            <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
-                                        </div>
-                                    </div>
-                                    <GoogleSignInButton islogin={false} />
-                                </>
-                            )}
-                            <br />
-                            <label style={{ width: '100%', textAlign: 'center' }}>Already have an account?</label>
+
+                        {loading ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                                <Oval
+                                    visible={true}
+                                    height="20"
+                                    width="20"
+                                    color="gray"
+                                    ariaLabel="oval-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClass=""
+                                    secondaryColor="gray"
+                                />
+                                <p>Creating Account...</p>
+                            </div>
+                        ) : (
                             <button
                                 className="collab-button"
-                                onClick={() => { router.push('/login') }}
+                                type="submit"
+                                disabled={
+                                    !formData.email ||
+                                    !formData.password ||
+                                    !formData.confirmPassword ||
+                                    formData.password !== formData.confirmPassword ||
+                                    emailValid === false ||
+                                    passwordStrength.level === "Weak"
+                                }
                             >
-                                Login
+                                Sign Up
                             </button>
+                        )}
+                        {/* Google Sign In option */}
 
-                            <div style={{ textAlign: 'center', fontSize: '0.8em', color: '#666', marginTop: '10px' }}>
-                                <p>By creating an account, you agree to our <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Terms of Service</Link> and <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Privacy Policy</Link></p>
-                            </div>
 
-                        </div>
+
                     </form>
+                    {!loading && (
+                        <>
+                            <div style={{ marginTop: '5px', textAlign: 'center' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
+                                    <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                    <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
+                                    <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
+                                </div>
+                            </div>
+                            <GoogleSignInButton islogin={false} className={'collab-button'} />
+                        </>
+                    )}
+                    <br />
+                    <label style={{ width: '100%', textAlign: 'center' }}>Already have an account?</label>
+                    <button
+                        className="collab-button"
+                        onClick={() => { router.push('/login') }}
+                    >
+                        Login
+                    </button>
+                    <div style={{ textAlign: 'center', fontSize: '0.8em', color: '#666', marginTop: '10px' }}>
+                        <p>By creating an account, you agree to our <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Terms of Service</Link> and <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Privacy Policy</Link></p>
+                    </div>
 
                 </div>
             )}

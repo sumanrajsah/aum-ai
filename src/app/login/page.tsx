@@ -108,13 +108,16 @@ export default function CollabLogin() {
                                         <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
                                     </div>
                                 </div>
-                                <GoogleSignInButton islogin={true} className="google-signup-button" />
+                                <GoogleSignInButton islogin={true} className="collab-button" />
                             </>
                         )}
                         <br />
                         <label style={{ width: '100%', textAlign: 'center' }}>Don't have an account?</label>
                         <button className="collab-button" onClick={() => { router.push('/signup') }}>Create an account</button>
                     </div>
+                </div>
+                <div style={{ textAlign: 'center', fontSize: '0.8em', color: '#666', marginTop: '10px' }}>
+                    <p>By Sign in, you agree to our <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Terms of Service</Link> and <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Privacy Policy</Link></p>
                 </div>
             </div>)}
         </>
