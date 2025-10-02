@@ -177,7 +177,6 @@ const HistoryBar = () => {
                                                             e.stopPropagation();
                                                             setSelectedChat(item.chat_id);
                                                         }}
-                                                        style={{ background: theme === 'dark' ? 'var(--prop-dark-bg)' : 'var(--prop-white-bg)' }}
                                                     >
                                                         {/* <div
                                                             className="chath-menu-list"

@@ -220,6 +220,7 @@ button:hover {
   font-family: "Orbitron Variable", sans-serif;
 
   z-index: 1;
+  font-weight: bold;
 }
 
 .new-chat-btn {

@@ -255,7 +255,7 @@ export default function CollabSignUp() {
                             <label>Password *</label>
 
                             <input
-                                placeholder="Enter a strong password"
+                                placeholder="min length 8 characters"
                                 onChange={(e) => handlePasswordChange(e, "password")}
                                 type={showPassword ? "text" : "password"}
                                 style={{

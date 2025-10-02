@@ -52,14 +52,14 @@ export const useAuth = () => {
     const [user, setUser] = useState<User | null>(sharedUser);
     const [guestUser, setGuestUser] = useState<GuestUser | null>(sharedGuestUser);
     const [status, setStatus] = useState<Status>(sharedStatus);
-    const [loading, setLoading] = useState(!sharedUser && !sharedGuestUser);
+    const [isAuthLoading, setLoading] = useState(false);
 
     useEffect(() => {
         const listener = (newState: { user: User | null; guestUser: GuestUser | null; status: Status }) => {
             setUser(newState.user);
             setGuestUser(newState.guestUser);
             setStatus(newState.status);
-            setLoading(!newState.user && !newState.guestUser && newState.status === "pending");
+            setLoading(false);
         };
 
         listeners.push(listener);
@@ -74,5 +74,5 @@ export const useAuth = () => {
     }, []);
     // console.log({ user, guestUser, status, loading });
 
-    return { user, guestUser, status, setUser, setStatus, isAuthLoading: loading };
+    return { user, guestUser, status, setUser, setStatus, isAuthLoading, setLoading };
 };

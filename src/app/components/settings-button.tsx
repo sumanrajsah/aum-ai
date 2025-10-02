@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useRef, useState } from "react"
-import { Image, Layers, MonitorSmartphone, PanelRightClose, Sparkles, Timer, TvMinimal, User2 } from "lucide-react"
+import { Image, Layers, MonitorSmartphone, PanelRightClose, Sparkles, Timer, TvMinimal, User2, Check, ChevronDown } from "lucide-react"
 import './settings-btn.css'
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -12,8 +12,77 @@ import { calculateImagePrice, calculateVideoPrice } from "../utils/pricing"
 interface SettingsButtonProps {
     openModal: boolean
     onClose: () => void
-    [key: string]: any // for {...props}
+    [key: string]: any
 }
+
+interface CustomSelectProps {
+    label: string
+    icon: React.ReactNode
+    value: string
+    options: { value: string; label: string }[]
+    onChange: (value: string) => void
+}
+
+const CustomSelect = ({ label, icon, value, options, onChange }: CustomSelectProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const selectedOption = options.find(opt => opt.value === value) || options[0];
+
+    return (
+        <div className="custom-setting-select" ref={dropdownRef}>
+            <label className="setting-label">
+                {icon}
+                {label}
+            </label>
+            <div className="setting-dropdown-wrapper">
+                <button
+                    className="setting-select-trigger"
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-expanded={isOpen}
+                >
+                    <span className="selected-value">{selectedOption.label}</span>
+                    <ChevronDown
+                        className={`chevron-icon ${isOpen ? 'rotated' : ''}`}
+                        size={14}
+                    />
+                </button>
+
+                {isOpen && (
+                    <div className="setting-dropdown-menu">
+                        <ul className="setting-option-list">
+                            {options.map((option) => (
+                                <li
+                                    key={option.value}
+                                    className={`setting-option ${value === option.value ? 'selected' : ''}`}
+                                    onClick={() => {
+                                        onChange(option.value);
+                                        setIsOpen(false);
+                                    }}
+                                >
+                                    <span>{option.label}</span>
+                                    {value === option.value && <Check className="check-icon" size={14} />}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
 const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) => {
     const { imageSettings, setImageSettings } = useImagePlaygound();
     const { videoSettings, setVideoSettings } = useVideoPlayground();
@@ -24,15 +93,14 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
     const styles = getAllLLMStyles();
     const { selectedStyle, setStyle } = useLLMStyleStore();
 
-    const handleStyleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const style = event.target.value;
-        setStyle(style);
+    const handleStyleChange = (value: string) => {
+        setStyle(value);
     };
-    // console.log(imageSettings)
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                onClose(); // close modal if clicked outside
+                onClose();
             }
         };
 
@@ -41,6 +109,7 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
     useEffect(() => {
         if (Model.includes("veo")) {
             setVideoSettings((prev) => ({
@@ -51,15 +120,15 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
         }
     }, [Model, setVideoSettings]);
 
-
     if (!openModal) return null;
 
     return (
-        <>
-            <div className="settings-btn-modal" ref={modalRef} >
-                <label>Settings</label>
-                {chatMode === 'image' &&
-                    <> {(() => {
+        <div className="settings-btn-modal" ref={modalRef}>
+            <label className="settings-title">Settings</label>
+
+            {chatMode === 'image' && (
+                <>
+                    {(() => {
                         const price = calculateImagePrice(
                             Model,
                             imageSettings.size,
@@ -71,149 +140,218 @@ const SettingsButton = ({ openModal, onClose, ...props }: SettingsButtonProps) =
                             </span>
                         );
                     })()}
-                        {Model === 'dalle-3' && <div className="settings-btn-cont">
-                            <label><TvMinimal size={16} />Size</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setImageSettings(prev => ({ ...prev, size: e.target.value })) }} defaultValue={imageSettings.size}>
-                                <option value='1024x1024'>1024x1024</option>
-                                <option value='1024x1792'>1024x1792</option>
-                                <option value='1792x1024'>1792x1024</option>
-                            </select>
+
+                    {Model === 'dalle-3' && (
+                        <div className="settings-btn-cont">
+                            <CustomSelect
+                                label="Size"
+                                icon={<TvMinimal size={16} />}
+                                value={imageSettings.size || '1024x1024'}
+                                options={[
+                                    { value: '1024x1024', label: '1024x1024' },
+                                    { value: '1024x1792', label: '1024x1792' },
+                                    { value: '1792x1024', label: '1792x1024' }
+                                ]}
+                                onChange={(value) => setImageSettings(prev => ({ ...prev, size: value }))}
+                            />
                             <hr />
-                            <label><Sparkles size={16} />Style</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setImageSettings(prev => ({ ...prev, style: e.target.value })) }} defaultValue={imageSettings.style}>
-                                <option value='vivid'>Vivid</option>
-                                <option value='natural'>Natural</option>
-                            </select>
+                            <CustomSelect
+                                label="Style"
+                                icon={<Sparkles size={16} />}
+                                value={imageSettings.style || 'vivid'}
+                                options={[
+                                    { value: 'vivid', label: 'Vivid' },
+                                    { value: 'natural', label: 'Natural' }
+                                ]}
+                                onChange={(value) => setImageSettings(prev => ({ ...prev, style: value }))}
+                            />
                             <hr />
-                            <label><Image size={16} />Quality</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setImageSettings(prev => ({ ...prev, quality: e.target.value })) }} defaultValue={imageSettings.quality}>
-                                <option value='standard'>Standard</option>
-                                <option value='hd'>High</option>
-                            </select>
-                        </div>}
-                        {Model.includes('stable') && <div className="settings-btn-cont" >
-                            <label><TvMinimal size={16} />Size</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setImageSettings(prev => ({ ...prev, size: e.target.value })) }} defaultValue={imageSettings.size}>
-                                <option value='672x1566'>672x1566</option>
-                                <option value='768x1366'>768x1366</option>
-                                <option value='836x1254'>836x1254</option>
-                                <option value='916x1145'>916x1145</option>
-                                <option value='1024x1024'>1024x1024</option>
-                                <option value='1145x916'>1145x916</option>
-                                <option value='1254x836'>1254x836</option>
-                                <option value='1366x768'>1366x768</option>
-                                <option value='1566x672'>1566x672</option>
-                            </select>
-                        </div>}
-                        {Model.includes('bria') && <div className="settings-btn-cont" >
-                            <label><TvMinimal size={16} />Size</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setImageSettings(prev => ({ ...prev, size: e.target.value })) }} defaultValue={imageSettings.size}>
+                            <CustomSelect
+                                label="Quality"
+                                icon={<Image size={16} />}
+                                value={imageSettings.quality || 'standard'}
+                                options={[
+                                    { value: 'standard', label: 'Standard' },
+                                    { value: 'hd', label: 'High' }
+                                ]}
+                                onChange={(value) => setImageSettings(prev => ({ ...prev, quality: value }))}
+                            />
+                        </div>
+                    )}
 
-                                <option value='768x1344'>768x1344</option>
-                                <option value='832x1216'>832x1216</option>
-                                <option value='896x1152'>896x1152</option>
-                                <option value='896x1088'>896x1088</option>
-                                <option value='1024x1024'>1024x1024</option>
-                                <option value='1088x896'>1088x896</option>
-                                <option value='1152x896'>1152x896</option>
-                                <option value='1216x832'>1216x832</option>
-                                <option value='1344x768'>1344x768</option>
+                    {Model.includes('stable') && (
+                        <div className="settings-btn-cont">
+                            <CustomSelect
+                                label="Size"
+                                icon={<TvMinimal size={16} />}
+                                value={imageSettings.size || '1024x1024'}
+                                options={[
+                                    { value: '672x1566', label: '672x1566' },
+                                    { value: '768x1366', label: '768x1366' },
+                                    { value: '836x1254', label: '836x1254' },
+                                    { value: '916x1145', label: '916x1145' },
+                                    { value: '1024x1024', label: '1024x1024' },
+                                    { value: '1145x916', label: '1145x916' },
+                                    { value: '1254x836', label: '1254x836' },
+                                    { value: '1366x768', label: '1366x768' },
+                                    { value: '1566x672', label: '1566x672' }
+                                ]}
+                                onChange={(value) => setImageSettings(prev => ({ ...prev, size: value }))}
+                            />
+                        </div>
+                    )}
 
-                            </select>
-                        </div>}
-                        {Model.includes('imagen') && <div className="settings-btn-cont">
-                            <label><MonitorSmartphone size={16} />Ratio</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setImageSettings(prev => ({ ...prev, ratio: e.target.value })) }} defaultValue={imageSettings.ratio}>
-                                <option value='1:1'>1:1</option>
-                                <option value='3:4'>3:4</option>
-                                <option value='4:3'>4:3</option>
-                                <option value='9:16'>9:16</option>
-                                <option value='16:9'>16:9</option>
-                            </select>
-                        </div>}
-                    </>
+                    {Model.includes('bria') && (
+                        <div className="settings-btn-cont">
+                            <CustomSelect
+                                label="Size"
+                                icon={<TvMinimal size={16} />}
+                                value={imageSettings.size || '1024x1024'}
+                                options={[
+                                    { value: '768x1344', label: '768x1344' },
+                                    { value: '832x1216', label: '832x1216' },
+                                    { value: '896x1152', label: '896x1152' },
+                                    { value: '896x1088', label: '896x1088' },
+                                    { value: '1024x1024', label: '1024x1024' },
+                                    { value: '1088x896', label: '1088x896' },
+                                    { value: '1152x896', label: '1152x896' },
+                                    { value: '1216x832', label: '1216x832' },
+                                    { value: '1344x768', label: '1344x768' }
+                                ]}
+                                onChange={(value) => setImageSettings(prev => ({ ...prev, size: value }))}
+                            />
+                        </div>
+                    )}
 
-                }
-                {chatMode === 'video' &&
-                    <>
-                        {(() => {
-                            let duration = Number(videoSettings.duration) || 5;
+                    {Model.includes('imagen') && (
+                        <div className="settings-btn-cont">
+                            <CustomSelect
+                                label="Ratio"
+                                icon={<MonitorSmartphone size={16} />}
+                                value={imageSettings.ratio || '1:1'}
+                                options={[
+                                    { value: '1:1', label: '1:1' },
+                                    { value: '3:4', label: '3:4' },
+                                    { value: '4:3', label: '4:3' },
+                                    { value: '9:16', label: '9:16' },
+                                    { value: '16:9', label: '16:9' }
+                                ]}
+                                onChange={(value) => setImageSettings(prev => ({ ...prev, ratio: value }))}
+                            />
+                        </div>
+                    )}
+                </>
+            )}
 
-                            // if Model name contains "veo", force duration = 8
-                            if (Model?.toLowerCase().includes("veo")) {
-                                duration = 8;
-                            }
+            {chatMode === 'video' && (
+                <>
+                    {(() => {
+                        let duration = Number(videoSettings.duration) || 5;
 
-                            const price = calculateVideoPrice(
-                                Model,
-                                videoSettings.resolution || "720p",
-                                videoSettings.ratio || "16:9",
-                                duration
-                            );
-                            setVideoCredits(price.credits + 100);
-                            return (
-                                <span className="price-tag">
-                                    *Price: {price.credits + 100} credits*
-                                </span>
-                            );
-                        })()}{Model.includes('sora') && <div className="settings-btn-cont">
-                            <label><TvMinimal size={16} />Resolution</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, resolution: e.target.value })) }} defaultValue={videoSettings.resolution}>
-                                <option value='480p'>480p</option>
-                                <option value='720p'>720p</option>
-                                <option value='1080p'>1080p</option>
-                            </select>
+                        if (Model?.toLowerCase().includes("veo")) {
+                            duration = 8;
+                        }
+
+                        const price = calculateVideoPrice(
+                            Model,
+                            videoSettings.resolution || "720p",
+                            videoSettings.ratio || "16:9",
+                            duration
+                        );
+                        setVideoCredits(price.credits + 100);
+                        return (
+                            <span className="price-tag">
+                                *Price: {price.credits + 100} credits*
+                            </span>
+                        );
+                    })()}
+
+                    {Model.includes('sora') && (
+                        <div className="settings-btn-cont">
+                            <CustomSelect
+                                label="Resolution"
+                                icon={<TvMinimal size={16} />}
+                                value={videoSettings.resolution || '720p'}
+                                options={[
+                                    { value: '480p', label: '480p' },
+                                    { value: '720p', label: '720p' },
+                                    { value: '1080p', label: '1080p' }
+                                ]}
+                                onChange={(value) => setVideoSettings(prev => ({ ...prev, resolution: value }))}
+                            />
                             <hr />
-                            <label><MonitorSmartphone size={16} />Ratio</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, ratio: e.target.value })) }} defaultValue={videoSettings.ratio}>
-                                <option value='1:1'>1:1</option>
-                                <option value='9:16'>9:16</option>
-                                <option value='16:9'>16:9</option>
-                            </select>
+                            <CustomSelect
+                                label="Ratio"
+                                icon={<MonitorSmartphone size={16} />}
+                                value={videoSettings.ratio || '16:9'}
+                                options={[
+                                    { value: '1:1', label: '1:1' },
+                                    { value: '9:16', label: '9:16' },
+                                    { value: '16:9', label: '16:9' }
+                                ]}
+                                onChange={(value) => setVideoSettings(prev => ({ ...prev, ratio: value }))}
+                            />
                             <hr />
-                            <label><Timer size={16} />Durations</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, duration: e.target.value })) }} defaultValue={videoSettings.duration}>
-                                <option value='5'>5 seconds</option>
-                                <option value='10'>10 seconds</option>
-                                <option value='15'>15 seconds</option>
-                                <option value='20'>20 seconds</option>
-                            </select>
+                            <CustomSelect
+                                label="Duration"
+                                icon={<Timer size={16} />}
+                                value={videoSettings.duration || '5'}
+                                options={[
+                                    { value: '5', label: '5 seconds' },
+                                    { value: '10', label: '10 seconds' },
+                                    { value: '15', label: '15 seconds' },
+                                    { value: '20', label: '20 seconds' }
+                                ]}
+                                onChange={(value) => setVideoSettings(prev => ({ ...prev, duration: value }))}
+                            />
+                        </div>
+                    )}
 
-
-                        </div>}
-                        {Model.includes('veo') && <div className="settings-btn-cont">
-                            <label><TvMinimal size={16} />Resolution</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, resolution: e.target.value })) }} defaultValue={videoSettings.resolution}>
-                                <option value='720p'>720p</option>
-                                {!Model.includes('veo-2') && <option value='1080p'>1080p</option>}
-                            </select>
+                    {Model.includes('veo') && (
+                        <div className="settings-btn-cont">
+                            <CustomSelect
+                                label="Resolution"
+                                icon={<TvMinimal size={16} />}
+                                value={videoSettings.resolution || '720p'}
+                                options={[
+                                    { value: '720p', label: '720p' },
+                                    ...(!Model.includes('veo-2') ? [{ value: '1080p', label: '1080p' }] : [])
+                                ]}
+                                onChange={(value) => setVideoSettings(prev => ({ ...prev, resolution: value }))}
+                            />
                             <hr />
-                            <label><Timer size={16} />Durations</label>
-                            <select className="model-selector-trigger" onChange={(e) => { setVideoSettings(prev => ({ ...prev, duration: e.target.value })) }} defaultValue={videoSettings.duration}>
-                                {Model.includes('veo-2') && <option value='5'>5 seconds</option>}
-                                {Model.includes('veo-2') && <option value='10'>6 seconds</option>}
-                                {Model.includes('veo-2') && <option value='15'>7 seconds</option>}
-                                <option value='20'>8 seconds</option>
-                            </select>
+                            <CustomSelect
+                                label="Duration"
+                                icon={<Timer size={16} />}
+                                value={videoSettings.duration || '20'}
+                                options={[
+                                    ...(Model.includes('veo-2') ? [
+                                        { value: '5', label: '5 seconds' },
+                                        { value: '10', label: '6 seconds' },
+                                        { value: '15', label: '7 seconds' }
+                                    ] : []),
+                                    { value: '20', label: '8 seconds' }
+                                ]}
+                                onChange={(value) => setVideoSettings(prev => ({ ...prev, duration: value }))}
+                            />
+                        </div>
+                    )}
+                </>
+            )}
 
-                        </div>}
-                    </>}
-                {chatMode === 'text' && <>
-                    <div className="settings-btn-cont">
-                        <label>style</label>
-                        <select className="model-selector-trigger" value={selectedStyle} onChange={handleStyleChange}>
-                            {styles.map(style => (
-                                <option key={style} value={style}>
-                                    {style}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </>}
-
-            </div >
-        </>
-    )
-}
+            {chatMode === 'text' && (
+                <div className="settings-btn-cont">
+                    <CustomSelect
+                        label="Style"
+                        icon={<Sparkles size={16} />}
+                        value={selectedStyle}
+                        options={styles.map(style => ({ value: style, label: style }))}
+                        onChange={handleStyleChange}
+                    />
+                </div>
+            )}
+        </div>
+    );
+};
 
 export default SettingsButton;

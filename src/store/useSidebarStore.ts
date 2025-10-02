@@ -10,7 +10,7 @@ type SidebarStore = {
 export const useSidebarStore = create<SidebarStore>()(
     persist(
         (set) => ({
-            isSidebarOpen: true,
+            isSidebarOpen: false,
             toggleSidebar: () =>
                 set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
             closeSidebar: () => set({ isSidebarOpen: false }),

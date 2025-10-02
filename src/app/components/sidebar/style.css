@@ -43,13 +43,14 @@
 
 .sidebar-2-bottom-cont {
     position: absolute;
-    bottom: 1%;
+    bottom: 5px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 2px;
     z-index: 1000;
+    max-height: 60px;
 
     hr {
         width: 90%;
@@ -527,6 +528,10 @@ html.dark {
         background: linear-gradient(to right, #D6E2FB, #E3EBFD);
         color: var(--prop-dark-bg);
     }
+
+    .chath-menu {
+        background: var(--prop-dark-bg);
+    }
 }
 
 html.light {
@@ -539,5 +544,9 @@ html.light {
     .sidebar-button-2:hover::after {
         background: linear-gradient(to right, #1C273B, #191E2B);
         color: var(--prop-white-bg);
+    }
+
+    .chath-menu {
+        background: var(--prop-white-bg);
     }
 }

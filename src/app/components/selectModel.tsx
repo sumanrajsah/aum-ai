@@ -1,7 +1,7 @@
 'use client'
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { Check, ChevronDown, Layers, PanelRightClose, User2, DollarSign } from "lucide-react"
-import './selectModel.css'
+import { Check, ChevronDown, Layers, PanelRightClose, User2, DollarSign, ArrowUpDown } from "lucide-react"
+import './selectModel.css' // Add the sort-button styles to this CSS file
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
 import { useChat } from "../../context/ChatContext"
@@ -14,11 +14,14 @@ export function isModelAvailable(modelValue: string): boolean {
     return llmModelsFree.includes(modelValue);
 }
 
+type SortOption = 'default' | 'cheap' | 'expensive' | 'free';
+
 const SelectModelButton = () => {
     const { user } = useAuth();
     const { selectModel, Model, chatMode } = useChat();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedModel, setSelectedModel] = useState(Model);
+    const [sortBy, setSortBy] = useState<SortOption>('default');
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const scrollToItem = useCallback((node: HTMLDivElement | null) => {
@@ -43,6 +46,41 @@ const SelectModelButton = () => {
     const models = getModels();
     const currentModel = models.find(model => model.value === selectedModel) || models[0];
 
+    // add near top of file
+    type IOCredit = { inputCredits: number; outputCredits: number };
+    const hasIOCredits = (m: any): m is IOCredit =>
+        typeof m?.inputCredits === "number" && typeof m?.outputCredits === "number";
+
+    // Calculate total cost for a model
+    const getModelCost = (model: any): number => {
+        if (isModelAvailable(model.value)) return 0; // Free models
+        if (hasIOCredits(model)) {
+            return model.inputCredits + model.outputCredits;
+        }
+        if (model.credits) {
+            return model.credits;
+        }
+        return 0;
+    };
+
+    // Sort models based on selected option
+    const getSortedModels = () => {
+        const modelsList = user?.uid ? models : models.filter(m => isModelAvailable(m.value));
+
+        switch (sortBy) {
+            case 'free':
+                return modelsList.filter(m => isModelAvailable(m.value));
+            case 'cheap':
+                return [...modelsList].sort((a, b) => getModelCost(a) - getModelCost(b));
+            case 'expensive':
+                return [...modelsList].sort((a, b) => getModelCost(b) - getModelCost(a));
+            default:
+                return modelsList;
+        }
+    };
+
+    const sortedModels = getSortedModels();
+
     // Handle model selection
     const handleModelSelect = (modelValue: any) => {
         setSelectedModel(modelValue);
@@ -53,8 +91,17 @@ const SelectModelButton = () => {
 
     // Handle pricing button click
     const handlePricingClick = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Prevent dropdown from closing
+        e.stopPropagation();
         router.push('/pricing')
+    };
+
+    // Handle sort change
+    const handleSortChange = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const sortOptions: SortOption[] = ['default', 'cheap', 'expensive', 'free'];
+        const currentIndex = sortOptions.indexOf(sortBy);
+        const nextIndex = (currentIndex + 1) % sortOptions.length;
+        setSortBy(sortOptions[nextIndex]);
     };
 
     // Close dropdown when clicking outside
@@ -73,11 +120,6 @@ const SelectModelButton = () => {
     useEffect(() => {
         setSelectedModel(Model);
     }, [Model]);
-
-    // add near top of file
-    type IOCredit = { inputCredits: number; outputCredits: number };
-    const hasIOCredits = (m: any): m is IOCredit =>
-        typeof m?.inputCredits === "number" && typeof m?.outputCredits === "number";
 
     return (
         <div className="custom-model-selector" ref={dropdownRef}>
@@ -101,6 +143,14 @@ const SelectModelButton = () => {
                         <div className="header-actions">
                             <span className="mode-badge">{chatMode}</span>
                             <button
+                                className="sort-button"
+                                onClick={handleSortChange}
+                                title={`Sort by: ${sortBy}`}
+                            >
+                                <ArrowUpDown size={10} />
+                                {sortBy === 'default' ? 'Sort' : sortBy}
+                            </button>
+                            <button
                                 className="pricing-button"
                                 onClick={handlePricingClick}
                                 title="View Pricing"
@@ -108,13 +158,12 @@ const SelectModelButton = () => {
                                 <DollarSign size={10} />Pricing
                             </button>
                         </div>
-
                     </div>
                     {!user?.uid && (
                         <p className="dropdown-title" style={{ display: 'flex', justifyContent: 'center', fontSize: '12px' }}>Login to unlock more models.</p>
                     )}
                     <ul className="model-list" role="listbox">
-                        {(user?.uid ? models : models.filter(m => isModelAvailable(m.value))).map((model) => (
+                        {sortedModels.map((model) => (
                             <li
                                 key={model.value}
                                 className={`model-option ${selectedModel === model.value ? 'selected' : ''}`}
@@ -141,10 +190,7 @@ const SelectModelButton = () => {
                                 {selectedModel === model.value && <Check className="check-icon" size={16} />}
                             </li>
                         ))}
-
                     </ul>
-
-
                 </div>
             )}
         </div>

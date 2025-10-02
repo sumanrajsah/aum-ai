@@ -26,6 +26,14 @@ export default function CollabLogin() {
     };
 
     async function handleLogin() {
+        if (!credentials.email || !credentials.password) {
+            alertMessage.warn("Please fill all the fields")
+            return;
+        }
+        if (credentials.password.length < 8) {
+            alertMessage.warn("Password must be at least 8 characters long")
+            return;
+        }
         setLoading(true)
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/v1/auth/login`, {
             method: "POST",
@@ -82,11 +90,11 @@ export default function CollabLogin() {
                 <div className="cs-signup-cont">
                     <div className="cs-signup-box">
                         <label>Email Address</label>
-                        <input placeholder="name@example.com" onChange={(e) => setCredentials({ ...credentials, email: (e.target.value).trim().toLowerCase() })} type="email" />
+                        <input placeholder="name@example.com" readOnly={loading} onChange={(e) => setCredentials({ ...credentials, email: (e.target.value).trim().toLowerCase() })} type="email" />
                     </div>
                     <div className="cs-signup-box">
                         <label>Password</label>
-                        <input placeholder="..." onChange={(e) => { handlePasswordChange(e) }} type="password" />
+                        <input placeholder="min length 8 characters" readOnly={loading} onChange={(e) => { handlePasswordChange(e) }} type="password" />
                     </div>
                     {loading ? <><Oval
                         visible={true}
@@ -97,7 +105,7 @@ export default function CollabLogin() {
                         wrapperStyle={{}}
                         wrapperClass=""
                         secondaryColor="gray"
-                    /><p>Wait...</p></> : <button className="collab-button" onClick={handleLogin} type="submit">Login</button>}
+                    /><p>Wait...</p></> : <button className="collab-button" onClick={handleLogin} type="submit" disabled={isAuthLoading}>Login</button>}
                     <div style={{ display: 'flex', gap: '5px', flexDirection: 'column', marginTop: '5px', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                         {!loading && (
                             <>
