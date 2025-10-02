@@ -1,5 +1,5 @@
 import React from "react";
-import { X, Search, Globe, Image } from "lucide-react";
+import { X, Search, Globe, Image, ClipboardCheck, BookOpen } from "lucide-react";
 import "./toolChip.css";
 import { useChat } from "@/context/ChatContext";
 
@@ -13,6 +13,10 @@ const ToolChip: React.FC<ToolChipProps> = ({ tool, onRemove }) => {
         <div className="tool-chip">
             {tool === "web_search" && <Globe size={18} />}
             {tool === "web_search" && <span className="tool-label">Search</span>}
+            {tool === "exam_mode" && <ClipboardCheck size={18} />}
+            {tool === "exam_mode" && <span className="tool-label">Exam</span>}
+            {tool === "study_mode" && <BookOpen size={18} />}
+            {tool === "study_mode" && <span className="tool-label">Study</span>}
             {tool === "image" && <Image size={18} />}
             {tool === "image" && <span className="tool-label">Image</span>}
             <button

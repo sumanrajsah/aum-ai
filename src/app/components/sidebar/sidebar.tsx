@@ -138,13 +138,13 @@ const Sidebar = () => {
                 <div className="sidebar-2-top-cont top-cont-scroll" onClick={(e) => { e.stopPropagation() }}>
 
 
-                    <SidebarButton className="sidebar-button" onClick={() => { router.push(`/?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(""); setAgentId(''); isSidebarOpen ? toggleSidebar() : null }}>
+                    <SidebarButton className="sidebar-button" onClick={() => { router.push(`/?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(""); setAgentId(''); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>
                         <SquarePen size={20} />New Chat
                     </SidebarButton >
-                    <SidebarButton className="sidebar-button" onClick={() => { router.push('/create'); isSidebarOpen ? toggleSidebar() : null }}>
+                    <SidebarButton className="sidebar-button" onClick={() => { router.push('/create'); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>
                         <PlusCircle size={20} />Create
                     </SidebarButton >
-                    <SidebarButton className="sidebar-button" data-tooltip={'chats'} onClick={() => { toggleHistoryBar(); isSidebarOpen ? toggleSidebar() : null }}>
+                    <SidebarButton className="sidebar-button" data-tooltip={'chats'} onClick={() => { toggleHistoryBar(); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>
                         <MessagesSquare size={20} /> Chats
                     </SidebarButton>
 
@@ -183,7 +183,7 @@ const Sidebar = () => {
                                         router.push(`/agent/${agent.aid}`);
                                         setMessages([]);
                                         setChatId('');
-                                        isSidebarOpen ? toggleSidebar() : null;
+                                        isSidebarOpen ? toggleSidebar() : setIsOpen(false);
                                     }}
                                 >
                                     <img
@@ -203,8 +203,8 @@ const Sidebar = () => {
                         <ImagePlay size={16} />AI Media Studio
                     </SidebarButton >
                     <div className="sidebar-dropdown-cont">
-                        <button className="dropdown-list" onClick={() => { router.push(currentWorkspace === '' ? `/image-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/image-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(""); isSidebarOpen ? toggleSidebar() : null }}> <Limage size={16} /> Image</button>
-                        <button className="dropdown-list" onClick={() => { router.push(currentWorkspace === '' ? `/video-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/video-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(""); isSidebarOpen ? toggleSidebar() : null }}>  <Play size={16} /> Video</button>
+                        <button className="dropdown-list" onClick={() => { router.push(currentWorkspace === '' ? `/image-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/image-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(""); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}> <Limage size={16} /> Image</button>
+                        <button className="dropdown-list" onClick={() => { router.push(currentWorkspace === '' ? `/video-playground?model=${Model}&mode=${chatMode}` : `/workspace/${currentWorkspace}/video-playground?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(""); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>  <Play size={16} /> Video</button>
                     </div>
                     <SidebarButton className="sidebar-button" onClick={() => { router.push('/store/agents') }}>
                         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -215,26 +215,26 @@ const Sidebar = () => {
 
                         AUM Store</SidebarButton>
                     <div className="sidebar-dropdown-cont">
-                        <button className="dropdown-list" onClick={() => { router.push('/store/publish'); isSidebarOpen ? toggleSidebar() : null }}> <Rocket size={16} /> Publish</button>
+                        <button className="dropdown-list" onClick={() => { router.push('/store/publish'); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}> <Rocket size={16} /> Publish</button>
                         {/* <button className="dropdown-list" onClick={() => { router.push('/store/profile') }}> <User size={16} /> Profile</button> */}
-                        <button className="dropdown-list" onClick={() => { router.push('/store/agents'); isSidebarOpen ? toggleSidebar() : null }}> <BrainCircuit size={16} /> AI Agents</button>
-                        <button className="dropdown-list" onClick={() => { router.push('/store/mcp'); isSidebarOpen ? toggleSidebar() : null }}>    <svg fill="currentColor" height="20px" viewBox="0 0 24 24" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M15.688 2.343a2.588 2.588 0 00-3.61 0l-9.626 9.44a.863.863 0 01-1.203 0 .823.823 0 010-1.18l9.626-9.44a4.313 4.313 0 016.016 0 4.116 4.116 0 011.204 3.54 4.3 4.3 0 013.609 1.18l.05.05a4.115 4.115 0 010 5.9l-8.706 8.537a.274.274 0 000 .393l1.788 1.754a.823.823 0 010 1.18.863.863 0 01-1.203 0l-1.788-1.753a1.92 1.92 0 010-2.754l8.706-8.538a2.47 2.47 0 000-3.54l-.05-.049a2.588 2.588 0 00-3.607-.003l-7.172 7.034-.002.002-.098.097a.863.863 0 01-1.204 0 .823.823 0 010-1.18l7.273-7.133a2.47 2.47 0 00-.003-3.537z"></path><path d="M14.485 4.703a.823.823 0 000-1.18.863.863 0 00-1.204 0l-7.119 6.982a4.115 4.115 0 000 5.9 4.314 4.314 0 006.016 0l7.12-6.982a.823.823 0 000-1.18.863.863 0 00-1.204 0l-7.119 6.982a2.588 2.588 0 01-3.61 0 2.47 2.47 0 010-3.54l7.12-6.982z"></path></svg> MCPs</button>
-                        <button className="dropdown-list" onClick={() => { router.push('/store/prompts'); isSidebarOpen ? toggleSidebar() : null }} >  <MessageSquare size={16} /> Prompts</button>
+                        <button className="dropdown-list" onClick={() => { router.push('/store/agents'); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}> <BrainCircuit size={16} /> AI Agents</button>
+                        <button className="dropdown-list" onClick={() => { router.push('/store/mcp'); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>    <svg fill="currentColor" height="20px" viewBox="0 0 24 24" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M15.688 2.343a2.588 2.588 0 00-3.61 0l-9.626 9.44a.863.863 0 01-1.203 0 .823.823 0 010-1.18l9.626-9.44a4.313 4.313 0 016.016 0 4.116 4.116 0 011.204 3.54 4.3 4.3 0 013.609 1.18l.05.05a4.115 4.115 0 010 5.9l-8.706 8.537a.274.274 0 000 .393l1.788 1.754a.823.823 0 010 1.18.863.863 0 01-1.203 0l-1.788-1.753a1.92 1.92 0 010-2.754l8.706-8.538a2.47 2.47 0 000-3.54l-.05-.049a2.588 2.588 0 00-3.607-.003l-7.172 7.034-.002.002-.098.097a.863.863 0 01-1.204 0 .823.823 0 010-1.18l7.273-7.133a2.47 2.47 0 00-.003-3.537z"></path><path d="M14.485 4.703a.823.823 0 000-1.18.863.863 0 00-1.204 0l-7.119 6.982a4.115 4.115 0 000 5.9 4.314 4.314 0 006.016 0l7.12-6.982a.823.823 0 000-1.18.863.863 0 00-1.204 0l-7.119 6.982a2.588 2.588 0 01-3.61 0 2.47 2.47 0 010-3.54l7.12-6.982z"></path></svg> MCPs</button>
+                        <button className="dropdown-list" onClick={() => { router.push('/store/prompts'); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }} >  <MessageSquare size={16} /> Prompts</button>
                     </div>
                     <SidebarButton className="sidebar-button" data-tooltip={'history'} onClick={() => toggleDropdown('workspace')}>
                         <Layers size={20} /> Workspaces <span className="expand-sidebar-icon">{isWorkspaceExpannd ? <ChevronDown size={16} /> : <ChevronRight size={16} />}</span>
                     </SidebarButton>
                     {isWorkspaceExpannd && <div className="sidebar-dropdown-cont">
-                        <button className="dropdown-list" onClick={() => { location.href = '#workspace/create'; isSidebarOpen ? toggleSidebar() : null }}><Plus size={14} />Create</button>
-                        <button className="dropdown-list" onClick={() => { router.push(`/workspace/invite`); isSidebarOpen ? toggleSidebar() : null }}>
+                        <button className="dropdown-list" onClick={() => { location.href = '#workspace/create'; isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}><Plus size={14} />Create</button>
+                        <button className="dropdown-list" onClick={() => { router.push(`/workspace/invite`); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>
                             <UserPlus size={14} />Invites
                         </button>
-                        <button className="dropdown-list" onClick={() => { router.push(`/workspace`); setCurrentWorkspace(''); setMessages([]); setChatId(''); isSidebarOpen ? toggleSidebar() : null }}>
+                        <button className="dropdown-list" onClick={() => { router.push(`/workspace`); setCurrentWorkspace(''); setMessages([]); setChatId(''); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>
                             <Layers size={14} />Workspace Home
                         </button>
                         <hr />
                         {workspaces.map((workspace: Workspace) => (
-                            <button className="dropdown-list" key={workspace.wid} onClick={() => { router.push(`/workspace/${workspace.wid}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(''); setCurrentWorkspace(workspace.wid); isSidebarOpen ? toggleSidebar() : null }}>
+                            <button className="dropdown-list" key={workspace.wid} onClick={() => { router.push(`/workspace/${workspace.wid}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(''); setCurrentWorkspace(workspace.wid); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>
                                 <Layers size={14} />{workspace.name}
                             </button>
                         ))}

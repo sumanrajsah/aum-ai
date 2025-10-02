@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useRef, useState } from "react"
-import { Globe, Image, Images, Layers, MonitorSmartphone, PanelRightClose, Sparkles, Timer, TvMinimal, User2 } from "lucide-react"
+import { BookOpen, ClipboardCheck, Globe, Image, Images, Layers, MonitorSmartphone, PanelRightClose, Sparkles, Timer, TvMinimal, User2 } from "lucide-react"
 import './tool.css'
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -28,20 +28,29 @@ const SelectToolButton = () => {
 
 
     const tools = [
-        // {
-        //     id: 'image',
-        //     name: 'Create an Image',
-        //     description: 'Generate AI-powered images and visual content',
-        //     icon: Images
-        // },
         {
             id: 'web_search',
             label: 'Search',
             name: 'Search on Web',
             description: 'Browse and search the internet for information',
             icon: Globe
+        },
+        {
+            id: 'study_mode',
+            label: 'Study',
+            name: 'Study',
+            description: 'Help you learn, summarize, create flashcards, and generate quizzes from study material',
+            icon: BookOpen // or any study-related icon
+        },
+        {
+            id: 'exam_mode',
+            label: 'Exam',
+            name: 'Exam',
+            description: 'Conduct timed exams with MCQs, short answers, problem-solving, and provide scoring and reports',
+            icon: ClipboardCheck // or any exam-related icon
         }
     ];
+
 
     return (
         <div className="selecttool-btn-modal">

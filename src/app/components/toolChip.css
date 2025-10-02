@@ -11,7 +11,7 @@
     justify-content: center;
     font-weight: 500;
     border-radius: 9999px;
-    padding: 5px;
+    padding: 5px 10px;
     font-size: 14px;
     transition: all 0.2s ease-in-out;
     background: rgba(var(--bg-color1), 0.25);
@@ -37,13 +37,13 @@
     margin-left: 6px;
     background: transparent;
     border: none;
-    color: #fff;
     cursor: pointer;
     padding: 0;
     transition: color 0.2s ease;
 }
 
 .tool-remove:hover {
-    color: #f87171;
+    color: #f03232;
+
     /* red hover for delete */
 }

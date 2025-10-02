@@ -13,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ['/api/*'],
             },
         ],
-        sitemap: 'https://0xxplorer.com.com/sitemap.xml',
+        sitemap: 'https://aum.sitrai.com/sitemap.xml',
     }
 }
