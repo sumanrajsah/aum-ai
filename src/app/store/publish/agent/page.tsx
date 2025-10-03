@@ -295,7 +295,14 @@ export default function PublishAgent() {
                 <button
                     className="publish-btn"
                     onClick={handlePublish}
-                    disabled={isPublishing || selectedConfigVersion === null || price === '' || Number(price) < 10}
+                    disabled={
+                        isPublishing ||
+                        selectedConfigVersion === null ||
+                        price === '' ||
+                        (Number(price) > 0 && Number(price) < 10) ||
+                        Number(price) < 0
+                    }
+
                 >
                     {isPublishing ? (
                         <>
