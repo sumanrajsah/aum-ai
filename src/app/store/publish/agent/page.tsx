@@ -278,7 +278,7 @@ export default function PublishAgent() {
                                 type="number"
                                 value={price}
                                 onChange={handlePriceChange}
-                                placeholder="min 10 AUM"
+                                placeholder="0 AUM or min 10 AUM"
                                 min="10"
                                 step="1"
                                 className="modern-input"
