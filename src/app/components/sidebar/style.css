@@ -364,6 +364,7 @@ label {
 
     width: 130px;
     height: auto;
+    z-index: 999999999;
 
     hr {
         width: 98%;
@@ -504,6 +505,18 @@ label {
 
     .sidebar-2 {
         display: none;
+    }
+
+    .history-box {
+
+        p {
+            width: 90%;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .chath-menu-btn {
+        display: flex;
     }
 
 }
