@@ -130,7 +130,7 @@ const Sidebar = () => {
                 <div className="slogo-cont" >
                     <Image src="/sitraone.png" onClick={() => { router.push('/'); setMessages([]); }} alt="0xXplorer" width={30} height={30} priority />
                     <span>AUM AI</span>
-                    <SidebarButton className="sidebar-button-2 close-sidebar" style={{ cursor: 'w-resize' }} data-tooltip={isSidebarOpen ? "close menu" : "keep menu open"} onClick={() => { toggleSidebar() }}>
+                    <SidebarButton className="sidebar-button-2 close-sidebar" style={{ cursor: 'w-resize' }} data-tooltip={isSidebarOpen ? "close menu" : "keep menu open"} onClick={() => { toggleSidebar(); setIsOpen(false) }}>
                         <PanelLeft size={20} />
                     </SidebarButton >
                 </div>
