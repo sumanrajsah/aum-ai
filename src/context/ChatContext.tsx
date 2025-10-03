@@ -768,7 +768,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 
 
                     } catch (error) {
-                        alertMessage.error("Error parsing stream chunk.");
+                        // alertMessage.error("Error parsing stream chunk.");
                         console.error("Error parsing stream chunk:", error, line);
                         continue;
                     }
