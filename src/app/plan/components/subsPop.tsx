@@ -135,7 +135,8 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
             const data = await response.json();
             console.log(data)
 
-            if (data.coupon.active) {
+
+            if (data.coupon) {
                 setCouponInfo({
                     code: couponCode.trim(),
                     discount: data.coupon.offerDetails.discount,
@@ -148,6 +149,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                 setCouponInfo(null);
             }
         } catch (error) {
+            console.log(error)
             setCouponError('Failed to validate coupon. Please try again.');
             setCouponInfo(null);
         } finally {
