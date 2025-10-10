@@ -122,6 +122,12 @@ const ModalSetting = () => {
     const [quickAccess, setQuickAccess] = useState<any>(null);
     const [loadingQuickAccess, setLoadingQuickAccess] = useState(false);
     const { settings, setSettings } = useSettingsStore();
+    console.log("Settings in modal:", settings,)
+    const init = useSettingsStore((s) => s.init)
+
+    useEffect(() => {
+        init()
+    }, [])
 
     type Memory = {
         memory_id: string;
