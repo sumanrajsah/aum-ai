@@ -4,6 +4,7 @@ import './style.css';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import SubscriptionPopup from './components/subsPop';
+import { stat } from 'fs';
 // Import the popup component
 
 declare global { interface Window { Razorpay?: any } }
@@ -34,7 +35,7 @@ const pricingData = {
             buttonText: 'Get Plus Plan',
             buttonStyle: 'primary',
             link: 'plus',
-            plan_id: 'plan_RAc3QE4F30l4Io'
+            plan_id: 'plan_R9OLfO0iomjpBl'
         },
         pro: {
             name: 'Pro',
@@ -129,7 +130,8 @@ const PricingPage = () => {
                     plan_id: pricingData.plans.plus.plan_id,
                     renewalDate: json.subscription.next_due ?? "",
                     period: json.subscription.current_end,
-                    subscription_id: json.subscription.subscription_id
+                    subscription_id: json.subscription.subscription_id,
+                    status: json.subscription.status
                 });
             } catch (err) {
                 console.error("Billing fetch failed", err);

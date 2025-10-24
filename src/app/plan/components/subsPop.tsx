@@ -36,6 +36,7 @@ interface CurrentPlan {
     plan_id: string;
     renewalDate: string;
     subscription_id: string;
+    status: string;
 }
 
 // Add these props to your SubscriptionPopupProps interface
@@ -463,6 +464,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
             });
 
             const data = await resp.json();
+            console.log(data)
 
             if (data.error) {
                 throw new Error(data.error);
@@ -477,7 +479,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                 name: "Qubicsquare Technologies Private Limited",
                 description: `Subscribe to AUM AI ${plan.name} Plan Subscription`,
                 image: "https://www.qubicsquare.tech/qubicsquare512.png",
-                // ...(plan.offer_id ? { offer_id: plan.offer_id } : {}),
+                ...(data.offer_id ? { offer_id: data.offer_id } : {}),
                 prefill: {
                     email: user.email || " ",
                     contact: userInfo.contact,
@@ -631,7 +633,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
     return (
         <div className="sub-popup-overlay">
             <div className="sub-popup-container">
-                {step === 'confirm' && isUpgrade && currentPlan && (
+                {step === 'confirm' && isUpgrade && currentPlan?.status === 'active' && (
                     <>
                         <div className="upgrade-simple">
                             <h2>Upgrade Your Plan</h2>

@@ -209,8 +209,12 @@ const ChatInput = () => {
 
     try {
       const endpoints = selectedServers.map((server: any) => ({
-        uri: server.uri,
-        authKey: server.authKey
+        auth: server.auth,
+        uri: server.config.url,
+        header: {
+          key: server.config.header.key,
+          value: server.config.header.value
+        }
       }));
 
       const connectionResults = await Promise.all(
@@ -276,7 +280,7 @@ const ChatInput = () => {
         )
       );
 
-      // console.log('Read resource result:', result);
+      console.log('Read resource result:', result);
 
       // Validate result structure
       if (!result?.data?.contents[0]?.text) {
