@@ -264,7 +264,7 @@ const PricingPage = () => {
                 loading={loading}
                 onSetLoading={setLoading}
                 onSetIsPopupOpen={setIsPopupOpen}
-                isUpgrade={data}
+                isUpgrade={data.status === 'active'}
                 planInfo={pricingData}
                 pricingData={{
                     currency: pricingData.currency,
