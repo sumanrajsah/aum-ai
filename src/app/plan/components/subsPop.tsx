@@ -700,7 +700,7 @@ const SubscriptionPopup: React.FC<SubscriptionPopupProps> = ({
                     </>
                 )}
 
-                {step === 'confirm' && !isUpgrade && (
+                {step === 'confirm' && currentPlan?.status !== 'active' && (
                     <>
                         <div className="sub-popup-header">
                             <h2>Confirm Your Subscription</h2>
