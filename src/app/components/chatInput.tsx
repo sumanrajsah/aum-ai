@@ -673,13 +673,13 @@ const ChatInput = () => {
                 <Plus size={20} />
               </button>}
               {!(pathname.includes('/agent')) && <SelectModelButton />}
-              {!(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { setSettingsModal(!openSettingsModal) }}><Settings size={18} /></button>}
+              {!(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { setSettingsModal(!openSettingsModal) }}><Settings size={18} />Settings</button>}
             </div>
 
 
 
             <div className='input-btn-cont-right'>
-              {showToolsBtn && chatMode === 'text' && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { window.location.hash = '#tools' }}><Settings2 size={18} /></button>}
+              {showToolsBtn && chatMode === 'text' && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { window.location.hash = '#tools' }}><Settings2 size={18} /> Tools</button>}
               {!((aiTyping) || (creatingImage)) && <button
                 className='button-send send'
                 onClick={handleSubmit}

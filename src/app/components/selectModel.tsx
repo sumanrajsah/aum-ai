@@ -141,7 +141,7 @@ const SelectModelButton = () => {
                     <div className="dropdown-header">
                         <span className="dropdown-title">Select Model</span>
                         <div className="header-actions">
-                            <span className="mode-badge">{chatMode}</span>
+                            {/* <span className="mode-badge">{chatMode}</span> */}
                             <button
                                 className="sort-button"
                                 onClick={handleSortChange}

@@ -1,5 +1,5 @@
 "use client"
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image'
 import './style.css'
 import Link from "next/link";
@@ -19,6 +19,7 @@ type SignUpForm = {
 }
 
 export default function CollabSignUp() {
+    const [currentStep, setCurrentStep] = useState(1);
     const [passwordStrength, setPasswordStrength] = useState<{ score: number, level: string }>({ score: 0, level: "Weak" });
     const [formData, setFormData] = useState<SignUpForm>({
         name: "",
@@ -35,18 +36,14 @@ export default function CollabSignUp() {
     const router = useRouter();
     const alert = useAlert();
 
-    const bufferToHex = (buffer: ArrayBuffer) => {
-        return Array.from(new Uint8Array(buffer))
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
-    };
+    const totalSteps = 2;
 
     const checkPasswordStrength = (password: string) => {
-        const minLength = /.{8,}/;             // at least 8 chars
-        const upper = /[A-Z]/;                 // uppercase
-        const lower = /[a-z]/;                 // lowercase
-        const number = /[0-9]/;                // digit
-        const special = /[^A-Za-z0-9]/;        // special char
+        const minLength = /.{8,}/;
+        const upper = /[A-Z]/;
+        const lower = /[a-z]/;
+        const number = /[0-9]/;
+        const special = /[^A-Za-z0-9]/;
 
         const passed = [
             minLength.test(password),
@@ -70,7 +67,6 @@ export default function CollabSignUp() {
         return emailRegex.test(email);
     };
 
-    // Email validation
     useEffect(() => {
         if (formData.email) {
             setEmailValid(validateEmail(formData.email));
@@ -88,35 +84,38 @@ export default function CollabSignUp() {
             setPasswordStrength({ score: strength.score, level: strength.level });
         }
 
-        // Clear password mismatch error when user starts typing
         if (field === "confirmPassword" || field === "password") {
             setFieldErrors(prev => ({ ...prev, passwordMismatch: "" }));
         }
     };
 
-    const validateForm = () => {
+    const validateStep = (step: number) => {
         const errors: { [key: string]: string } = {};
 
-        if (!formData.name.trim()) {
-            errors.name = "Please enter your name";
+        if (step === 1) {
+            if (!formData.name.trim()) {
+                errors.name = "Please enter your name";
+            }
         }
 
-        if (!formData.email) {
-            errors.email = "Please enter your email address";
-        } else if (!validateEmail(formData.email)) {
-            errors.email = "Please enter a valid email address";
-        }
+        if (step === 2) {
+            if (!formData.email) {
+                errors.email = "Please enter your email address";
+            } else if (!validateEmail(formData.email)) {
+                errors.email = "Please enter a valid email address";
+            }
 
-        if (!formData.password) {
-            errors.password = "Please enter a password";
-        } else if (formData.password.length < 8) {
-            errors.password = "Password must be at least 8 characters long";
-        }
+            if (!formData.password) {
+                errors.password = "Please enter a password";
+            } else if (formData.password.length < 8) {
+                errors.password = "Password must be at least 8 characters long";
+            }
 
-        if (!formData.confirmPassword) {
-            errors.confirmPassword = "Please confirm your password";
-        } else if (formData.password !== formData.confirmPassword) {
-            errors.passwordMismatch = "Passwords do not match";
+            if (!formData.confirmPassword) {
+                errors.confirmPassword = "Please confirm your password";
+            } else if (formData.password !== formData.confirmPassword) {
+                errors.passwordMismatch = "Passwords do not match";
+            }
         }
 
         setFieldErrors(errors);
@@ -130,11 +129,20 @@ export default function CollabSignUp() {
         return true;
     };
 
+    const handleNext = () => {
+        if (validateStep(currentStep)) {
+            setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+        }
+    };
+
+    const handleBack = () => {
+        setCurrentStep(prev => Math.max(prev - 1, 1));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!validateForm()) {
-            setLoading(false);
+        if (!validateStep(2)) {
             return;
         }
 
@@ -173,6 +181,36 @@ export default function CollabSignUp() {
         }
     }, [status, router]);
 
+    const renderStepIndicator = () => (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px', gap: '10px' }}>
+            {[1, 2].map((step) => (
+                <React.Fragment key={step}>
+                    <div style={{
+                        width: '30px',
+                        height: '30px',
+                        borderRadius: '50%',
+                        backgroundColor: currentStep >= step ? '#4CAF50' : '#e0e0e0',
+                        color: currentStep >= step ? 'white' : '#666',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 'bold',
+                        fontSize: '0.9em'
+                    }}>
+                        {step}
+                    </div>
+                    {step < 2 && (
+                        <div style={{
+                            width: '40px',
+                            height: '2px',
+                            backgroundColor: currentStep > step ? '#4CAF50' : '#e0e0e0'
+                        }} />
+                    )}
+                </React.Fragment>
+            ))}
+        </div>
+    );
+
     return (
         <>
             {isAuthLoading ? (
@@ -197,186 +235,222 @@ export default function CollabSignUp() {
                 </div>
             ) : (
                 <div className="collab-sbody">
-
-
                     <div className="cs-heading">
                         <Image src={'/sitraone.png'} height={50} width={50} alt="sitraone" />
                         <br />
-                        <h1>Sign Up</h1>
+                        <h2>Sign Up</h2>
+                        <p style={{ fontSize: '0.9em', color: '#666', margin: '5px 0' }}>
+                            Step {currentStep} of {totalSteps}
+                        </p>
                     </div>
 
+                    {renderStepIndicator()}
+
                     <form className="cs-signup-cont" onSubmit={handleSubmit}>
-                        <div className="cs-signup-box">
-                            <label>Full Name *</label>
-                            <input
-                                placeholder="Enter your full name"
-                                value={formData.name}
-                                onChange={(e) => {
-                                    setFormData(prev => ({ ...prev, name: e.target.value }));
-                                    setFieldErrors(prev => ({ ...prev, name: "" }));
-                                }}
-                                type="text"
-                                style={{ borderColor: fieldErrors.name ? '#ff4444' : '' }}
-                            />
-                            {fieldErrors.name && (
-                                <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
-                                    {fieldErrors.name}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="cs-signup-box">
-                            <label>Email Address *</label>
-                            <input
-                                placeholder="name@example.com"
-                                value={formData.email}
-                                onChange={(e) => {
-                                    setFormData(prev => ({
-                                        ...prev,
-                                        email: e.target.value.trim().toLowerCase()
-                                    }));
-                                    setFieldErrors(prev => ({ ...prev, email: "" }));
-                                }}
-                                type="email"
-                                style={{
-                                    borderColor: fieldErrors.email ? '#ff4444' :
-                                        emailValid === false ? '#ff4444' :
-                                            emailValid === true ? '#44ff44' : ''
-                                }}
-                            />
-                            {fieldErrors.email && (
-                                <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
-                                    {fieldErrors.email}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="cs-signup-box">
-                            <label>Password *</label>
-
-                            <input
-                                placeholder="min length 8 characters"
-                                onChange={(e) => handlePasswordChange(e, "password")}
-                                type={showPassword ? "text" : "password"}
-                                style={{
-                                    borderColor: fieldErrors.password ? '#ff4444' : '',
-                                    paddingRight: '40px'
-                                }}
-                            />
-
-
-                            {fieldErrors.password && (
-                                <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
-                                    {fieldErrors.password}
-                                </p>
-                            )}
-                            {formData.password && (
-                                <div style={{ marginTop: '8px' }}>
-                                    <p style={{
-                                        fontSize: "0.9em",
-                                        color: passwordStrength.level === "Strong" ? "green" :
-                                            passwordStrength.level === "Medium" ? "orange" : "red",
-                                        margin: '0 0 5px 0'
-                                    }}>
-                                        Strength: {passwordStrength.level}
-                                    </p>
-                                    <div style={{ fontSize: '0.8em', color: '#666' }}>
-                                        <p style={{ margin: 0 }}>Password should contain:</p>
-                                        <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
-                                            <li style={{ color: formData.password.length >= 8 ? 'green' : '#666' }}>
-                                                At least 8 characters
-                                            </li>
-                                            <li style={{ color: /[A-Z]/.test(formData.password) ? 'green' : '#666' }}>
-                                                Uppercase letter
-                                            </li>
-                                            <li style={{ color: /[a-z]/.test(formData.password) ? 'green' : '#666' }}>
-                                                Lowercase letter
-                                            </li>
-                                            <li style={{ color: /[0-9]/.test(formData.password) ? 'green' : '#666' }}>
-                                                Number
-                                            </li>
-                                            <li style={{ color: /[^A-Za-z0-9]/.test(formData.password) ? 'green' : '#666' }}>
-                                                Special character
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="cs-signup-box">
-                            <label>Confirm Password *</label>
-
-                            <input
-                                placeholder="Re-enter your password"
-                                onChange={(e) => handlePasswordChange(e, "confirmPassword")}
-                                type={showConfirmPassword ? "text" : "password"}
-                                style={{
-                                    borderColor: fieldErrors.confirmPassword || fieldErrors.passwordMismatch ? '#ff4444' :
-                                        formData.confirmPassword && formData.password === formData.confirmPassword ? '#44ff44' : '',
-                                    paddingRight: '40px'
-                                }}
-                            />
-                            {(fieldErrors.confirmPassword || fieldErrors.passwordMismatch) && (
-                                <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
-                                    {fieldErrors.confirmPassword || fieldErrors.passwordMismatch}
-                                </p>
-                            )}
-                            {formData.confirmPassword && formData.password === formData.confirmPassword && (
-                                <p style={{ color: 'green', fontSize: '0.8em', margin: '5px 0 0 0' }}>
-                                    ✓ Passwords match
-                                </p>
-                            )}
-                        </div>
-
-
-                        {loading ? (
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                                <Oval
-                                    visible={true}
-                                    height="20"
-                                    width="20"
-                                    color="gray"
-                                    ariaLabel="oval-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClass=""
-                                    secondaryColor="gray"
+                        {/* Step 1: Name */}
+                        {currentStep === 1 && (
+                            <div className="cs-signup-box">
+                                <label>Full Name *</label>
+                                <input
+                                    placeholder="Enter your full name"
+                                    value={formData.name}
+                                    onChange={(e) => {
+                                        setFormData(prev => ({ ...prev, name: e.target.value }));
+                                        setFieldErrors(prev => ({ ...prev, name: "" }));
+                                    }}
+                                    type="text"
+                                    style={{ borderColor: fieldErrors.name ? '#ff4444' : '' }}
+                                    autoFocus
                                 />
-                                <p>Creating Account...</p>
+                                {fieldErrors.name && (
+                                    <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
+                                        {fieldErrors.name}
+                                    </p>
+                                )}
                             </div>
-                        ) : (
+                        )}
+
+                        {/* Step 2: Email and Password */}
+                        {currentStep === 2 && (
+                            <>
+                                <div className="cs-signup-box">
+                                    <label>Email Address *</label>
+                                    <input
+                                        placeholder="name@example.com"
+                                        value={formData.email}
+                                        onChange={(e) => {
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                email: e.target.value.trim().toLowerCase()
+                                            }));
+                                            setFieldErrors(prev => ({ ...prev, email: "" }));
+                                        }}
+                                        type="email"
+                                        style={{
+                                            borderColor: fieldErrors.email ? '#ff4444' :
+                                                emailValid === false ? '#ff4444' :
+                                                    emailValid === true ? '#44ff44' : ''
+                                        }}
+                                        autoFocus
+                                    />
+                                    {fieldErrors.email && (
+                                        <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
+                                            {fieldErrors.email}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="cs-signup-box">
+                                    <label>Password *</label>
+                                    <input
+                                        placeholder="min length 8 characters"
+                                        onChange={(e) => handlePasswordChange(e, "password")}
+                                        type={showPassword ? "text" : "password"}
+                                        value={formData.password}
+                                        style={{
+                                            borderColor: fieldErrors.password ? '#ff4444' : '',
+                                            paddingRight: '40px'
+                                        }}
+                                    />
+                                    {fieldErrors.password && (
+                                        <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
+                                            {fieldErrors.password}
+                                        </p>
+                                    )}
+                                    {formData.password && (
+                                        <div style={{ marginTop: '8px' }}>
+                                            <p style={{
+                                                fontSize: "0.9em",
+                                                color: passwordStrength.level === "Strong" ? "green" :
+                                                    passwordStrength.level === "Medium" ? "orange" : "red",
+                                                margin: '0 0 5px 0'
+                                            }}>
+                                                Strength: {passwordStrength.level}
+                                            </p>
+                                            <div style={{ fontSize: '0.8em', color: '#666' }}>
+                                                <p style={{ margin: 0 }}>Password should contain:</p>
+                                                <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+                                                    <li style={{ color: formData.password.length >= 8 ? 'green' : '#666' }}>
+                                                        At least 8 characters
+                                                    </li>
+                                                    <li style={{ color: /[A-Z]/.test(formData.password) ? 'green' : '#666' }}>
+                                                        Uppercase letter
+                                                    </li>
+                                                    <li style={{ color: /[a-z]/.test(formData.password) ? 'green' : '#666' }}>
+                                                        Lowercase letter
+                                                    </li>
+                                                    <li style={{ color: /[0-9]/.test(formData.password) ? 'green' : '#666' }}>
+                                                        Number
+                                                    </li>
+                                                    <li style={{ color: /[^A-Za-z0-9]/.test(formData.password) ? 'green' : '#666' }}>
+                                                        Special character
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="cs-signup-box">
+                                    <label>Confirm Password *</label>
+                                    <input
+                                        placeholder="Re-enter your password"
+                                        onChange={(e) => handlePasswordChange(e, "confirmPassword")}
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        value={formData.confirmPassword}
+                                        style={{
+                                            borderColor: fieldErrors.confirmPassword || fieldErrors.passwordMismatch ? '#ff4444' :
+                                                formData.confirmPassword && formData.password === formData.confirmPassword ? '#44ff44' : '',
+                                            paddingRight: '40px'
+                                        }}
+                                    />
+                                    {(fieldErrors.confirmPassword || fieldErrors.passwordMismatch) && (
+                                        <p style={{ color: '#ff4444', fontSize: '0.8em', margin: '5px 0 0 0' }}>
+                                            {fieldErrors.confirmPassword || fieldErrors.passwordMismatch}
+                                        </p>
+                                    )}
+                                    {formData.confirmPassword && formData.password === formData.confirmPassword && (
+                                        <p style={{ color: 'green', fontSize: '0.8em', margin: '5px 0 0 0' }}>
+                                            ✓ Passwords match
+                                        </p>
+                                    )}
+                                </div>
+                            </>
+                        )}
+
+                        {/* Navigation Buttons */}
+
+                        {currentStep > 1 && (
                             <button
+                                type="button"
                                 className="collab-button"
-                                type="submit"
-                                disabled={
-                                    !formData.email ||
-                                    !formData.password ||
-                                    !formData.confirmPassword ||
-                                    formData.password !== formData.confirmPassword ||
-                                    emailValid === false ||
-                                    passwordStrength.level === "Weak"
-                                }
+                                onClick={handleBack}
+
                             >
-                                Sign Up
+                                Back
                             </button>
                         )}
-                        {/* Google Sign In option */}
 
-
+                        {currentStep < totalSteps ? (
+                            <button
+                                type="button"
+                                className="collab-button"
+                                onClick={handleNext}
+                                disabled={
+                                    (currentStep === 1 && !formData.name.trim())
+                                }
+                            >
+                                Next
+                            </button>
+                        ) : (
+                            loading ? (
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                                    <Oval
+                                        visible={true}
+                                        height="20"
+                                        width="20"
+                                        color="gray"
+                                        ariaLabel="oval-loading"
+                                        wrapperStyle={{}}
+                                        wrapperClass=""
+                                        secondaryColor="gray"
+                                    />
+                                    <p>Creating Account...</p>
+                                </div>
+                            ) : (
+                                <button
+                                    className="collab-button"
+                                    type="submit"
+                                    style={{ flex: 1, minWidth: '120px' }}
+                                    disabled={
+                                        !formData.email ||
+                                        !formData.password ||
+                                        !formData.confirmPassword ||
+                                        formData.password !== formData.confirmPassword ||
+                                        emailValid === false ||
+                                        passwordStrength.level === "Weak"
+                                    }
+                                >
+                                    Sign Up
+                                </button>
+                            )
+                        )}
 
                     </form>
-                    {!loading && (
+
+                    {!loading && currentStep === 1 && (
                         <>
                             <div style={{ marginTop: '5px', textAlign: 'center' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
                                     <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
-                                    <span style={{ margin: '0 15px', color: '#666', fontSize: '0.9em' }}>or</span>
+                                    <span style={{ marginTop: '5px', color: '#666', fontSize: '0.9em' }}>or</span>
                                     <div style={{ flex: 1, height: '1px', backgroundColor: '#e0e0e0' }}></div>
                                 </div>
                             </div>
                             <GoogleSignInButton islogin={false} className={'collab-button'} />
                         </>
                     )}
+
                     <br />
                     <label style={{ width: '100%', textAlign: 'center' }}>Already have an account?</label>
                     <button
@@ -385,6 +459,8 @@ export default function CollabSignUp() {
                     >
                         Login
                     </button>
+
+
                     <div style={{ textAlign: 'center', fontSize: '0.8em', color: '#666', marginTop: '10px' }}>
                         <p>By creating an account, you agree to our <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Terms of Service</Link> and <Link href="/term-and-condition" style={{ textDecoration: 'underline', color: 'blue' }}>Privacy Policy</Link></p>
                     </div>

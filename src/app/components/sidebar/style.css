@@ -563,3 +563,192 @@ html.light {
         background: var(--prop-white-bg);
     }
 }
+
+.guest-credits-info {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    padding: 5px 10px;
+    gap: 2px;
+    border-radius: 12px;
+    font-size: 12px;
+    transition: all 0.2s ease-in-out;
+    animation: slideOutSidebarButton 0.2s ease-in-out;
+}
+
+.guest-credits-info span:first-child {
+    font-weight: 500;
+    font-size: 13px;
+    width: 100%;
+    text-align: center;
+}
+
+.guest-credits-info span:last-child {
+    font-size: 11px;
+    color: rgb(163, 161, 161);
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.credits-progress-container {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.credits-progress-bar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease-in-out;
+    position: relative;
+}
+
+.credits-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Progress bar color states */
+.credits-progress-bar.high {
+    background: linear-gradient(90deg, #4ade80, #22c55e);
+}
+
+.credits-progress-bar.medium {
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+
+.credits-progress-bar.low {
+    background: linear-gradient(90deg, #f87171, #ef4444);
+}
+
+.credits-progress-bar.depleted {
+    background: linear-gradient(90deg, #dc2626, #b91c1c);
+}
+
+/* Dark mode styles */
+html.dark .guest-credits-info {
+    background: rgba(94, 129, 173, 0.15);
+    border: 1px solid rgba(94, 129, 173, 0.2);
+}
+
+html.dark .credits-progress-container {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+html.dark .guest-credits-info:hover {
+    background: rgba(94, 129, 173, 0.25);
+    border-color: rgba(94, 129, 173, 0.3);
+}
+
+/* Light mode styles */
+html.light .guest-credits-info {
+    background: rgba(94, 129, 173, 0.1);
+    border: 1px solid rgba(94, 129, 173, 0.15);
+}
+
+html.light .credits-progress-container {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+html.light .guest-credits-info:hover {
+    background: rgba(94, 129, 173, 0.15);
+    border-color: rgba(94, 129, 173, 0.25);
+}
+
+/* Collapsed sidebar version */
+.sidebar-2 .guest-credits-info {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    animation: slideInSidebarButton 0.2s ease-in-out;
+    border-radius: 50%;
+}
+
+.sidebar-2 .guest-credits-info span {
+    display: none;
+}
+
+.sidebar-2 .credits-progress-container {
+    display: none;
+}
+
+/* Tooltip for collapsed sidebar */
+.sidebar-2 .guest-credits-info::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 10px);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    z-index: 1000;
+    min-width: max-content;
+}
+
+.sidebar-2 .guest-credits-info:hover::after {
+    opacity: 1;
+}
+
+html.dark .sidebar-2 .guest-credits-info:hover::after {
+    background: linear-gradient(to right, #D6E2FB, #E3EBFD);
+    color: var(--prop-dark-bg);
+}
+
+html.light .sidebar-2 .guest-credits-info:hover::after {
+    background: linear-gradient(to right, #1C273B, #191E2B);
+    color: var(--prop-white-bg);
+}
+
+/* Warning pulse animation when credits are low */
+.guest-credits-info.warning {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.01);
+        opacity: 0.95;
+    }
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 1000px) {
+    .guest-credits-info {
+        width: 90%;
+    }
+}

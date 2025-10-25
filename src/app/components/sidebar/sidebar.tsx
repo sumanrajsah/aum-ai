@@ -28,7 +28,7 @@ const Sidebar = () => {
     // console.log(memoizedHistory)
     const [activeMenuChatId, setActiveMenuChatId] = useState<string | null>(null);
     const [selectedChat, setSelectedChat] = useState<string | null>(null);
-    const { user, status } = useAuth()
+    const { user, guestUser, status } = useAuth()
     const { theme, setTheme, systemTheme } = useTheme();
     const alertMessage = useAlert()
     const SidebarRef = useRef<HTMLDivElement | null>(null);
@@ -242,6 +242,27 @@ const Sidebar = () => {
                 </div>
                 <div className="sidebar-2-bottom-cont" onClick={(e) => { e.stopPropagation() }}>
                     <hr />
+                    {guestUser?.guest && guestUser.credits && (
+                        <div
+                            className={`guest-credits-info ${guestUser.credits.used >= guestUser.credits.dailyLimit ? 'warning' : ''
+                                }`}
+                            data-tooltip={`Credits: ${guestUser.credits.used}/${guestUser.credits.dailyLimit}`}
+                        >
+                            <span>Daily Credits: {guestUser.credits.used} / {guestUser.credits.dailyLimit}</span>
+                            <div className="credits-progress-container">
+                                <div
+                                    className={`credits-progress-bar ${guestUser.credits.used / guestUser.credits.dailyLimit < 0.5 ? 'high' :
+                                        guestUser.credits.used / guestUser.credits.dailyLimit < 0.75 ? 'medium' :
+                                            guestUser.credits.used / guestUser.credits.dailyLimit < 1 ? 'low' : 'depleted'
+                                        }`}
+                                    style={{
+                                        width: `${Math.min((guestUser.credits.used / guestUser.credits.dailyLimit) * 100, 100)}%`
+                                    }}
+                                />
+                            </div>
+                            <span>Signup to get more Credits</span>
+                        </div>
+                    )}
 
                     {user && <SidebarButton className="sidebar-button account-btn" onClick={() => { setProfileModal(!openProfileModal) }}>
                         <div className="user-avatar">

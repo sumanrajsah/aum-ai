@@ -110,7 +110,7 @@
     font-size: clamp(15px, 2.5vw, 17px);
     font-weight: 600;
     width: 100%;
-    max-width: 500px;
+    max-width: 420px;
     display: flex;
     justify-content: center;
     align-items: center;
