@@ -375,7 +375,7 @@ html.light .send {
     padding: 5px 5px;
     gap: 5px;
     font-size: 16px;
-    border-radius: 12px;
+    border-radius: 50px;
     width: fit-content;
     background: linear-gradient(145deg, rgba(var(--bg-color1), 0.15), rgba(var(--bg-color1), 0.05));
     backdrop-filter: blur(30px);
@@ -400,7 +400,7 @@ html.light .send {
     padding: 5px;
     height: 32px;
     width: 60px;
-    border-radius: 10px;
+    border-radius: 50px;
     cursor: pointer;
     user-select: none;
     transition:

@@ -432,7 +432,7 @@ button:hover {
   border-radius: 12px;
   background: linear-gradient(90deg, #5353535b 25%, #4444445b 50%, #5e5d5d52 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: shimmerchat 1.5s infinite;
 }
 
 .bubble.short {
@@ -444,7 +444,7 @@ button:hover {
 }
 
 
-@keyframes shimmer {
+@keyframes shimmerchat {
   0% {
     background-position: -200% 0;
   }
