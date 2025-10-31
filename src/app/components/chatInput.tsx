@@ -539,7 +539,7 @@ const ChatInput = () => {
   }, [openAttachModal, setOpenAttachModal]);
   return (
     <>
-      <div className='input-body' style={{ bottom: messages.length === 0 ? "40%" : "2%" }}>
+      <div className='input-body' style={{ bottom: (messages.length === 0 || allVideos.length === 0 || allImages.length === 0) ? "40%" : "2%" }}>
         {/* {messages.length === 0 && !input && (selectedFiles.length === 0) && !(pathname.includes('/image-playground')) && !(pathname.includes('/video-playground')) && !(pathname.includes('/agent')) && <div className='chatmode-cont'>
           <button className={chatMode === 'text' ? 'active' : ''} onClick={() => { setChatMode('text'); router.push(`/?model=gpt-5-nano&mode=${'text'}`); selectModel('gpt-5-nano') }} >Text</button>
           <button className={chatMode === 'image' ? 'active' : ''} onClick={() => { setChatMode('image'); router.push(`/?model=dalle-3&mode=${'image'}`); selectModel('dalle-3') }} >Image</button>
