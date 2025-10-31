@@ -440,6 +440,7 @@ html.light .send {
     transform: perspective(1000px) translateZ(0);
     transform-style: preserve-3d;
     transition: all 0.4s ease;
+    overflow: hidden;
 }
 
 .input-container:hover {
@@ -467,6 +468,7 @@ html.light .send {
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     width: 100%;
+    overflow: hidden;
 }
 
 .textarea {
@@ -763,7 +765,6 @@ html.light {
         box-sizing: border-box;
         gap: 6px;
         min-height: 8vh;
-        border-radius: 24px;
     }
 
     .input-container {

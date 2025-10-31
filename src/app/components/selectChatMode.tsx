@@ -49,7 +49,7 @@ const SelectChatModeButton = () => {
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen}
                 aria-haspopup="listbox"
-                style={{ maxWidth: '80px' }}
+                style={{ maxWidth: '100px' }}
             >
                 <MessageSquare size={16} />
 
