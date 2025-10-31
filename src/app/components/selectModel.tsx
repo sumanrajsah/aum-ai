@@ -1,6 +1,6 @@
 'use client'
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { Check, ChevronDown, Layers, PanelRightClose, User2, DollarSign, ArrowUpDown } from "lucide-react"
+import { Check, ChevronDown, Layers, PanelRightClose, User2, DollarSign, ArrowUpDown, Cpu } from "lucide-react"
 import './selectModel.css' // Add the sort-button styles to this CSS file
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -129,6 +129,7 @@ const SelectModelButton = () => {
                 aria-expanded={isOpen}
                 aria-haspopup="listbox"
             >
+                <Cpu size={16} />
                 <span className="selected-model-label">{currentModel.label}</span>
                 <ChevronDown
                     className={`chevron-icon ${isOpen ? 'rotated' : ''}`}

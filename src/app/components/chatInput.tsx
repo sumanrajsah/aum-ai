@@ -20,6 +20,7 @@ import { imageModels, llmModels, vidoeModels } from '../utils/models-list';
 import SelectToolButton from './toolComp/toolmodal';
 import { Oval } from 'react-loader-spinner';
 import { ToolChips } from './toolChip';
+import SelectChatModeButton from './selectChatMode';
 
 interface ChatInputProps {
   pause: boolean;
@@ -538,12 +539,63 @@ const ChatInput = () => {
   }, [openAttachModal, setOpenAttachModal]);
   return (
     <>
-      <div className='input-body'>
-        {messages.length === 0 && !input && (selectedFiles.length === 0) && !(pathname.includes('/image-playground')) && !(pathname.includes('/video-playground')) && !(pathname.includes('/agent')) && <div className='chatmode-cont'>
+      <div className='input-body' style={{ bottom: messages.length === 0 ? "40%" : "2%" }}>
+        {/* {messages.length === 0 && !input && (selectedFiles.length === 0) && !(pathname.includes('/image-playground')) && !(pathname.includes('/video-playground')) && !(pathname.includes('/agent')) && <div className='chatmode-cont'>
           <button className={chatMode === 'text' ? 'active' : ''} onClick={() => { setChatMode('text'); router.push(`/?model=gpt-5-nano&mode=${'text'}`); selectModel('gpt-5-nano') }} >Text</button>
           <button className={chatMode === 'image' ? 'active' : ''} onClick={() => { setChatMode('image'); router.push(`/?model=dalle-3&mode=${'image'}`); selectModel('dalle-3') }} >Image</button>
           <button className={chatMode === 'video' ? 'active' : ''} onClick={() => { setChatMode('video'); router.push(`/?model=sora&mode=${'video'}`); selectModel('sora') }}>Video</button>
+        </div>} */}
+        {<SettingsButton openModal={openSettingsModal} onClose={() => { setSettingsModal(false) }} />}
+        {openAttachModal && <div className='attach-btn-modal' ref={attachModalRef} onClick={(e) => { e.stopPropagation() }}>
+          <button
+            className="attach-child-btn"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            upload file & photos
+            <input
+              ref={fileInputRef}
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                handleFileSelect(e);       // your upload logic
+                setOpenAttachModal(false); // close modal after selection
+              }}
+              accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+              multiple
+            />
+          </button>
+          <hr />
+          <label>mcp resources</label>
+          {mcpResources.map((resource) => (
+            <button
+              key={resource.uri}
+              className="attach-child-btn"
+              onClick={() => {
+                handleMcpResources(resource);
+              }}
+
+            >
+              <Pickaxe size={16} /> {resource.name}
+            </button>
+          ))}
         </div>}
+        <div className='input-btn-cont'>
+          <SelectChatModeButton />
+          {!(pathname.includes('/agent')) && <SelectModelButton />}
+          {user && chatMode === 'text' && <button className="attach-btn" ref={attachButtonRef} onClick={(e) => {
+            e.stopPropagation();
+            setOpenAttachModal(!openAttachModal);
+          }}>
+
+            <Paperclip size={14} /><span> Attach</span>
+          </button>}
+          {!(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { setSettingsModal(!openSettingsModal) }}><Settings size={18} /><span>Settings</span></button>}
+
+
+
+
+          {showToolsBtn && chatMode === 'text' && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { window.location.hash = '#tools' }}><Settings2 size={18} /> <span>Tools</span></button>}
+        </div>
         <div
           className='input-container' onClick={(e) => {
             setOpenAttachModal(false);
@@ -552,92 +604,93 @@ const ChatInput = () => {
 
         >
           <ToolChips />
-          {/* Multiple files preview */}
-          {fileLoading && <div className="files-preview-cont"> <div className='file-view' > <Oval
-            visible={true}
-            height="24"
-            width="24"
-            color="white"
-            ariaLabel="oval-loading"
-            wrapperStyle={{}}
-            strokeWidth={4}
-            wrapperClass=""
-            secondaryColor="white"
-          /></div></div>}
-          {selectedFiles.length > 0 && (
-            <div className="files-preview-cont">
+          <div className='input-container-top'>
+            {/* Multiple files preview */}
+            {fileLoading && <div className="files-preview-cont"> <div className='file-view' > <Oval
+              visible={true}
+              height="24"
+              width="24"
+              color="white"
+              ariaLabel="oval-loading"
+              wrapperStyle={{}}
+              strokeWidth={4}
+              wrapperClass=""
+              secondaryColor="white"
+            /></div></div>}
+            {selectedFiles.length > 0 && (
+              <div className="files-preview-cont">
 
-              {/* Files grid */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'row',
+                {/* Files grid */}
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'row',
 
-                gap: '8px',
-                maxWidth: '600px',
-                maxHeight: '100px',
-                objectFit: 'contain',
-              }}>
-                {selectedFiles.map((file) => (
-                  <div key={file.id} className="file-preview" style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '4px',
-                    padding: '8px',
-                    borderRadius: '8px',
-                    position: 'relative',
-                    fontSize: '12px',
-                    objectFit: 'cover',
-                  }}>
-                    {/* Remove button */}
-                    <button
-                      onClick={() => removeSelectedFile(file.id)}
-                      style={{
-                        position: 'absolute',
-                        top: '4px',
-                        right: '4px',
-                        cursor: 'pointer',
-                        padding: '2px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '50%',
-                        width: '20px',
-                        height: '20px',
-                        background: theme === 'dark' ? 'black' : 'white'
-                      }}
-                    >
-                      <X size={12} />
-                    </button>
-
-                    {/* File content */}
-                    {file.type === 'image' && file.image_url ? (
-                      <img
-                        src={file.image_url}
-                        alt={file.filename}
+                  gap: '8px',
+                  maxWidth: '600px',
+                  maxHeight: '100px',
+                  objectFit: 'contain',
+                }}>
+                  {selectedFiles.map((file) => (
+                    <div key={file.id} className="file-preview" style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '4px',
+                      padding: '8px',
+                      borderRadius: '8px',
+                      position: 'relative',
+                      fontSize: '12px',
+                      objectFit: 'cover',
+                    }}>
+                      {/* Remove button */}
+                      <button
+                        onClick={() => removeSelectedFile(file.id)}
                         style={{
-                          width: '50px',
-                          height: '50px',
-                          objectFit: 'fill',
-                          borderRadius: '4px'
+                          position: 'absolute',
+                          top: '4px',
+                          right: '4px',
+                          cursor: 'pointer',
+                          padding: '2px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderRadius: '50%',
+                          width: '20px',
+                          height: '20px',
+                          background: theme === 'dark' ? 'black' : 'white'
                         }}
-                      />
-                    ) : (
-                      <div className='file-view' >
-                        {fileLoading ? 'Loading...' : (
-                          <div>
-                            <FilePreview
-                              show={false}
-                              fileName={file.filename}
-                              fileUrl={file.file_url || file.file_data || ''}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
+                      >
+                        <X size={12} />
+                      </button>
 
-                    {/* Filename */}
-                    {/* <div style={{
+                      {/* File content */}
+                      {file.type === 'image' && file.image_url ? (
+                        <img
+                          src={file.image_url}
+                          alt={file.filename}
+                          style={{
+                            width: '50px',
+                            height: '50px',
+                            objectFit: 'fill',
+                            borderRadius: '4px'
+                          }}
+                        />
+                      ) : (
+                        <div className='file-view' >
+                          {fileLoading ? 'Loading...' : (
+                            <div>
+                              <FilePreview
+                                show={false}
+                                fileName={file.filename}
+                                fileUrl={file.file_url || file.file_data || ''}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Filename */}
+                      {/* <div style={{
                       width: '100%',
                       textAlign: 'center',
                       overflow: 'hidden',
@@ -647,91 +700,44 @@ const ChatInput = () => {
                     }}>
                       {file.filename}
                     </div> */}
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-
-          <textarea
-            ref={textareaRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={chatMode === 'text' ? 'Ask Anything' : 'Generate Anything...'}
-            onKeyDown={handleKeyDown}
-            className='textarea'
-            onFocus={() => setShowSearchAds(true)}
-            onBlur={() => setShowSearchAds(false)}
-          />
-          <div className='input-btn-cont'>
-            <div className='input-btn-cont-left'>
-              {user && chatMode === 'text' && <button className="attach-btn" ref={attachButtonRef} onClick={(e) => {
-                e.stopPropagation();
-                setOpenAttachModal(!openAttachModal);
-              }}>
-
-                <Plus size={20} />
-              </button>}
-              {!(pathname.includes('/agent')) && <SelectModelButton />}
-              {!(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { setSettingsModal(!openSettingsModal) }}><Settings size={18} />Settings</button>}
-            </div>
-
-
-
-            <div className='input-btn-cont-right'>
-              {showToolsBtn && chatMode === 'text' && !(pathname.includes('/agent')) && <button className='server-btn' onClick={() => { window.location.hash = '#tools' }}><Settings2 size={18} /> Tools</button>}
-              {!((aiTyping) || (creatingImage)) && <button
-                className='button-send send'
-                onClick={handleSubmit}
-              >
-                <ArrowUp />
-              </button>}
-              {((aiTyping) || (creatingImage)) && (
-                <button
-                  type="button"
-                  onClick={handleStop}
-                  className='stop-button'
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                    <rect x="7" y="7" width="10" height="10" rx="2" />
-                  </svg>
-                </button>)}
-            </div>
+            )}
           </div>
-          {<SettingsButton openModal={openSettingsModal} onClose={() => { setSettingsModal(false) }} />}
-          {openAttachModal && <div className='attach-btn-modal' ref={attachModalRef} onClick={(e) => { e.stopPropagation() }}>
-            <button
-              className="attach-child-btn"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              upload file & photos
-              <input
-                ref={fileInputRef}
-                type="file"
-                style={{ display: 'none' }}
-                onChange={(e) => {
-                  handleFileSelect(e);       // your upload logic
-                  setOpenAttachModal(false); // close modal after selection
-                }}
-                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
-                multiple
-              />
-            </button>
-            <hr />
-            <label>mcp resources</label>
-            {mcpResources.map((resource) => (
-              <button
-                key={resource.uri}
-                className="attach-child-btn"
-                onClick={() => {
-                  handleMcpResources(resource);
-                }}
+          <div className='input-container-bottom'>
 
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={chatMode === 'text' ? 'Ask anything' : 'Generate anything...'}
+              onKeyDown={handleKeyDown}
+              className='textarea'
+              onFocus={() => setShowSearchAds(true)}
+              onBlur={() => setShowSearchAds(false)}
+            />
+
+            {!((aiTyping) || (creatingImage)) && <button
+              className='button-send send'
+              onClick={handleSubmit}
+            >
+              <ArrowUp />
+            </button>}
+            {((aiTyping) || (creatingImage)) && (
+              <button
+                type="button"
+                onClick={handleStop}
+                className='stop-button'
               >
-                <Pickaxe size={16} /> {resource.name}
-              </button>
-            ))}
-          </div>}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <rect x="7" y="7" width="10" height="10" rx="2" />
+                </svg>
+              </button>)}
+          </div>
+
+
         </div>
       </div>
 

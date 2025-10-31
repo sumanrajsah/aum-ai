@@ -37,6 +37,7 @@
     padding-top: 10px;
     padding-bottom: 20px;
     animation: slideInSidebar 0.2s ease-in-out;
+    border-right: 1px solid rgba(94, 129, 173, 0.2);
 
 }
 
@@ -532,8 +533,7 @@ label {
 
 html.dark {
 
-    .sidebar,
-    .sidebar-2 {
+    .sidebar {
         background: linear-gradient(to right, #1C273B, #191E2B);
     }
 
@@ -549,8 +549,7 @@ html.dark {
 
 html.light {
 
-    .sidebar,
-    .sidebar-2 {
+    .sidebar {
         background: linear-gradient(to right, #D6E2FB, #E3EBFD);
     }
 
