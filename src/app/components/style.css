@@ -565,6 +565,9 @@ html.light .send {
 
 /* Dark Mode Styles */
 html.dark {
+    .input-body {
+        background: var(--prop-dark-bg);
+    }
 
     .input-container,
     .attach-btn-modal {
@@ -596,6 +599,9 @@ html.dark {
 
 /* Light Mode Styles */
 html.light {
+    .input-body {
+        background: var(--prop-white-bg);
+    }
 
     .input-container,
     .attach-btn-modal {
