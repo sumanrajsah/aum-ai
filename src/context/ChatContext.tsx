@@ -283,6 +283,7 @@ const VideoPlaygroundProvider = ({ children }: { children: React.ReactNode }) =>
     const [expandVideo, setExpandVideo] = useState<VideoMetadata | {}>({})
     const alert = useAlert();
     const router = useRouter();
+    const pathname = usePathname();
     useEffect(() => {
         async function getVideos() {
             if (status === 'unauthenticated') {

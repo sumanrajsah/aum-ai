@@ -200,9 +200,9 @@ export default function VideoPlayground() {
                         <p>No videos yet. Create your first video!</p>
                     </div>
                 )}
+                <ChatInput />
             </div>
 
-            <ChatInput />
         </>
     );
 }

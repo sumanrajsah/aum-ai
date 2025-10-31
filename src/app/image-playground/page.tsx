@@ -200,8 +200,8 @@ export default function ImagePlayground() {
                     </div>
                 )}
             </div>
-
             <ChatInput />
+
         </>
     );
 }
