@@ -25,7 +25,7 @@ const BgButton = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [])
 
-    const currentValue = settings?.background ?? "none"
+    const currentValue = settings?.background ?? "space"
 
     const options = useMemo(
         () => [

@@ -40,7 +40,7 @@ async function saveSettingsApi(settings: Settings): Promise<void> {
 
 export const useSettingsStore = create<SettingsStore>()(
     (set, get) => ({
-        settings: { theme: 'light', language: 'en', background: "none", systemContextWindow: 3, memory: false }, // always defined
+        settings: { theme: 'light', language: 'en', background: "space", systemContextWindow: 3, memory: false }, // always defined
         loading: false,
         error: undefined,
 
@@ -51,7 +51,7 @@ export const useSettingsStore = create<SettingsStore>()(
                 const serverSettings = await fetchSettingsApi();
                 if (serverSettings) {
                     // Merge with defaults in case server returns partial settings
-                    const defaults = { theme: 'light', language: 'en', background: "none", systemContextWindow: 3, memory: false };
+                    const defaults = { theme: 'light', language: 'en', background: "space", systemContextWindow: 3, memory: false };
                     set({ settings: { ...defaults, ...serverSettings } });
                 }
             } catch (err: any) {

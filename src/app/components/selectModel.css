@@ -57,7 +57,7 @@
     overflow: hidden;
     width: 250px;
     animation: slideDown 0.15s ease-out;
-    max-height: 40vh;
+    max-height: 30vh;
 }
 
 @keyframes slideDown {
@@ -244,7 +244,7 @@ html.dark .dropdown-header {
     }
 
     .model-dropdown {
-        max-width: 200px;
+        max-width: 250px;
         width: auto;
         right: -50%;
     }

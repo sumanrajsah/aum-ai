@@ -364,7 +364,10 @@ html.light .send {
     max-width: 800px;
     bottom: 2%;
     background: transparent;
-    border: 1px solid rgba(var(--bg-color1), 0.3);
+    border-top: 1px solid rgba(var(--bg-color1), 0.3);
+    border-right: 1px solid rgba(var(--bg-color1), 0.3);
+    border-bottom: 1px solid rgba(var(--bg-color1), 0.3);
+    border-left: 1px solid rgba(var(--bg-color1), 0.3);
     border-radius: 30px;
 }
 
@@ -486,7 +489,7 @@ html.light .send {
     resize: none;
     overflow-y: auto;
     max-height: 200px;
-    height: 40px;
+    height: 50px;
 }
 
 .input-btn-cont {
@@ -696,7 +699,7 @@ html.light {
     }
 
     .textarea {
-        min-height: 45px;
+        min-height: 50px;
     }
 
     .chatmode-cont {

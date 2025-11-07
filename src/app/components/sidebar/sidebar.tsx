@@ -232,7 +232,7 @@ const Sidebar = () => {
                         <button className="dropdown-list" onClick={() => { router.push(`/workspace`); setCurrentWorkspace(''); setMessages([]); setChatId(''); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>
                             <Layers size={14} />Workspace Home
                         </button>
-                        <hr />
+                        {workspaces.length > 0 && <hr />}
                         {workspaces.map((workspace: Workspace) => (
                             <button className="dropdown-list" key={workspace.wid} onClick={() => { router.push(`/workspace/${workspace.wid}?model=${Model}&mode=${chatMode}`); setMessages([]); setChatId(''); setCurrentWorkspace(workspace.wid); isSidebarOpen ? toggleSidebar() : setIsOpen(false) }}>
                                 <Layers size={14} />{workspace.name}

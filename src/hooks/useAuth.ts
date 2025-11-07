@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getFingerprint } from "@/app/utils/fp";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 interface User { uid: string; plan: string | "free"; name?: string; image?: string; email?: string; username?: string }
 interface GuestUser { guest?: boolean; credits?: { dailyLimit: number; used: number } }
@@ -53,6 +54,7 @@ export const useAuth = () => {
     const [guestUser, setGuestUser] = useState<GuestUser | null>(sharedGuestUser);
     const [status, setStatus] = useState<Status>(sharedStatus);
     const [isAuthLoading, setLoading] = useState(false);
+    const { init: initSettings } = useSettingsStore();
 
     useEffect(() => {
         const listener = (newState: { user: User | null; guestUser: GuestUser | null; status: Status }) => {
@@ -66,6 +68,7 @@ export const useAuth = () => {
 
         // fetch only once
         fetchAuth();
+        initSettings();
 
         return () => {
             const index = listeners.indexOf(listener);

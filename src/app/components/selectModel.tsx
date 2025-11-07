@@ -24,14 +24,16 @@ const SelectModelButton = () => {
     const [sortBy, setSortBy] = useState<SortOption>('default');
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
-    const scrollToItem = useCallback((node: HTMLDivElement | null) => {
-        if (node) {
-            node.scrollIntoView({
+    const selectedModelRef = useRef<HTMLLIElement | null>(null);
+
+    useEffect(() => {
+        if (isOpen && selectedModelRef.current) {
+            selectedModelRef.current.scrollIntoView({
                 behavior: 'smooth',
-                block: 'center'
+                block: 'center',
             });
         }
-    }, []);
+    }, [isOpen, selectedModel]);
 
     // Get the appropriate models based on chat mode
     const getModels = () => {
@@ -167,6 +169,7 @@ const SelectModelButton = () => {
                         {sortedModels.map((model) => (
                             <li
                                 key={model.value}
+                                ref={selectedModel === model.value ? selectedModelRef : null}
                                 className={`model-option ${selectedModel === model.value ? 'selected' : ''}`}
                                 onClick={() => handleModelSelect(model.value)}
                                 role="option"
